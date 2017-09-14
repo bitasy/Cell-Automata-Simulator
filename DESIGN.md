@@ -1,4 +1,4 @@
-Classes:
+Classes
 
 *Block (has internal states)
 *Grid
