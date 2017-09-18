@@ -26,7 +26,7 @@ The program design has eight major classes: CellSociety, Screen, SimulationLoade
 
 
 Picture form of some information about the classes:
-![Specific Information](design_images/specific_info.jpeg “Specific Information")
+![Specific Information](design_images/overview_picture.jpg “Specific Information")
 
 For more specifics like method names, check out design details.
 
