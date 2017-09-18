@@ -21,11 +21,11 @@ An XML file will define which rules are used in a simulation, as well as initial
 
 The program design has eight major classes: CellSociety, Screen, SimulationLoader, CellSimulator, SimulationInterface, Grid, Cell, and Rules. CellSociety initializes the program by creating an ArrayList of SimulationLoader objects that each read in the information for a particular simulation from its XML file. It then passes this to SimulationInterface through the Screen class, the latter of which will handle both displaying the simulation and the user interface in the stage. The SimulationInterface object will represent the options available to the user, including the speed and playback of the simulation as well as the choice of which simulation to run. It passes this information (along with only the currently chosen SimulationLoader object) to a CellSimulator. This object controls the flow of turns in the game by creating and updating a Grid object as specified by the SimulationInterface (60 times per second, once per method call, etc). The Grid object handles updating by going through every cell and passing it to the right static methods in the Rules class that write the resulting state to a new grid, which Grid eventually makes the current grid after all updating is finished. The Grid knows which rules are the correct ones because they are specified by the SimulationLoader class, which represents the correct simulation. The Cell class contains the state of a particular cell, along with methods that change the state as needed. The Rules class is not instantiatable; rather, it contains a database of static methods that take a Cell and its neighbors as parameters and apply logic to return the result. 
 
-![Interface](design_images/Interface.JPG "User Interface")
+![Interface](design_images/20170917_193025.jpg "User Interface")
 
 Picture form of some information about the classes:
 
-![Interface](design_images/Interface.JPG "User Interface")
+![Interface](design_images/overview_picture.jpg "User Interface")
 
 For more specifics like method names, check out design details.
 
