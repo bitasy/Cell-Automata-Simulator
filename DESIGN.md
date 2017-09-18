@@ -44,23 +44,23 @@ CellSociety: CellSociety class is responsible for having a main() method that st
 
 Summary of class:
 * start() method
-⋅⋅* Make screen
-⋅⋅⋅⋅* Read XML in simulationloader objects
-⋅⋅⋅⋅* Make arraylist of simulation loaders objects
+* Make screen
+* Read XML in simulationloader objects
+* Make arraylist of simulation loaders objects
 
 Screen: Screen class is responsible for having a method to create the window where the world display will be in, to create the actual world display, as well as all the sliders and parameters that define the simulation. The Screen class will pass in and receive information from the simulation interface class, which will define how exactly these parameters, as well as the grid arrangements and updates, will work in relation to every time the simulation runs and updates. If we were given additional requirements, most likely we'd have to change the way the screen looks (say, if an additional simulation requires different parameters to be included in a simulation) as well as potentially having different ways that the user can interact with the simulation (i.e. perhaps the user could click on the grid to specify initial conditions, amongst other things). These potential additions could be implemented by adding variables or methods in the makeScreen class to handle any additional features, as well as adding a method or class to enable the user to interact with the GUI with clicks on it.
 
 * Summary of class:
-⋅⋅* updateWorld() method
-⋅⋅⋅⋅* Re-paint the screen with new grid's information
-⋅⋅* updateSimulationType() method
-⋅⋅⋅⋅* Re-paint the screen with a new type of simulation and its initial conditions
-⋅⋅* initializeSimulation()
-⋅⋅⋅⋅* Given initial conditions and parameters, setup the world screen with the initial conditions, grid, cells and parameters for a given specific type of simulation
-⋅⋅* makeScreen()
-⋅⋅⋅⋅* Creates the window and screen with all components that are used in the simulation, and sets up connections with the back end of the screen, SimulationInterface.
-⋅⋅* currentSimulation variable
-⋅⋅⋅⋅* SimulationLoader type variable that holds the current simulation's equivalent object type such that the Screen can read all the XML information that has been passed into it and use that to write stuff on the screen.
+* updateWorld() method
+* Re-paint the screen with new grid's information
+* updateSimulationType() method
+* Re-paint the screen with a new type of simulation and its initial conditions
+* initializeSimulation()
+* Given initial conditions and parameters, setup the world screen with the initial conditions, grid, cells and parameters for a given specific type of simulation
+* makeScreen()
+* Creates the window and screen with all components that are used in the simulation, and sets up connections with the back end of the screen, SimulationInterface.
+* currentSimulation variable
+* SimulationLoader type variable that holds the current simulation's equivalent object type such that the Screen can read all the XML information that has been passed into it and use that to write stuff on the screen.
 
 XML: The XML component of the project will likely be a file that includes all the different simulation parameters, as well as initial conditions, that will be read by the SimulationLoader class responsible for extracting all these parameter informations in a meaningful way, to be passed on to the rest of the program. The database of rules will depend on information that is passed on by the XML file, so it is important for the database and the XML file to communicate effortlessly. If any additional components are added to the project, the way to go about it would be to change the XML file in ways such that the new components and/or simulations can be represented and read by the rest of the program.
 
@@ -72,42 +72,42 @@ Summary of file:
 SimulationLoader: SimulationLoader class is responsible for reading in an XML file that contains important information as to how the current type of simulation of CellSociety will run. It will then store this information in a comprehensible format such that it can be passed onto and read by CellSimulator, Grid and maybe Screen. If additional components are added to the project, SimulationLoader will most likely have to add different methods and variables to be able to hold this information, and pass it on to the relevant classes that have dependencies on the new features.
 
 Summary of class:
-⋅⋅* readXML()
-⋅⋅⋅⋅* Reads an XML file and assigns all relevant variables and methods with information pertaining to that particular simulation (i.e. simulation type, initial conditions, simulation parameters);
-⋅⋅* initialConditions variable
-⋅⋅⋅⋅* Grid object or matrix object with details about the initial conditions of the grid for the simulation
-⋅⋅* Parameters variable
-⋅⋅⋅⋅* Different sets of variables relevant for each simulation
+* readXML()
+* Reads an XML file and assigns all relevant variables and methods with information pertaining to that particular simulation (i.e. simulation type, initial conditions, simulation parameters);
+* initialConditions variable
+* Grid object or matrix object with details about the initial conditions of the grid for the simulation
+* Parameters variable
+* Different sets of variables relevant for each simulation
 
 
 CellSimulator: CellSimulator essentially creates the Grid (essentially a 2D array of Cell shapes) by populating the Screen Class and passes information from the XML files to the cells using a list of SimulationLoaders, which stores information about the initial conditions. It’s main purpose is to be the container of the grid and to maintain the grid independent from many of the other factors of the program. The simulator will be the point of contact for the SimulationInterface as well. Information is extracted from the interface and relayed to the Grid as necessary. If you wanted to create multiple CellSimulator on the same screen, you could create multiple instances of the CellSimulator class and populate it with different grid simulations. 
 
 Summary of Class:
-⋅⋅* The CellSimulator would help create the cells in the actual displayed Grid and provide Grid with necessary information from XML files and Interface. setGrid()
-⋅⋅* Responsible for updating hosting timeline and updating Grid. update()
-⋅⋅* Allows Grid to function independently in respect to many of other elements of the program as the Grid only requires the information it receives from CellSimulator. We want this to keep the program reasonably versatile.
+* The CellSimulator would help create the cells in the actual displayed Grid and provide Grid with necessary information from XML files and Interface. setGrid()
+* Responsible for updating hosting timeline and updating Grid. update()
+* Allows Grid to function independently in respect to many of other elements of the program as the Grid only requires the information it receives from CellSimulator. We want this to keep the program reasonably versatile.
 
 SimulatorInterface: SimulatorInterface acts as the main point of contact between the user and the inputs of the game. It is created by the Screen and takes up the lower section of the window. It will accomplish the goals of the user interface by allowing the user to switch simulations (drop down menu), edit state with pause/stop/start/step (buttons), and alter speed (slider). This class will be the gateway to add more user editable elements for the grid. You will get information here and send it to the CellSimulator to handle what must be done to commit the actual change to the simulation. This new information can be gathered in any way that you want, as long as the Simulator is ready to handle it. To make it extendable, we envision adding new sliders and we would also have to change CellSimulator to make sure we could support the new change.
 
 Summary of Class:
-⋅⋅* SimulatorInterface handles getting information from the user and sending it to the simulator where it creates the necessary change. setGUI()
-⋅⋅* Creates separation between the actual Simulation and editable elements to maintain modularity. getInputs()
+* SimulatorInterface handles getting information from the user and sending it to the simulator where it creates the necessary change. setGUI()
+* Creates separation between the actual Simulation and editable elements to maintain modularity. getInputs()
 Grid: The Grid class keeps track of the two-dimensional Cell array and is in charge of updating the simulation turn by turn. It does this by creating a new grid object and marking the effects of the rules on each cell in the old grid on it. After all the changes have been marked, it makes the new grid the current one and removes the old one. 
 Summary of Class:
-⋅⋅* update()
-⋅⋅⋅⋅* Creates a new Grid and runs the rules specified by SimulationLoader in the Rules class on the current grid of cells, and writes the updated positions onto the new grid. Saves the new grid as the current grid.
-⋅⋅* setRules(int[] rules)
-⋅⋅⋅⋅* Sets the rules (and the order) with which to pass the current grid in order to create the new grid. Each rule is specified by a number from 1 to the number of rules, and the order is specified by that number’s index in the array.
+* update()
+* Creates a new Grid and runs the rules specified by SimulationLoader in the Rules class on the current grid of cells, and writes the updated positions onto the new grid. Saves the new grid as the current grid.
+* setRules(int[] rules)
+* Sets the rules (and the order) with which to pass the current grid in order to create the new grid. Each rule is specified by a number from 1 to the number of rules, and the order is specified by that number’s index in the array.
 Cell: The Cell class represents a single cell in the Grid. It holds a single state that can be changed, as well as an arbitrary number of numbers available for rules to use to track data over time. It has a color for each state, as specified by the SimulationLoader (although grid tells the cell what states map to what colors, not the actual SimulationLoader). 
 Summary of Class:
-⋅⋅* setState(int state)
-⋅⋅⋅⋅* Updates the state and color of the cell to the specified state. Possible states are held in a list contained by the cell’s grid, and the grid calls this method on every cell for every new turn.
+* setState(int state)
+* Updates the state and color of the cell to the specified state. Possible states are held in a list contained by the cell’s grid, and the grid calls this method on every cell for every new turn.
 Rules: Rules contains a large list of possible rules with parameters for simulations to use. Each rule is static and takes in one cell and an array of its neighbors. Each rule is defined by a distinct number, which the Rules class uses to call it via a switch statement. A simulation can customize the rules it uses through parameters specified in the XML file and provided by the SimulationLoader.
 Summary of Class:
-⋅⋅* callRule(int rule, Cell cell, Cell[] neighbors)
-⋅⋅⋅⋅* Uses a switch statement to call the specified rule and pass along the cell and its neighbors to apply the rule to. 
-⋅⋅* setParameter(int rule, double parameter)
-⋅⋅⋅⋅* Stores a simulation’s desired parameter for a particular rule internally. For example, the rule onFewerNeighbors() would have a parameter n defining that the rule will be applied when the cell has fewe than n neighbors.
+* callRule(int rule, Cell cell, Cell[] neighbors)
+* Uses a switch statement to call the specified rule and pass along the cell and its neighbors to apply the rule to. 
+* setParameter(int rule, double parameter)
+* Stores a simulation’s desired parameter for a particular rule internally. For example, the rule onFewerNeighbors() would have a parameter n defining that the rule will be applied when the cell has fewe than n neighbors.
 
 
 Use Cases:
