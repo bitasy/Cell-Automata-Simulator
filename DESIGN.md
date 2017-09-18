@@ -44,9 +44,9 @@ CellSociety: CellSociety class is responsible for having a main() method that st
 
 Summary of class:
 * start() method
-* Make screen
+    * Make screen
 * Read XML in simulationloader objects
-* Make arraylist of simulation loaders objects
+    * Make arraylist of simulation loaders objects
 
 Screen: Screen class is responsible for having a method to create the window where the world display will be in, to create the actual world display, as well as all the sliders and parameters that define the simulation. The Screen class will pass in and receive information from the simulation interface class, which will define how exactly these parameters, as well as the grid arrangements and updates, will work in relation to every time the simulation runs and updates. If we were given additional requirements, most likely we'd have to change the way the screen looks (say, if an additional simulation requires different parameters to be included in a simulation) as well as potentially having different ways that the user can interact with the simulation (i.e. perhaps the user could click on the grid to specify initial conditions, amongst other things). These potential additions could be implemented by adding variables or methods in the makeScreen class to handle any additional features, as well as adding a method or class to enable the user to interact with the GUI with clicks on it.
 
