@@ -21,12 +21,28 @@ public class SimulationLoader {
 	
 	
 
+	//Some example methods -brian
+	
+	public int numRows() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public int numCols() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	
+	public int[][] initialState(){
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	//TODO: SimulationLoader() constructor (with or without argument) that initializes instance of simulation
 	
 	
 	
 	// TODO: readXML() method to read XML file and assign data
-	
 	
 	
 }
