@@ -9,8 +9,8 @@ public class Cell {
 	
 	private int state;
 	private Rectangle view;
-	private Grid myGrid;
 	private HashMap<Integer, Color> myColorMap;
+	private int[] myLocation;
 	
 	/**
 	 * Creates a new Cell with the specified parameters. 
@@ -19,10 +19,11 @@ public class Cell {
 	 * @param colorMap the map of states to colors used to display the cell as having a particular state.
 	 * @param location the location of the cell inside the grid, given by {row, column}.
 	 */
-	public Cell(int initialState, double size, HashMap<Integer, Color> colorMap) {
+	public Cell(int initialState, double size, HashMap<Integer, Color> colorMap, int[] location) {
 		state = initialState;
 		myColorMap = colorMap;
 		view = new Rectangle(size, size, myColorMap.get(initialState));
+		myLocation = location;
 	}
 	
 	/**
@@ -40,6 +41,10 @@ public class Cell {
 	 */
 	public int getState() {
 		return state;
+	}
+	
+	public int[] getLocation() {
+		return myLocation;
 	}
 
 }

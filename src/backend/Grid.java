@@ -14,6 +14,8 @@ public class Grid {
 
 	private HashMap<Integer, Color> colorMap;
 	private Cell[][] grid;
+	private int defaultState;
+	private RuleSet myRuleSet;
 	double myCellSize;
 	
 	/**
@@ -24,13 +26,15 @@ public class Grid {
 	public Grid(SimulationLoader simdata, double cellSize) {
 		grid = new Cell[simdata.numRows()][simdata.numCols()];
 		myCellSize = cellSize;
+		int defaultState = simdata.getDefaultState();
 		populate(simdata.initialState());
+		myRuleSet = simdata.getRuleSet();
 	}
 	
 	private void populate(int[][] initialState) {
 		for(int i = 0; i < initialState.length; i++) {
 			for(int j : initialState[i]) {
-				grid[j][i] = new Cell(0, myCellSize, colorMap);
+				grid[i][j] = new Cell(0, myCellSize, colorMap, new int[] {i,j});
 			}
 		}
 	}
@@ -39,8 +43,60 @@ public class Grid {
 	 * Updates the current grid by creating a new one, filling it in, and making it the new grid. This method applies the specified rules on each cell, going from left to right then top to bottom of the grid. The results of each rule are noted in the new grid that is being filled in.
 	 */
 	public void update() {
-		Cell[][] newGrid = new Cell[grid.length][grid[0].length];
+		int[][] newStates = createStateGrid();
+		myRuleSet.setGrid(newStates);
+		applyRules();
 		
+		for(int i = 0; i < newStates.length; i++) {
+			for(int j = 0; j < newStates[0].length; j++) {
+				grid[i][j].changeState(newStates[i][j]);
+			}
+		}
+		
+	}
+
+	private int[][] createStateGrid() {
+		int[][] newStates = new int[grid.length][grid[0].length];
+		for(int i = 0; i < newStates.length; i++) {
+			for(int j = 0; j < newStates[0].length; j++) {
+				newStates[i][j] = defaultState;
+			}
+		}
+		return newStates;
+	}
+	
+	private void applyRules() {
+		for(int rule = 1; rule <= myRuleSet.numRules(); rule++)
+			for(int i = 0; i < grid.length; i++) 
+				for(int j = 0; j < grid[0].length; j++) {
+					//No error detection yet, currently only guaranteed to work for Game of Life
+					myRuleSet.applyRule(rule,getNeighborhood(grid[i][j]));
+				}
+	}
+	
+	/**
+	 * Returns a 3x3 array that contains references to a cell and its neighbors on all sides. The parameter cell is in the position (1,1). If the cell is on the edge, the neighbors that do not exist are null.
+	 * @param cell the cell whose neighbors are being returned.
+	 * @return the array of cells in the parameter cell's neighborhood.
+	 */
+	private Cell[][] getNeighborhood(Cell cell) {
+		//This method adapted from Vivek at https://stackoverflow.com/questions/4120609/more-efficient-way-to-check-neighbours-in-a-two-dimensional-array-in-java
+		int[] location = cell.getLocation();
+		
+		int startPosX = (location[1] - 1 < 0) ? location[1] : location[1]-1;
+		int startPosY = (location[0] - 1 < 0) ? location[0] : location[0]-1;
+		int endPosX =   (location[1] + 1 > grid.length-1) ? location[1] : location[1]+1;
+		int endPosY =   (location[0] + 1 > grid[0].length-1) ? location[0] : location[0]+1;
+		
+		Cell[][] neighborhood = new Cell[3][3];
+		
+		for (int rowNum=startPosX; rowNum<=endPosX; rowNum++) {
+		    for (int colNum=startPosY; colNum<=endPosY; colNum++) {
+		        neighborhood[rowNum-location[0]+1][colNum-location[0]+1] = grid[rowNum][colNum];
+		    }
+		}
+		
+		return neighborhood;
 	}
 }
 
