@@ -14,6 +14,7 @@ public class Grid {
 
 	private HashMap<Integer, Color> colorMap;
 	private Cell[][] grid;
+	private int defaultState;
 	double myCellSize;
 	
 	/**
@@ -24,13 +25,14 @@ public class Grid {
 	public Grid(SimulationLoader simdata, double cellSize) {
 		grid = new Cell[simdata.numRows()][simdata.numCols()];
 		myCellSize = cellSize;
+		int defaultState = simdata.getDefaultState();
 		populate(simdata.initialState());
 	}
 	
 	private void populate(int[][] initialState) {
 		for(int i = 0; i < initialState.length; i++) {
 			for(int j : initialState[i]) {
-				grid[j][i] = new Cell(0, myCellSize, colorMap);
+				grid[j][i] = new Cell(0, myCellSize, colorMap, new int[] {j,i});
 			}
 		}
 	}
