@@ -1,11 +1,14 @@
 package xml_start;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -24,41 +27,86 @@ import javafx.stage.FileChooser.ExtensionFilter;
  */
 public class MasterMap {
 
-    // public static final String DATA_FILE_EXTENSION = "*.xml";
-
+	public static final String[] SIMULATION_NAMES = {"GameOfLife", "Segregation", "Fire", "PredatorPrey"};
+	private Map<String, SimulationParameters> simulationMap = null;
+	
+	public MasterMap() throws Exception {
+		
+		makeMap();
+		
+	}
+	
+	// TODO: handle exceptions somehow
+	
+	// reads in XML file and assigns SimulationParameters values
     private static SimulationParameters read(String s) throws Exception {
         File dataFile = new File(s);
         SimulationParameters mySimulation = null;
         if (dataFile != null) {
             try {
             	
-            	mySimulation = new XMLParserCS("simulation").getSimulation(dataFile);
+            		mySimulation = new XMLParserCS("simulation").getSimulation(dataFile);
             		System.out.println("it may have worked");
             }
             catch (XMLException e) {
-                Alert a = new Alert(AlertType.ERROR);
-                a.setContentText(e.getMessage());
-                a.showAndWait();
+            	// TODO: do something relevant about error;
+            	System.out.println("Error loading " + s);
+            	
+//                Alert a = new Alert(AlertType.ERROR);
+//                a.setContentText(e.getMessage());
+//                a.showAndWait();
+//                System.out.println("Some error here");
             }
         }
         
         return mySimulation;
     }
-
-
-    public static void main (String[] args) throws Exception {
-        
-    		String fileName = "data/TestFile.xml";
-    		SimulationParameters myTester = read(fileName);
-    		System.out.println(myTester == null);
-    		Map<String, String> myMap = myTester.getMap();
-    		System.out.println(myMap.get("artist"));
+    
+    
+    // creates map of all SimulationParameter instances for each simulation type
+    	private void makeMap() throws Exception {
+    	
+    		simulationMap = new HashMap<String, SimulationParameters>();
+    	
+    		for (String s : SIMULATION_NAMES) {
+    			
+    			// TODO: add throw and catch for errors
+    			String fileName = "data/" + s + ".xml";
+    			SimulationParameters currentSimulation = read(fileName);
+    			simulationMap.put(s, currentSimulation);
+    			
+    		}
     		
-    		
+    		return;
     	
     }
 
-    // TODO: getMap() method, returns map
+    // getter for master map
+    public Map<String, SimulationParameters> getMap() {
+    		return simulationMap;
+    }
+    
+    
+    
+    
+    
+    
+    
+    public static void main (String[] args) throws Exception {
+        
+//		String fileName = "data/TestFile.xml";
+//		SimulationParameters myTester = read(fileName);
+//		System.out.println(myTester == null);
+//		Map<String, String> myMap = myTester.getMap();
+//		System.out.println(myMap.get("artist"));
+    	
+    		MasterMap myTester = new MasterMap();
+    		
+		
+    }
+    
+    
+    
     
     
 

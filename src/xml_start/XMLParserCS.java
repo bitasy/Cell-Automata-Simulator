@@ -47,7 +47,6 @@ public class XMLParserCS {
         Element root = getRootElement(dataFile);
         System.out.println(root);
         if (! isValidFile(root, SimulationParameters.DATA_TYPE)) {
-        		System.out.println("im in here baby");
             throw new XMLException("XML file does not represent %s", SimulationParameters.DATA_TYPE);
         }
         // read data associated with the fields given by the object
