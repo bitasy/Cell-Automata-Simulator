@@ -20,7 +20,7 @@ public class SimulationInterface extends BorderPane {
 		super();
 		this.setPrefSize(Screen.WIDTH, height);
 		simNames = new String[] { "Segregation", "Wator", "GOL", "Fire" };
-		buttonTitles = new String[] { "Start", "Pause", "Stop" };
+		buttonTitles = new String[] { "Start", "Pause", "Reset", "Step" };
 		createDropDown();
 		createButtons();
 	}
@@ -58,10 +58,10 @@ public class SimulationInterface extends BorderPane {
 	private VBox setRightButtons() {
 		VBox vRightButtons = new VBox(20);
 		vRightButtons.setPadding(new Insets(25, 20, 0, 0));
-		Button reset = new Button("Reset");
+		Button reset = new Button(buttonTitles[2]);
 		reset.setOnAction(e -> System.out.println("3"));
 		reset.setPrefWidth(100);
-		Button step = new Button("Step");
+		Button step = new Button(buttonTitles[3]);
 		step.setOnAction(e -> System.out.println("4"));
 		step.setPrefWidth(100);
 		vRightButtons.getChildren().addAll(reset, step);
@@ -71,10 +71,10 @@ public class SimulationInterface extends BorderPane {
 	private VBox setLeftButtons() {
 		VBox vLeftButtons = new VBox(20);
 		vLeftButtons.setPadding(new Insets(25, 20, 0, 50));
-		Button start = new Button("Start");
+		Button start = new Button(buttonTitles[0]);
 		start.setPrefWidth(100);
 		start.setOnAction(e -> System.out.println("1"));
-		Button pause = new Button("Pause");
+		Button pause = new Button(buttonTitles[1]);
 		pause.setOnAction(e -> System.out.println("2"));
 		pause.setPrefWidth(100);
 		vLeftButtons.getChildren().addAll(start, pause);
