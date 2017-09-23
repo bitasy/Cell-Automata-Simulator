@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <data simulation="SimulationParameters">
-    <artist>Adele</artist>
-    <title>25</title>
-    <year>2015</year>
-    <publisher>Columbia</publisher>
+    <title>fire title</title>
+    <author>fire author</author>
+    <colorScheme>fire cs</colorScheme>
+    <extraParams>fire extra</extraParams>
+    <grid>fire grid</grid>
 </data>

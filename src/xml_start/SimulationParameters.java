@@ -20,10 +20,11 @@ public class SimulationParameters {
     public static final String DATA_TYPE = "SimulationParameters";
     // field names expected to appear in data file holding values for this object
     public static final List<String> DATA_FIELDS = Arrays.asList(new String[] {
-        "author",
+    		"title",
+    		"author",
         "colorScheme",
-        "year",
-        "publisher"
+        "extraParams",
+        "grid"
     });
 	
     private Color[] colors = {Color.WHITE, Color.BLACK, Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW, Color.ORANGE};
@@ -40,6 +41,8 @@ public class SimulationParameters {
 
     public SimulationParameters (Map<String, String> dataValues) {
         myDataValues = dataValues;
+        simAuthor = myDataValues.get("author");
+        simTitle = myDataValues.get("title");
         // call setupAllParameters();
     }
     

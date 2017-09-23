@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <data simulation="SimulationParameters">
-    <artist>Adele</artist>
-    <title>25</title>
-    <year>2015</year>
-    <publisher>Columbia</publisher>
+    <title>pp title</title>
+    <author>pp author</author>
+    <colorScheme>pp cs</colorScheme>
+    <extraParams>pp extra</extraParams>
+    <grid>pp grid</grid>
 </data>
