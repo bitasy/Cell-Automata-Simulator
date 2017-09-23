@@ -19,9 +19,11 @@ public class SimulationInterface extends BorderPane {
 	private String[] simNames;
 	private String[] buttonTitles;
 	private String author = "Created By: Simran";
+	private CellSimulator simulator;
 
-	public SimulationInterface() {
+	public SimulationInterface(CellSimulator s) {
 		super();
+		simulator = s;
 		this.setPrefSize(Screen.WIDTH, height);
 		simNames = new String[] { "Segregation", "Wator", "GOL", "Fire" };
 		buttonTitles = new String[] { "Start", "Pause", "Reset", "Step" };
@@ -36,7 +38,7 @@ public class SimulationInterface extends BorderPane {
 			@Override
 			public void changed(ObservableValue<? extends String> observables, //
 					String oldV, String newV) {
-				// System.out.println(newV);
+				 simulator.handleSimulatorChange(newV);
 			}
 		};
 		simulations.getSelectionModel().selectedItemProperty().addListener(changeListener);
@@ -64,10 +66,10 @@ public class SimulationInterface extends BorderPane {
 		VBox vRightButtons = new VBox(20);
 		vRightButtons.setPadding(new Insets(25, 20, 0, 0));
 		Button reset = new Button(buttonTitles[2]);
-		reset.setOnAction(e -> System.out.println("3"));
+		reset.setOnAction(e -> simulator.handleReset());
 		reset.setPrefWidth(100);
 		Button step = new Button(buttonTitles[3]);
-		step.setOnAction(e -> System.out.println("4"));
+		step.setOnAction(e -> simulator.handleStep());
 		step.setPrefWidth(100);
 		vRightButtons.getChildren().addAll(reset, step);
 		return vRightButtons;
@@ -78,9 +80,9 @@ public class SimulationInterface extends BorderPane {
 		vLeftButtons.setPadding(new Insets(25, 20, 0, 50));
 		Button start = new Button(buttonTitles[0]);
 		start.setPrefWidth(100);
-		start.setOnAction(e -> System.out.println("1"));
+		start.setOnAction(e -> simulator.handleStart());
 		Button pause = new Button(buttonTitles[1]);
-		pause.setOnAction(e -> System.out.println("2"));
+		pause.setOnAction(e -> simulator.handlePause());
 		pause.setPrefWidth(100);
 		vLeftButtons.getChildren().addAll(start, pause);
 		return vLeftButtons;
@@ -107,6 +109,7 @@ public class SimulationInterface extends BorderPane {
 		speed.setFill(Color.BLACK);
 		slider.valueProperty().addListener(new ChangeListener<Number>() {
 			public void changed(ObservableValue<? extends Number> ov, Number old_val, Number new_val) {
+				simulator.handleSpeedChange(new_val.doubleValue());
 				speed.setText(String.format("%.2f", new_val));
 			}
 		});

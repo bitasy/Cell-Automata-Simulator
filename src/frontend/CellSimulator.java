@@ -15,7 +15,7 @@ public class CellSimulator extends Pane {
 	private int rows;
 	private int cols;
 	private Timeline animation;
-	private int step;
+	private double step;
 
 	public CellSimulator() {
 		super();
@@ -29,8 +29,38 @@ public class CellSimulator extends Pane {
 		animation.play();
 	}
 
+	public void handleStart() {
+		animation.play();
+	}
+
+	public void handlePause() {
+		animation.pause();
+	}
+
+	public void handleReset() {
+		System.out.println("Reset");
+	}
+
+	public void handleStep() {
+		update();
+	}
+
+	public void handleSimulatorChange(String sim) {
+		System.out.println("Change to " + sim);
+	}
+	
+	public void handleSpeedChange(double speed) {
+		System.out.println("Speed Change!!");
+		step = 1000/speed;
+		System.out.println(step);
+		animation.stop();
+		animation = new Timeline(new KeyFrame(Duration.millis(step), e -> update()));
+		animation.setCycleCount(Timeline.INDEFINITE);
+		animation.play();
+	}
+
 	private void update() {
-//		System.out.println("updating!");
+		 System.out.println("updating!");
 	}
 
 	private void createCellShapes() {
