@@ -1,5 +1,7 @@
 package xml_start;
 
+import backend.RuleSet;
+
 /*
  * Questions:
  * 
@@ -34,6 +36,16 @@ public class SimulationLoader {
 	}
 	
 	public int[][] initialState(){
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public int getDefaultState() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public RuleSet getRuleSet() {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -8,7 +8,6 @@ public class GameOfLifeRuleSet implements RuleSet {
 	private Cell cell;
 	private Cell[][] neighborhood;
 	private int[][] effects;
-	private int defaultState;
 	
 
 	@Override

@@ -15,6 +15,7 @@ public class Grid {
 	private HashMap<Integer, Color> colorMap;
 	private Cell[][] grid;
 	private int defaultState;
+	private RuleSet myRuleSet;
 	double myCellSize;
 	
 	/**
@@ -27,6 +28,7 @@ public class Grid {
 		myCellSize = cellSize;
 		int defaultState = simdata.getDefaultState();
 		populate(simdata.initialState());
+		myRuleSet = simdata.getRuleSet();
 	}
 	
 	private void populate(int[][] initialState) {
@@ -41,18 +43,35 @@ public class Grid {
 	 * Updates the current grid by creating a new one, filling it in, and making it the new grid. This method applies the specified rules on each cell, going from left to right then top to bottom of the grid. The results of each rule are noted in the new grid that is being filled in.
 	 */
 	public void update() {
+		int[][] newStates = createStateGrid();
+		myRuleSet.setGrid(newStates);
+		applyRules();
+		
+		for(int i = 0; i < newStates.length; i++) {
+			for(int j = 0; j < newStates[0].length; j++) {
+				grid[i][j].changeState(newStates[i][j]);
+			}
+		}
+		
+	}
+
+	private int[][] createStateGrid() {
 		int[][] newStates = new int[grid.length][grid[0].length];
 		for(int i = 0; i < newStates.length; i++) {
 			for(int j = 0; j < newStates[0].length; j++) {
 				newStates[i][j] = defaultState;
 			}
 		}
-		for(int i = 0; i < grid.length; i++) {
-			for(int j = 0; j < grid[0].length; j++) {
-				
-			}
-		}
-		
+		return newStates;
+	}
+	
+	private void applyRules() {
+		for(int rule = 1; rule <= myRuleSet.numRules(); rule++)
+			for(int i = 0; i < grid.length; i++) 
+				for(int j = 0; j < grid[0].length; j++) {
+					//No error detection yet, currently only guaranteed to work for Game of Life
+					myRuleSet.applyRule(rule,getNeighborhood(grid[i][j]));
+				}
 	}
 	
 	/**
