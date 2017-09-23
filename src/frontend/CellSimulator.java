@@ -2,7 +2,6 @@ package frontend;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -31,7 +30,7 @@ public class CellSimulator extends Pane {
 	}
 
 	private void update() {
-		System.out.println("updating!");
+//		System.out.println("updating!");
 	}
 
 	private void createCellShapes() {
