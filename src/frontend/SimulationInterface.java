@@ -6,8 +6,11 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Slider;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import xml_start.Screen;
 
 public class SimulationInterface extends BorderPane {
@@ -15,6 +18,7 @@ public class SimulationInterface extends BorderPane {
 	private int height = Screen.HEIGHT / 4;
 	private String[] simNames;
 	private String[] buttonTitles;
+	private String author = "Created By: Simran";
 
 	public SimulationInterface() {
 		super();
@@ -23,6 +27,7 @@ public class SimulationInterface extends BorderPane {
 		buttonTitles = new String[] { "Start", "Pause", "Reset", "Step" };
 		createDropDown();
 		createButtons();
+		createSliderSection();
 	}
 
 	private void createDropDown() {
@@ -79,5 +84,36 @@ public class SimulationInterface extends BorderPane {
 		pause.setPrefWidth(100);
 		vLeftButtons.getChildren().addAll(start, pause);
 		return vLeftButtons;
+	}
+
+	private void createSliderSection() {
+		BorderPane sliderSection = new BorderPane();
+		VBox sliderBox = setSliderBox();
+		sliderSection.setTop(sliderBox);
+		Text authorText = new Text(author);
+		authorText.setFill(Color.BLACK);
+		sliderSection.setCenter(authorText);
+		BorderPane.setMargin(authorText, new Insets(0, 0, 30, 0));
+		this.setRight(sliderSection);
+	}
+
+	private VBox setSliderBox() {
+		VBox sliderBox = new VBox(5);
+		Slider slider = new Slider(Screen.MINSPEED, Screen.MAXSPEED, 1);
+		slider.setShowTickMarks(true);
+		slider.setMajorTickUnit(0.25f);
+		slider.setBlockIncrement(0.1f);
+		Text speed = new Text(String.format("%.2f", (Screen.MAXSPEED-Screen.MINSPEED)/2));
+		speed.setFill(Color.BLACK);
+		slider.valueProperty().addListener(new ChangeListener<Number>() {
+			public void changed(ObservableValue<? extends Number> ov, Number old_val, Number new_val) {
+				speed.setText(String.format("%.2f", new_val));
+			}
+		});
+		Text units = new Text("updates per second");
+		units.setFill(Color.BLACK);
+		sliderBox.getChildren().addAll(slider, speed, units);
+		BorderPane.setMargin(sliderBox, new Insets(30, 15, 0, 0));
+		return sliderBox;
 	}
 }
