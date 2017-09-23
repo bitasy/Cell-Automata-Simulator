@@ -71,11 +71,18 @@ public class SimulationParameters {
     
     // TODO: get colorScheme
     
+    
     // TODO: get Grid
     
     // TODO: get Author
+    public String getAuthor() {
+    		return simAuthor;
+    }
     
     // TODO: get Title
+    public String getTitle() {
+    		return simTitle;
+    }
     
     // TODO: get Rules
     
