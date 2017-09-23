@@ -6,8 +6,8 @@ import backend.RuleSet;
 public class GameOfLifeRuleSet implements RuleSet {
 	
 	private Cell cell;
-	private Cell[] neighbors;
-	private Cell[][] effects;
+	private Cell[][] neighborhood;
+	private int[][] effects;
 	private int defaultState;
 	
 
@@ -17,10 +17,10 @@ public class GameOfLifeRuleSet implements RuleSet {
 	}
 
 	@Override
-	public void applyRule(int ruleNum, Cell cell, Cell[] neighbors) {
+	public void applyRule(int ruleNum, Cell[][] neighborhood) {
 		if(effects == null) throw new IllegalArgumentException("The grid is null - please call setGrid first.");
-		this.cell = cell;
-		this.neighbors = neighbors;
+		this.cell = neighborhood[1][1];
+		this.neighborhood = neighborhood;
 		
 		switch(ruleNum) {
 		case 1: 
@@ -41,33 +41,36 @@ public class GameOfLifeRuleSet implements RuleSet {
 	private void rule1() {
 		if(cell.getState() == 1 && liveNeighborCount() < 2 ) {
 			int[] location = cell.getLocation();
-			effects[location[0]][location[1]].changeState(0);
+			effects[location[0]][location[1]] = 0;
 			
 		}			
 	}
 
 	private void rule2() {
 		if(cell.getState() == 1 && liveNeighborCount() > 3) {
-			cell.changeState(0);
+			int[] location = cell.getLocation();
+			effects[location[0]][location[1]] = 0;
 		}
 	}
 
 	private void rule3() {
 		if(cell.getState() == 0 && liveNeighborCount() == 3) {
-			cell.changeState(1);
+			int[] location = cell.getLocation();
+			effects[location[0]][location[1]] = 1;
 		}
 	}
 	
 	private int liveNeighborCount() {
 		int c = 0;
-		for(Cell n : neighbors)
-			if(n != null && n.getState() == 1)
-				c++;
+		for(Cell[] a : neighborhood)
+			for(Cell n : a)
+				if(n != null && n != cell && n.getState() == 1)
+					c++;
 		return c;
 	}
 	
 	@Override
-	public void setGrid(Cell[][] effects) {
+	public void setGrid(int[][] effects) {
 		this.effects = effects;
 	}
 }
