@@ -49,10 +49,10 @@ public class CellSimulator extends Pane {
 	public void handleReset() {
 		System.out.println("Reset");
 		addCellShapes();
+		animation.pause();
 	}
 
 	public void handleStep() {
-		System.out.println("updating!");
 		myGrid.update();
 	}
 
@@ -63,7 +63,6 @@ public class CellSimulator extends Pane {
 		rows = data.getNumRows();
 		cols = data.getNumCols();
 		cellSize = Math.min(CellSociety.WIDTH / cols, HEIGHT / rows);
-		myGrid = new Grid(data, cellSize);
 		addCellShapes();
 		startAnimation();
 	}
@@ -89,10 +88,11 @@ public class CellSimulator extends Pane {
 		}
 		animation = new Timeline(new KeyFrame(Duration.millis(step), e -> handleStep()));
 		animation.setCycleCount(Timeline.INDEFINITE);
-		animation.play();
+		//animation.play();
 	}
 
 	private void addCellShapes() {
+		myGrid = new Grid(data, cellSize);
 		this.getChildren().removeAll(this.getChildren());
 		double totalWidthPercent = cellSize * cols / CellSociety.WIDTH;
 		double firstX = (.5 - totalWidthPercent / 2) * CellSociety.WIDTH;

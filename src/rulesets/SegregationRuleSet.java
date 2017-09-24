@@ -22,14 +22,14 @@ public class SegregationRuleSet extends StandardRuleSet {
 		return 2;
 	}
 	
-	private void rule1() {
+	void rule1() {
 		int[] location = cell.getLocation();
 		if(cell.getPrimaryState() != 0 && isSatisfied()) {
 			effects[location[0]][location[1]][0] = cell.getPrimaryState();
 		}
 	}
 
-	private void rule2() {
+	void rule2() {
 		if (cell.getPrimaryState() != 0 && !isSatisfied()) {
 			boolean valid = false;
 			int row = 0;

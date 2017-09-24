@@ -9,7 +9,7 @@ public class GameOfLifeRuleSet extends StandardRuleSet{
 		return 2;
 	}
 	
-	private void rule1() {
+	void rule1() {
 		int[] location = cell.getLocation();
 		if(cell.getPrimaryState() == 1 && liveNeighborCount() < 2 || liveNeighborCount() > 3) {
 			effects[location[0]][location[1]][0] = 0;
@@ -20,7 +20,7 @@ public class GameOfLifeRuleSet extends StandardRuleSet{
 		}
 	}
 
-	private void rule2() {
+	void rule2() {
 		if(cell.getPrimaryState() == 0 && liveNeighborCount() == 3) {
 			int[] location = cell.getLocation();
 			effects[location[0]][location[1]][0] = 1;

@@ -23,7 +23,7 @@ public class PredatorPreyRuleSet extends StandardRuleSet {
 		return 5;
 	}
 
-	private void rule1() {
+	void rule1() {
 		if (cell != null && cell.getPrimaryState() == 2) {
 			int[] location = cell.getLocation();
 			boolean eaten = false;
@@ -55,16 +55,16 @@ public class PredatorPreyRuleSet extends StandardRuleSet {
 		}
 	}
 
-	private void rule2() {
+	void rule2() {
 	}
 
-	private void rule3() {
+	void rule3() {
 	}
 	
-	private void rule4() {
+	void rule4() {
 	}
 
-	private void rule5() {
+	void rule5() {
 	}
 	
 	/** This simulation uses a single array of Cell neighbors, {top, right, bottom, left}.

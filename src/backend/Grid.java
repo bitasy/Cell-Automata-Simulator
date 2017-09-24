@@ -34,8 +34,9 @@ public class Grid {
 		myCellSize = cellSize;
 		populate(simdata.getGrid());
 		myRuleSet = simdata.getRules();
-		myRuleSet.setParams(Arrays.copyOfRange(simdata.getExtraParameters(), 1, numStates+1));
 		myRuleSet.setGrid(grid);
+		myRuleSet.setParams(Arrays.copyOfRange(simdata.getExtraParameters(), 1, numStates+1));
+		
 	}
 	
 	private void populate(int[][] initialState) {
@@ -63,7 +64,7 @@ public class Grid {
 	}
 
 	private int[][][] createStateGrid() {
-		int[][][] newStates = new int[grid.length][grid[0].length][];
+		int[][][] newStates = new int[grid.length][grid[0].length][numStates];
 		for(int i = 0; i < newStates.length; i++) 
 			for(int j = 0; j < newStates[0].length; j++)
 				for(int k = 0; k < numStates; k++) 
