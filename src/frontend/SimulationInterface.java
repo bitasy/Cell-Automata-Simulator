@@ -11,22 +11,19 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import xml_start.Screen;
 
 public class SimulationInterface extends BorderPane {
 
-	private int height = Screen.HEIGHT / 4;
+	private static final int HEIGHT = CellSociety.HEIGHT / 4;
 	private String[] simNames;
-	private String[] buttonTitles;
-	private String author = "Created By: Simran";
+	private Text authorText = new Text();
 	private CellSimulator simulator;
 
 	public SimulationInterface(CellSimulator s) {
 		super();
 		simulator = s;
-		this.setPrefSize(Screen.WIDTH, height);
-		simNames = new String[] { "Segregation", "Wator", "GOL", "Fire" };
-		buttonTitles = new String[] { "Start", "Pause", "Reset", "Step" };
+		this.setPrefSize(CellSociety.WIDTH, HEIGHT);
+		simNames = s.getSimulationNames();
 		createDropDown();
 		createButtons();
 		createSliderSection();
@@ -36,9 +33,9 @@ public class SimulationInterface extends BorderPane {
 		ChoiceBox<String> simulations = new ChoiceBox<>();
 		ChangeListener<String> changeListener = new ChangeListener<String>() {
 			@Override
-			public void changed(ObservableValue<? extends String> observables, //
-					String oldV, String newV) {
-				 simulator.handleSimulatorChange(newV);
+			public void changed(ObservableValue<? extends String> observables, String oldV, String newV) {
+				simulator.handleSimulatorChange(newV);
+				authorText.setText(simulator.getAuthor());
 			}
 		};
 		simulations.getSelectionModel().selectedItemProperty().addListener(changeListener);
@@ -65,10 +62,10 @@ public class SimulationInterface extends BorderPane {
 	private VBox setRightButtons() {
 		VBox vRightButtons = new VBox(20);
 		vRightButtons.setPadding(new Insets(25, 20, 0, 0));
-		Button reset = new Button(buttonTitles[2]);
+		Button reset = new Button(CellSociety.BUTTON_TITLES[2]);
 		reset.setOnAction(e -> simulator.handleReset());
 		reset.setPrefWidth(100);
-		Button step = new Button(buttonTitles[3]);
+		Button step = new Button(CellSociety.BUTTON_TITLES[3]);
 		step.setOnAction(e -> simulator.handleStep());
 		step.setPrefWidth(100);
 		vRightButtons.getChildren().addAll(reset, step);
@@ -78,10 +75,10 @@ public class SimulationInterface extends BorderPane {
 	private VBox setLeftButtons() {
 		VBox vLeftButtons = new VBox(20);
 		vLeftButtons.setPadding(new Insets(25, 20, 0, 50));
-		Button start = new Button(buttonTitles[0]);
+		Button start = new Button(CellSociety.BUTTON_TITLES[0]);
 		start.setPrefWidth(100);
 		start.setOnAction(e -> simulator.handleStart());
-		Button pause = new Button(buttonTitles[1]);
+		Button pause = new Button(CellSociety.BUTTON_TITLES[1]);
 		pause.setOnAction(e -> simulator.handlePause());
 		pause.setPrefWidth(100);
 		vLeftButtons.getChildren().addAll(start, pause);
@@ -92,7 +89,6 @@ public class SimulationInterface extends BorderPane {
 		BorderPane sliderSection = new BorderPane();
 		VBox sliderBox = setSliderBox();
 		sliderSection.setTop(sliderBox);
-		Text authorText = new Text(author);
 		authorText.setFill(Color.BLACK);
 		sliderSection.setCenter(authorText);
 		BorderPane.setMargin(authorText, new Insets(0, 0, 30, 0));
@@ -101,11 +97,11 @@ public class SimulationInterface extends BorderPane {
 
 	private VBox setSliderBox() {
 		VBox sliderBox = new VBox(5);
-		Slider slider = new Slider(Screen.MINSPEED, Screen.MAXSPEED, 1);
+		Slider slider = new Slider(CellSociety.MINSPEED, CellSociety.MAXSPEED, (CellSociety.MAXSPEED - CellSociety.MINSPEED) / 2);
 		slider.setShowTickMarks(true);
 		slider.setMajorTickUnit(0.25f);
 		slider.setBlockIncrement(0.1f);
-		Text speed = new Text(String.format("%.2f", (Screen.MAXSPEED-Screen.MINSPEED)/2));
+		Text speed = new Text(String.format("%.2f", (CellSociety.MAXSPEED - CellSociety.MINSPEED) / 2));
 		speed.setFill(Color.BLACK);
 		slider.valueProperty().addListener(new ChangeListener<Number>() {
 			public void changed(ObservableValue<? extends Number> ov, Number old_val, Number new_val) {
@@ -113,7 +109,7 @@ public class SimulationInterface extends BorderPane {
 				speed.setText(String.format("%.2f", new_val));
 			}
 		});
-		Text units = new Text("updates per second");
+		Text units = new Text(CellSociety.UNIT_TITLE);
 		units.setFill(Color.BLACK);
 		sliderBox.getChildren().addAll(slider, speed, units);
 		BorderPane.setMargin(sliderBox, new Insets(30, 15, 0, 0));
