@@ -60,8 +60,8 @@ public class CellSimulator extends Pane {
 		System.out.println("Change to " + sim);
 		data = XML_readings.get(sim);
 		stage.setTitle(data.getTitle());
-		rows = data.numRows();
-		cols = data.numCols();
+		rows = data.getNumRows();
+		cols = data.getNumCols();
 		cellSize = Math.min(CellSociety.WIDTH / cols, HEIGHT / rows);
 		myGrid = new Grid(data, cellSize);
 		addCellShapes();
