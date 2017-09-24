@@ -1,5 +1,6 @@
 package xml_start;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -30,8 +31,7 @@ public class SimulationParameters {
     });
 	
     private Color[] colors = {Color.WHITE, Color.BLACK, Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW, Color.ORANGE};
-    private RuleSet[] rules = {new GameOfLifeRuleSet(), new SegregationRuleSet(), new FireRuleSet(), new PredatorPreyRuleSet()};
-    public static final String[] SIMULATION_NAMES = {"GameOfLife", "Segregation", "Fire", "PredatorPrey"};
+    private RuleSet[] rules = {new FireRuleSet(), new GameOfLifeRuleSet(), new PredatorPreyRuleSet(), new SegregationRuleSet()};
     public Map<String, RuleSet> rulesMap = new HashMap<String, RuleSet>();
     
     private Map<Integer, Color> simColorScheme = new HashMap<Integer, Color>();
@@ -130,14 +130,24 @@ public class SimulationParameters {
     		simTitle = myDataValues.get("title");
     }
     
-    
     // setup rule set file
     public void setupRules() {
     	
-    		for (int i = 0; i < rules.length; i++) {
-    			rulesMap.put(SIMULATION_NAMES[i], rules[i]);
-    		}
-    		
+	    	File folder = new File("data/");
+	    	File[] listOfFiles = folder.listFiles();
+	
+	    	for (int i = 0; i < listOfFiles.length; i++) {
+	    	      if (listOfFiles[i].isFile()) {
+	    	    	  
+	    	    	  	
+	    	    	  	String fileString = listOfFiles[i].getName();
+	    	    	  	String simulationName = fileString.replace(".xml","");
+	    	    	  	rulesMap.put(simulationName, rules[i]);
+	    	    	  	
+	    	      }
+	    	 
+	    	}
+	    	    
     		simRules = rulesMap.get(simName);
     	
     }
@@ -208,49 +218,6 @@ public class SimulationParameters {
     public int getNumCols() {
     		return simGrid[0].length;
     }
-    
-    
-    
-    /*=============================================================================
-    |
-    |
-    |                     TEMPORARY METHODS (FOR TESTING)
-    |
-    |
-    *===========================================================================*/
-    
-    
-    
-    
-    // TEMPORARY METHOD: print grid
-    public void printGrid() {
-    		for (int[] row : simGrid) {
-    			System.out.println(Arrays.toString(row));
-    		}
-    		System.out.println();
-    		System.out.println("rows: " + simGrid.length + " cols: " + simGrid[0].length);
-    }
-    
-    
-    
-    // TEMPORARY METHOD: print extra parameters
-    public void printEP() {
-    		System.out.println(Arrays.toString(simExtraParams));
-    }
-    
-    
-    
-    // TEMPORARY METHOD: print color scheme
-    public void printCS() {
-    	
-    		for (int state : simColorScheme.keySet()) {
-    			System.out.println("State " + state + ": " + simColorScheme.get(state).toString());
-    		}
-    	
-    }
-    
-
-    
     
     
 }

@@ -52,36 +52,59 @@ public class MasterMap {
         
         return mySimulation;
     }
-    
-    
-    // creates map of all SimulationParameter instances for each simulation type
+    	
+    	
+    	
+    	// creates map of all SimulationParameter instances for each simulation type
     	private void makeMap() {
     	
     		simulationMap = new HashMap<String, SimulationParameters>();
     		errorsMap.clear();
     		
-    		for (String s : SIMULATION_NAMES) {
-    			
-    			SimulationParameters currentSimulation = null;
-				try {
-					currentSimulation = read(s);
-				} catch (Exception e) {
+	    	File folder = new File("data/");
+	    	File[] listOfFiles = folder.listFiles();
+	
+	    	for (int i = 0; i < listOfFiles.length; i++) {
+	    	      if (listOfFiles[i].isFile()) {
+	    	    	  
+	    	    	  	
+	    	    	  	String fileString = listOfFiles[i].getName();
+	    	    	  	String s = fileString.replace(".xml","");
+	    	    	  	
+	    	    	  	
+	    	    	  	SimulationParameters currentSimulation = null;
+	    				try {
+	    					currentSimulation = read(s);
+	    				} catch (Exception e) {
 
-					// e.printStackTrace();
-					
-		            	ArrayList<String> errorList = new ArrayList<String>();
-	        			errorList.add(e.getMessage());
-	        			errorsMap.put(s, errorList);          		
+	    					// e.printStackTrace();
+	    					
+	    		            	ArrayList<String> errorList = new ArrayList<String>();
+	    	        			errorList.add(e.getMessage());
+	    	        			errorsMap.put(s, errorList);          		
 
-	            }	
-				
-			if (currentSimulation != null) {
-					simulationMap.put(s, currentSimulation);			
-			}
-    		}
+	    	            }	
+	    				
+	    			if (currentSimulation != null) {
+	    					simulationMap.put(s, currentSimulation);			
+	    			}
+	    	    	  	
+	    	    	  	
+	    	    	  	
+	    	      }
+	    	 
+	    	}
+    		
+    		
     		
     		return;
     }
+    	
+    	
+    	
+    	
+    	
+    	
 
     // getter for master map
     public Map<String, SimulationParameters> getMap() {
