@@ -3,7 +3,7 @@
     <title>Segregation</title>
     <author>Frank McCown</author>
     <colorScheme>0 -1 1 2</colorScheme>
-    <extraParams>0.7</extraParams>
+    <extraParams>1 0.7</extraParams>
     <grid> 0 0 0 0 0 0 0 0 1 2;
      	   0 0 0 0 0 0 0 0 0 0;
      	   0 1 1 1 2 1 2 0 0 0;

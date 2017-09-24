@@ -3,7 +3,7 @@
     <title>Game of Life</title>
     <author>John Horton Conway</author>
     <colorScheme>0 1</colorScheme>
-    <extraParams>0</extraParams>
+    <extraParams>1</extraParams>
     <grid> 0 0 0 0 0 0 0 0 0 0;
      	   0 0 1 0 0 0 0 0 0 0;
      	   0 0 0 1 0 0 0 0 0 0;

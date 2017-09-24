@@ -3,7 +3,7 @@
     <title>Fire</title>
     <author>Angela B. Shiflet</author>
     <colorScheme>0 -1 -1 -1 1 -1 2</colorScheme>
-    <extraParams>0.9</extraParams>
+    <extraParams>1 0.3</extraParams>
     <grid> 0 0 0 0 0 0 0 0 0 0;
      	   0 1 1 1 1 1 1 1 1 0;
      	   0 1 1 1 1 1 1 1 1 0;
