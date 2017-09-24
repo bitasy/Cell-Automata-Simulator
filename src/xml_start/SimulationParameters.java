@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Scanner;
 
 import backend.RuleSet;
+import rulesets.*;
 import javafx.scene.paint.Color;
 
 /**
@@ -18,9 +19,8 @@ import javafx.scene.paint.Color;
  */
 public class SimulationParameters {
 
-    // name in data file that will indicate it represents data for this type of object
+    // XML related variables
     public static final String DATA_TYPE = "SimulationParameters";
-    // field names expected to appear in data file holding values for this object
     public static final List<String> DATA_FIELDS = Arrays.asList(new String[] {
     		"title",
     		"author",
@@ -30,6 +30,9 @@ public class SimulationParameters {
     });
 	
     private Color[] colors = {Color.WHITE, Color.BLACK, Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW, Color.ORANGE};
+    private RuleSet[] rules = {new GameOfLifeRuleSet(), new SegregationRuleSet(), new FireRuleSet(), new PredatorPreyRuleSet()};
+    public static final String[] SIMULATION_NAMES = {"GameOfLife", "Segregation", "Fire", "PredatorPrey"};
+    public Map<String, RuleSet> rulesMap = new HashMap<String, RuleSet>();
     
     private Map<Integer, Color> simColorScheme = new HashMap<Integer, Color>();
     private int[][] simGrid;
@@ -37,14 +40,16 @@ public class SimulationParameters {
     private String simTitle;
     private RuleSet simRules;
     private double[] simExtraParams;
+    private String simName;
     
     // specific data values for this instance
     private Map<String, String> myDataValues;
 
     // constructor initializing all parameters for simulation
-    public SimulationParameters (Map<String, String> dataValues) {
+    public SimulationParameters (Map<String, String> dataValues, String simPathName) {
     	
         myDataValues = dataValues;    
+        simName = simPathName;
         setupAllParameters();
         
     }
@@ -58,7 +63,7 @@ public class SimulationParameters {
     *===========================================================================*/
     
     
-    // TODO: make setupAllParameters() method; calls all setup methods;
+    // calls all setup methods
     public void setupAllParameters() {
     	
     		setupGrid();
@@ -66,6 +71,7 @@ public class SimulationParameters {
     		setupTitle();
     		setupColorScheme();
     		setupExtraParams();
+    		setupRules();
     	
     }
     
@@ -108,7 +114,6 @@ public class SimulationParameters {
     		}
     		
     		simGrid = myGrid;
-    		
     		return;
     		
     }
@@ -126,10 +131,16 @@ public class SimulationParameters {
     }
     
     
-    
-    
-    // TODO: setupRules
-    
+    // setup rule set file
+    public void setupRules() {
+    	
+    		for (int i = 0; i < rules.length; i++) {
+    			rulesMap.put(SIMULATION_NAMES[i], rules[i]);
+    		}
+    		
+    		simRules = rulesMap.get(simName);
+    	
+    }
     
     
     
@@ -178,13 +189,10 @@ public class SimulationParameters {
     		return simTitle;
     }
     
-    
-    
-    
-    // TODO: get Rules
-    
-    
-    
+    // get rules object
+    public RuleSet getRules() {
+    		return simRules;
+    }
     
     // get extra parameters
     public double[] getExtraParameters() {
@@ -203,7 +211,13 @@ public class SimulationParameters {
     
     
     
-    
+    /*=============================================================================
+    |
+    |
+    |                     TEMPORARY METHODS (FOR TESTING)
+    |
+    |
+    *===========================================================================*/
     
     
     
@@ -235,8 +249,7 @@ public class SimulationParameters {
     	
     }
     
-    
-    
+
     
     
     

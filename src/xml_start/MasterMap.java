@@ -40,17 +40,19 @@ public class MasterMap {
 	
 	// reads in XML file and assigns SimulationParameters values
     private static SimulationParameters read(String s) throws Exception {
-        File dataFile = new File(s);
+		String fileName = "data/" + s + ".xml";
+        File dataFile = new File(fileName);
         SimulationParameters mySimulation = null;
         if (dataFile != null) {
             try {
             	
-            		mySimulation = new XMLParserCS("simulation").getSimulation(dataFile);
-            		System.out.println("it may have worked");
+            		mySimulation = new XMLParserCS("simulation").getSimulation(dataFile, s);
+            		
+            		// System.out.println("it may have worked");
             }
             catch (XMLException e) {
             	// TODO: do something relevant about error;
-            	     System.out.println("Error loading " + s);
+            	     // System.out.println("Error loading " + s);
             	
 //                Alert a = new Alert(AlertType.ERROR);
 //                a.setContentText(e.getMessage());
@@ -71,8 +73,7 @@ public class MasterMap {
     		for (String s : SIMULATION_NAMES) {
     			
     			// TODO: add throw and catch for errors
-    			String fileName = "data/" + s + ".xml";
-    			SimulationParameters currentSimulation = read(fileName);
+    			SimulationParameters currentSimulation = read(s);
     			simulationMap.put(s, currentSimulation);
     			
     		}
@@ -91,14 +92,17 @@ public class MasterMap {
     public static void main (String[] args) throws Exception {
         
     		MasterMap myTester = new MasterMap();
-    		SimulationParameters GOL = myTester.getMap().get("GameOfLife");
-    		GOL.printGrid();
-    		GOL.printEP();
-    		GOL.printCS();
-		
+    		
+    		for (SimulationParameters simObjects : myTester.getMap().values()) {
+    			
+    			System.out.println(simObjects.getTitle());
+        		simObjects.printGrid();
+        		// simObjects.printEP();
+        		// simObjects.printCS();
+        		System.out.println();
+    				
+    		}
     }
-    
-
 
 }
 

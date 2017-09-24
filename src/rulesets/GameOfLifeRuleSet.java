@@ -72,4 +72,8 @@ public class GameOfLifeRuleSet implements RuleSet {
 	public void setGrid(int[][] effects) {
 		this.effects = effects;
 	}
+	
+	public void printVictory() {
+		System.out.println("GAME OF LIFE RULES");
+	}
 }

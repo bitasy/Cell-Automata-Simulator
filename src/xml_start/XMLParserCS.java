@@ -43,9 +43,9 @@ public class XMLParserCS {
 	/**
      * Get the data contained in this XML file as an object
      */
-    public SimulationParameters getSimulation (File dataFile) {
+    public SimulationParameters getSimulation (File dataFile, String simName) {
         Element root = getRootElement(dataFile);
-        System.out.println(root);
+        // System.out.println(root);
         if (! isValidFile(root, SimulationParameters.DATA_TYPE)) {
             throw new XMLException("XML file does not represent %s", SimulationParameters.DATA_TYPE);
         }
@@ -54,7 +54,7 @@ public class XMLParserCS {
         for (String field : SimulationParameters.DATA_FIELDS) {
             results.put(field, getTextValue(root, field));
         }
-        return new SimulationParameters(results);
+        return new SimulationParameters(results, simName);
     }
     
     
