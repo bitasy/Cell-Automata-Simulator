@@ -82,4 +82,18 @@ public class CellSimulator extends Pane {
 			}
 		}
 	}
+<<<<<<< Updated upstream
+=======
+
+	private void checkForErrors() {
+		alert.setTitle(CellSociety.ALERT_TITLE);
+		alert.setHeaderText(null);
+		Collection<String> errors = XML_readings.getErrors();
+		if (errors.size() != 0) {
+			String errorMessage = String.join(", ", errors);
+			alert.setContentText(CellSociety.ALERT_MESSAGE + errorMessage);
+			alert.showAndWait();
+		}
+	}
+>>>>>>> Stashed changes
 }
