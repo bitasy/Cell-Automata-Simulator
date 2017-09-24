@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<data simulation="SimulationParameters">
+    <title>Predator Prey</title>
+    <author>Mike Scott</author>
+    <colorScheme>-1 -1 -1 0 1 2</colorScheme>
+    <extraParams>3 2 2 2</extraParams>
+    <grid> 0 0 0 0 0 0 0 0 0 0;
+     	   0 1 1 1 0 0 0 0 2 2;
+     	   2 2 1 1 0 0 1 2 0 2;
+     	   0 2 0 0 0 2 0 0 2 0;
+     	   0 0 0 0 2 1 0 0 0 1;
+     	   2 1 0 0 0 0 0 1 1 0;
+     	   1 0 2 2 1 1 0 0 0 1;
+     	   1 2 2 0 0 0 0 0 0 0;
+     	   1 0 2 0 0 2 0 1 0 1;
+     	   0 0 1 2 1 2 0 0 0 1;</grid>
+</data>

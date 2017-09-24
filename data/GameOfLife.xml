@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<data simulation="SimulationParameters">
+    <title>Game of Life</title>
+    <author>John Horton Conway</author>
+    <colorScheme>0 1</colorScheme>
+    <extraParams>0</extraParams>
+    <grid> 0 0 0 0 0 0 0 0 0 0;
+     	   0 0 1 0 0 0 0 0 0 0;
+     	   0 0 0 1 0 0 0 0 0 0;
+     	   0 1 1 1 0 0 0 0 0 0;
+     	   0 0 0 0 0 0 0 0 0 0;
+     	   0 0 0 0 0 0 0 0 0 0;
+     	   0 0 0 0 0 0 0 0 0 0;
+     	   0 0 0 0 0 0 0 0 0 0;
+     	   0 0 0 0 0 0 0 0 0 0;
+     	   0 0 0 0 0 0 0 0 0 0;</grid>
+</data>

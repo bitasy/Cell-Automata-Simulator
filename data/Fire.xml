@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<data simulation="SimulationParameters">
+    <title>Fire</title>
+    <author>Angela B. Shiflet</author>
+    <colorScheme>0 -1 -1 -1 1 -1 2</colorScheme>
+    <extraParams>0.9</extraParams>
+    <grid> 0 0 0 0 0 0 0 0 0 0;
+     	   0 1 1 1 1 1 1 1 1 0;
+     	   0 1 1 1 1 1 1 1 1 0;
+     	   0 1 1 1 1 1 1 1 1 0;
+     	   0 1 1 1 2 1 1 1 1 0;
+     	   0 1 1 1 1 1 1 1 1 0;
+     	   0 1 1 1 1 1 1 1 1 0;
+     	   0 1 1 1 1 1 1 1 1 0;
+     	   0 1 1 1 1 1 1 1 1 0;
+     	   0 0 0 0 0 0 0 0 0 0;</grid>
+</data>
