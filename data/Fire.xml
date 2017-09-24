@@ -2,16 +2,16 @@
 <data simulation="SimulationParameters">
     <title>Fire</title>
     <author>Angela B. Shiflet</author>
-    <colorScheme>0 -1 -1 -1 1 -1 2</colorScheme>
+    <colorScheme>2 -1 -1 -1 0 -1 1</colorScheme>
     <extraParams>1 0.3</extraParams>
-    <grid> 0 0 0 0 0 0 0 0 0 0;
-     	   0 1 1 1 1 1 1 1 1 0;
-     	   0 1 1 1 1 1 1 1 1 0;
-     	   0 1 1 1 1 1 1 1 1 0;
-     	   0 1 1 1 2 1 1 1 1 0;
-     	   0 1 1 1 1 1 1 1 1 0;
-     	   0 1 1 1 1 1 1 1 1 0;
-     	   0 1 1 1 1 1 1 1 1 0;
-     	   0 1 1 1 1 1 1 1 1 0;
-     	   0 0 0 0 0 0 0 0 0 0;</grid>
+    <grid> 2 2 2 2 2 2 2 2 2 2;
+     	   2 0 0 0 0 0 0 0 0 2;
+     	   2 0 0 0 0 0 0 0 0 2;
+     	   2 0 0 0 0 0 0 0 0 2;
+     	   2 0 0 0 0 1 0 0 0 2;
+     	   2 0 0 0 0 0 0 0 0 2;
+     	   2 0 0 0 0 0 0 0 0 2;
+     	   2 0 0 0 0 0 0 0 0 2;
+     	   2 0 0 0 0 0 0 0 0 2;
+     	   2 2 2 2 2 2 2 2 2 2;</grid>
 </data>
