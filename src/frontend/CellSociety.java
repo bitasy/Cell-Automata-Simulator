@@ -38,6 +38,5 @@ public class CellSociety extends Application {
 		root.setBottom(new SimulationInterface(simulator));
 		s.setScene(mainScene);
 		s.show();
-		s.setTitle(TITLE);
 	}
 }
