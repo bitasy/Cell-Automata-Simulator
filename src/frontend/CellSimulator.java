@@ -59,7 +59,7 @@ public class CellSimulator extends Pane {
 	public void handleSimulatorChange(String sim) {
 		System.out.println("Change to " + sim);
 		data = XML_readings.get(sim);
-		stage.setTitle(data.getTitle());
+		stage.setTitle(CellSociety.TITLE + " - "+ data.getTitle());
 		rows = data.getNumRows();
 		cols = data.getNumCols();
 		cellSize = Math.min(CellSociety.WIDTH / cols, HEIGHT / rows);
