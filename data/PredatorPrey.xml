@@ -2,7 +2,16 @@
 <data simulation="SimulationParameters">
     <title>pp title</title>
     <author>pp author</author>
-    <colorScheme>pp cs</colorScheme>
-    <extraParams>pp extra</extraParams>
-    <grid>pp grid</grid>
+    <colorScheme>0 1</colorScheme>
+    <extraParams>0</extraParams>
+    <grid> 0 0 0 0 0 0 0 0 0 0;
+     	   0 0 0 0 0 0 0 0 0 0;
+     	   0 0 0 0 0 0 0 0 0 0;
+     	   0 0 0 0 0 0 0 0 0 0;
+     	   0 0 0 0 0 0 0 0 0 0;
+     	   0 0 0 0 0 0 0 0 0 0;
+     	   0 0 0 0 0 0 0 0 0 0;
+     	   0 0 0 0 0 0 0 0 0 0;
+     	   0 0 0 0 0 0 0 0 0 0;
+     	   0 0 0 0 0 0 0 0 0 0;</grid>
 </data>

@@ -2,7 +2,16 @@
 <data simulation="SimulationParameters">
     <title>fire title</title>
     <author>fire author</author>
-    <colorScheme>fire cs</colorScheme>
-    <extraParams>fire extra</extraParams>
-    <grid>fire grid</grid>
+    <colorScheme>0 1</colorScheme>
+    <extraParams>0.9 0.3 0.1</extraParams>
+    <grid> 1 0 0 0 0 0 0 0 0 1;
+     	   0 0 0 0 0 0 0 0 0 0;
+     	   0 0 0 0 0 0 0 0 0 0;
+     	   0 0 0 0 0 0 0 0 0 0;
+     	   0 0 0 0 0 0 0 0 0 0;
+     	   0 0 0 0 0 0 0 0 0 0;
+     	   0 0 0 0 0 0 0 0 0 0;
+     	   0 0 0 0 0 0 0 0 0 0;
+     	   0 0 0 0 0 0 0 0 0 0;
+     	   1 0 0 0 0 0 0 0 0 1;</grid>
 </data>

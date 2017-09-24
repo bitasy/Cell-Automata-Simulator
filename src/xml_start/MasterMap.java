@@ -50,7 +50,7 @@ public class MasterMap {
             }
             catch (XMLException e) {
             	// TODO: do something relevant about error;
-            	System.out.println("Error loading " + s);
+            	     System.out.println("Error loading " + s);
             	
 //                Alert a = new Alert(AlertType.ERROR);
 //                a.setContentText(e.getMessage());
@@ -85,30 +85,20 @@ public class MasterMap {
     public Map<String, SimulationParameters> getMap() {
     		return simulationMap;
     }
-    
-    
-    
-    
-    
+
     
     
     public static void main (String[] args) throws Exception {
         
-//		String fileName = "data/TestFile.xml";
-//		SimulationParameters myTester = read(fileName);
-//		System.out.println(myTester == null);
-//		Map<String, String> myMap = myTester.getMap();
-//		System.out.println(myMap.get("artist"));
-    	
     		MasterMap myTester = new MasterMap();
-    		
+    		SimulationParameters GOL = myTester.getMap().get("GameOfLife");
+    		GOL.printGrid();
+    		GOL.printEP();
+    		GOL.printCS();
 		
     }
     
-    
-    
-    
-    
+
 
 }
 

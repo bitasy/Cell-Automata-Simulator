@@ -2,7 +2,16 @@
 <data simulation="SimulationParameters">
     <title>seg title</title>
     <author>seg author</author>
-    <colorScheme>seg cs</colorScheme>
-    <extraParams>seg extra</extraParams>
-    <grid>seg grid</grid>
+    <colorScheme>0 1</colorScheme>
+    <extraParams>0 1</extraParams>
+    <grid> 0 0 0 0 0 0 0 0 0 0;
+     	   0 0 0 0 0 0 0 0 0 0;
+     	   0 0 0 0 0 0 0 0 0 0;
+     	   0 0 0 0 0 0 0 0 0 0;
+     	   0 0 0 0 0 0 0 0 0 0;
+     	   0 0 0 0 0 0 0 0 0 0;
+     	   0 0 0 0 0 0 0 0 0 0;
+     	   0 0 0 0 0 0 0 0 0 0;
+     	   0 0 0 0 0 0 0 0 0 0;
+     	   0 0 0 0 0 0 0 0 0 0;</grid>
 </data>
