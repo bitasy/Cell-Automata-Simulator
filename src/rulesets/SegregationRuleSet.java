@@ -93,8 +93,8 @@ public class SegregationRuleSet extends StandardRuleSet {
 	@Override
 	public void setParams(double[] params) {
 		t = params[0];
-		width = (int) params[1];
-		height = (int) params[2];
+		width = myGrid[0].length;
+		height = myGrid.length;
 		possibilities = width*height;
 	}
 
