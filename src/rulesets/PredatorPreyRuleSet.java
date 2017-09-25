@@ -1,6 +1,8 @@
- package rulesets;
+package rulesets;
 
-import java.util.Random;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import backend.Cell;
 
@@ -12,61 +14,74 @@ public class PredatorPreyRuleSet extends StandardRuleSet {
 	private int sharkStarveTime;
 	private int sharkBreedTime;
 	private int fishBreedTime;
-	private Random r;
-	
-	{
-		r = new Random();
-	}
-	
+
 	@Override
 	public int numRules() {
-		return 5;
+		return 6;
 	}
 
 	void rule1() {
 		if (cell != null && cell.getPrimaryState() == 2) {
+			if(cell.getState(2) == -1) cell.changeState(2, sharkStarveTime);
 			int[] location = cell.getLocation();
 			boolean eaten = false;
-			for (Cell c : neighborhood) {
+			refill();
+			for (int i = 0; i < choices.length; i++) {
+				Cell c = neighborhood[choices[i]];
 				if(c.getPrimaryState() == 1) {
-					eaten = true;
 					int[] fishLocation = c.getLocation();
-					effects[fishLocation[0]][fishLocation[1]][0] = 2;
-					effects[fishLocation[0]][fishLocation[1]][2] = sharkStarveTime; 
-					effects[location[0]][location[1]][0] = 0;
-					break;
-				}
-			} 
-			
-			if(!eaten) {
-				for (Cell c : neighborhood) {
-					if(c.getPrimaryState() == 0) {
-						int[] neighborLocation = c.getLocation();
-						effects[neighborLocation[0]][neighborLocation[1]][0] = 2;
-						effects[neighborLocation[0]][neighborLocation[1]][2] = c.getState(2)-1; 
-						effects[location[0]][location[1]][0] = 0;
+					if (effects[fishLocation[0]][fishLocation[1]][0] != 2) {
+						eaten = true;
+						effects[fishLocation[0]][fishLocation[1]][0] = 2;
+						effects[fishLocation[0]][fishLocation[1]][2] = sharkStarveTime;
 						break;
 					}
-					
+				}
+			} 
+
+			if(!eaten && cell.getState(2) != 0) {
+				effects[location[0]][location[1]][0] = 2;
+				effects[location[0]][location[1]][2] = cell.getState(2) - 1;
+				refill();
+				for (int i = 0; i < choices.length; i++) {
+					Cell c = neighborhood[choices[i]];
+					if(c.getPrimaryState() == 0) {
+						int[] neighborLocation = c.getLocation();
+						if (effects[neighborLocation[0]][neighborLocation[1]][0] != 2) {
+							effects[neighborLocation[0]][neighborLocation[1]][0] = 2;
+							effects[neighborLocation[0]][neighborLocation[1]][2] = cell.getState(2) - 1;
+							effects[location[0]][location[1]][0] = 0;
+							break;
+						}
+					}
+
 				} 
 			}
-			
-			
+
+
 		}
 	}
 
 	void rule2() {
+		
 	}
 
 	void rule3() {
+		
 	}
-	
+
 	void rule4() {
+		
 	}
 
 	void rule5() {
+		
 	}
 	
+	void rule6() {
+		
+	}
+
 	/** This simulation uses a single array of Cell neighbors, {top, right, bottom, left}.
 	 * @see rulesets.StandardRuleSet#setNeighborhood(backend.Cell)
 	 */
@@ -74,20 +89,40 @@ public class PredatorPreyRuleSet extends StandardRuleSet {
 	protected void setNeighborhood(Cell cell) {
 		int[] location = cell.getLocation();
 		Cell[] neighbors = new Cell[4];
-		
+
 		if(location[0] == 0) neighbors[0] = myGrid[myGrid.length-1][location[1]];
 		else neighbors[0] = myGrid[location[0]-1][location[1]];
-		
+
 		if(location[1] == myGrid[0].length - 1) neighbors[1] = myGrid[location[0]][0];
 		else neighbors[1] = myGrid[location[0]][location[1]+1];
-		
+
 		if(location[0] == myGrid.length - 1) neighbors[2] = myGrid[0][location[1]];
 		else neighbors[2] = myGrid[location[0]+1][location[1]];
-		
+
 		if(location[1] == 0) neighbors[3] = myGrid[location[0]][myGrid[0].length - 1];
 		else neighbors[3] = myGrid[location[0]][location[1]-1];
-		
+
 		neighborhood = neighbors;
+	}
+
+	private Integer[] choices;
+
+	private int getRandomNeighbor() {
+		for(int i = 0; i < choices.length; i++) {
+			if(choices[i] != 0) {
+				int j = choices[i];
+				choices[i] = 0;
+				return j;
+			}
+		}
+		return -1;
+	}
+
+	private void refill() {
+		choices = new Integer[]{0,1,2,3};
+		List<Integer> temp = Arrays.asList(choices);
+		Collections.shuffle(temp);
+		choices = (Integer[]) temp.toArray();
 	}
 
 	@Override

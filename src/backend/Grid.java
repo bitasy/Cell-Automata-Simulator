@@ -43,6 +43,7 @@ public class Grid {
 		for(int i = 0; i < initialState.length; i++) {
 			for(int j = 0; j < initialState[0].length; j++) {
 				grid[i][j] = new Cell(initialState[i][j], numStates, colorMap, new int[] {i,j}, myCellSize);
+				for(int k = 1; k < numStates; k++) grid[i][j].changeState(k, DEFAULT_SECONDARY_STATE);
 			}
 		}
 	}

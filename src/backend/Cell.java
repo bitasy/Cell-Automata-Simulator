@@ -31,22 +31,29 @@ public class Cell {
 	}
 	
 	/**
-	 * Changes the state of the cell and updates its display color.
+	 * Changes the primary state of the cell and updates its display color.
 	 * @param newState the state to which the cell will be changed.
 	 */
-	public void changeState(int[] newState) {
-		if(newState.length == 0) throw new IllegalArgumentException("New state must have at least a primary state determined.");
-		myState = newState;
-		myView.setFill(myColorMap.get(newState[0]));
+	public void changeState(int value) {
+		changeState(0, value);
 	}
 	
 	/**
-	 * Changes only the primary state of this cell, and removes all other states.
-	 * @param newState the new primary state of this cell, used to calculate cell color.
+	 * Changes the specified state of this cell.
+	 * @param newState the state of this cell to update.
+	 * @param value the value to update the specified state to.
 	 */
-	public void changeState(int newState) {
-		myState[0] = newState;
-		myView.setFill(myColorMap.get(newState));
+	public void changeState(int state, int value) {
+		myState[state] = value;
+		if(state == 0)
+			myView.setFill(myColorMap.get(value));
+	}
+	
+	public void changeState(int[] newStates) {
+		if(newStates.length == myState.length) {
+			myState = newStates;
+			myView.setFill(myColorMap.get(newStates[0]));
+		} else throw new IllegalArgumentException("Cell must have "+ myState.length +" state(s).");
 	}
 	
 	/**
