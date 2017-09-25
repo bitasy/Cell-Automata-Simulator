@@ -17,23 +17,48 @@ public class PredatorPreyRuleSet extends StandardRuleSet {
 	public int numRules() {
 		return 5;
 	}
-
+	
+	/**
+	 * Sharks breed.
+	 */
 	void rule1() {
-		if (cell != null && cell.getPrimaryState() == 2) {
-			refill();
+		if(cell != null && cell.getPrimaryState() == 2) {
+			if(cell.getState(1) == -1) cell.changeState(1, sharkBreedTime);
 			int[] location = cell.getLocation();
-			effects[location[0]][location[1]][0] = 2;
-			effects[location[0]][location[1]][1] = cell.getState(1);
-			effects[location[0]][location[1]][2] = cell.getState(2);
+			if(cell.getState(1) <= 0) {
+				refill();
+				for (int i = 0; i < choices.length; i++) {
+					Cell c = neighborhood[choices[i]];
+					if(c.getPrimaryState() == 0) {
+						int[] waterLocation = c.getLocation();
+						if (effects[waterLocation[0]][waterLocation[1]][0] == 0) {
+							setEffects(waterLocation[0], waterLocation[1], 2, sharkBreedTime, sharkStarveTime);
+							effects[location[0]][location[1]][1] = sharkBreedTime;
+							break;
+						}
+					}
+				}
+			} else if(cell.getState(1) > 0) {
+				cell.changeState(1, cell.getState(1) - 1);
+			}
+		}
+	}
+
+	/**
+	 * Sharks eat fish.
+	 */
+	void rule2() {
+		if (cell != null && cell.getPrimaryState() == 2) {
+			int[] location = cell.getLocation();
+			setEffects(location[0], location[1], 2, cell.getState(1), cell.getState(2));	
+			refill();		
 			for (int i = 0; i < choices.length; i++) {
 				Cell c = neighborhood[choices[i]];
 				if(c.getPrimaryState() == 1) {
 					int[] fishLocation = c.getLocation();
 					if (effects[fishLocation[0]][fishLocation[1]][0] != 2) {
-						effects[fishLocation[0]][fishLocation[1]][0] = 2;
-						effects[fishLocation[0]][fishLocation[1]][1] = cell.getState(1) - 1;
-						effects[fishLocation[0]][fishLocation[1]][2] = sharkStarveTime;
-						effects[location[0]][location[1]][0] = 0;
+						setEffects(fishLocation[0], fishLocation[1], 2, cell.getState(1) - 1, sharkStarveTime);
+						setEffects(location[0], location[1], 0);
 						break;
 					}
 				}
@@ -41,34 +66,9 @@ public class PredatorPreyRuleSet extends StandardRuleSet {
 		}
 	}
 
-	void rule2() {
-		if(cell != null && cell.getPrimaryState() == 2) {
-			if(cell.getState(1) == -1) cell.changeState(1, sharkBreedTime);
-			int[] location = cell.getLocation();
-			if(cell.getState(1) == 0) {
-				boolean bred = false;
-				refill();
-				for (int i = 0; i < choices.length; i++) {
-					Cell c = neighborhood[choices[i]];
-					if(c.getPrimaryState() == 0) {
-						int[] waterLocation = c.getLocation();
-						if (effects[waterLocation[0]][waterLocation[1]][0] == 0) {
-							bred = true;
-							effects[waterLocation[0]][waterLocation[1]][0] = 2;
-							effects[waterLocation[0]][waterLocation[1]][1] = sharkBreedTime;
-							effects[waterLocation[0]][waterLocation[1]][2] = sharkStarveTime;
-							effects[location[0]][location[1]][2] = sharkBreedTime;
-							break;
-						}
-					}
-				}
-				if(!bred) effects[location[0]][location[1]][2] = cell.getState(1) + 1;
-			} else {
-				effects[location[0]][location[1]][2] = cell.getState(1) - 1;
-			}
-		}
-	}
-
+	/**
+	 * Fish breed.
+	 */
 	void rule3() {
 		if(cell != null && cell.getPrimaryState() == 1) {
 			if(cell.getState(1) == -1) cell.changeState(1, fishBreedTime);
@@ -94,6 +94,9 @@ public class PredatorPreyRuleSet extends StandardRuleSet {
 		}
 	}
 
+	/**
+	 * Sharks move.
+	 */
 	void rule4() {
 		if (cell != null && cell.getPrimaryState() == 2) {
 			if(cell.getState(2) == -1) cell.changeState(2, sharkStarveTime);
@@ -107,36 +110,33 @@ public class PredatorPreyRuleSet extends StandardRuleSet {
 					if (c.getPrimaryState() == 0) {
 						int[] neighborLocation = c.getLocation();
 						if (effects[neighborLocation[0]][neighborLocation[1]][0] != 2) {
-							effects[neighborLocation[0]][neighborLocation[1]][0] = 2;
-							effects[neighborLocation[0]][neighborLocation[1]][1] = cell.getState(1) - 1;
-							effects[neighborLocation[0]][neighborLocation[1]][2] = cell.getState(2) - 1;
-							effects[location[0]][location[1]][0] = 0;
+							setEffects(neighborLocation[0], neighborLocation[1], 2, cell.getState(1), cell.getState(2) - 1);
+							setEffects(location[0], location[1], 0);
 							break;
 						}
 					}
 
 				}
-			} 
+			} else if(cell.getState(2) == 0) setEffects(location[0], location[1], 0);
 		}
 	}
 
+	/**
+	 * Fish move.
+	 */
 	void rule5() {
 		if (cell != null && cell.getPrimaryState() == 1) {
 			int[] location = cell.getLocation();
-			if(effects[location[0]][location[1]][0] == 1) {
-				effects[location[0]][location[1]][0] = 1;
-				effects[location[0]][location[1]][1] = cell.getState(1) - 1;
-				effects[location[0]][location[1]][2] = cell.getState(2) - 1;
+			if(effects[location[0]][location[1]][0] == 0) {
+				setEffects(location[0], location[1], 1, cell.getState(1) - 1, cell.getState(2) - 1);
 				refill();
 				for (int i = 0; i < choices.length; i++) {
 					Cell c = neighborhood[choices[i]];
 					if (c.getPrimaryState() == 0) {
 						int[] neighborLocation = c.getLocation();
-						if (effects[neighborLocation[0]][neighborLocation[1]][0] != 1) {
-							effects[neighborLocation[0]][neighborLocation[1]][0] = 1;
-							effects[neighborLocation[0]][neighborLocation[1]][1] = cell.getState(1) - 1;
-							effects[neighborLocation[0]][neighborLocation[1]][2] = cell.getState(2) - 1;
-							effects[location[0]][location[1]][0] = 0;
+						if (effects[neighborLocation[0]][neighborLocation[1]][0] == 0) {
+							setEffects(neighborLocation[0], neighborLocation[1], 1, cell.getState(1)-1, cell.getState(2) - 1);
+							setEffects(location[0], location[1], 0);
 							break;
 						}
 					}
@@ -146,6 +146,12 @@ public class PredatorPreyRuleSet extends StandardRuleSet {
 		}
 	}
 
+	private void setEffects(int row, int col, int... states) {
+		for(int i = 0; i < states.length; i++) {
+			effects[row][col][i] = states[i];
+		}
+	}
+	
 	/** This simulation uses a single array of Cell neighbors, {top, right, bottom, left}.
 	 * @see rulesets.StandardRuleSet#setNeighborhood(backend.Cell)
 	 */
