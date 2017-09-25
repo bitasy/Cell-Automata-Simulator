@@ -26,8 +26,7 @@ import javafx.stage.FileChooser.ExtensionFilter;
  * @author Robert C. Duvall
  */
 public class MasterMap {
-
-	public static final String[] SIMULATION_NAMES = {"GameOfLife", "Segregation", "Fire", "PredatorPrey"};
+	
 	private Map<String, SimulationParameters> simulationMap = null;
 	private Map<String, ArrayList<String>> errorsMap = new HashMap<String, ArrayList<String>>();
 	

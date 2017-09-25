@@ -1,23 +1,18 @@
- package rulesets;
+package rulesets;
 
-import java.util.Random;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import backend.Cell;
 
 public class PredatorPreyRuleSet extends StandardRuleSet {
 
 	private Cell[] neighborhood;
-	private int width;
-	private int height;
 	private int sharkStarveTime;
 	private int sharkBreedTime;
 	private int fishBreedTime;
-	private Random r;
-	
-	{
-		r = new Random();
-	}
-	
+
 	@Override
 	public int numRules() {
 		return 5;
@@ -25,48 +20,132 @@ public class PredatorPreyRuleSet extends StandardRuleSet {
 
 	void rule1() {
 		if (cell != null && cell.getPrimaryState() == 2) {
+			refill();
 			int[] location = cell.getLocation();
-			boolean eaten = false;
-			for (Cell c : neighborhood) {
+			effects[location[0]][location[1]][0] = 2;
+			effects[location[0]][location[1]][1] = cell.getState(1);
+			effects[location[0]][location[1]][2] = cell.getState(2);
+			for (int i = 0; i < choices.length; i++) {
+				Cell c = neighborhood[choices[i]];
 				if(c.getPrimaryState() == 1) {
-					eaten = true;
 					int[] fishLocation = c.getLocation();
-					effects[fishLocation[0]][fishLocation[1]][0] = 2;
-					effects[fishLocation[0]][fishLocation[1]][2] = sharkStarveTime; 
-					effects[location[0]][location[1]][0] = 0;
-					break;
-				}
-			} 
-			
-			if(!eaten) {
-				for (Cell c : neighborhood) {
-					if(c.getPrimaryState() == 0) {
-						int[] neighborLocation = c.getLocation();
-						effects[neighborLocation[0]][neighborLocation[1]][0] = 2;
-						effects[neighborLocation[0]][neighborLocation[1]][2] = c.getState(2)-1; 
+					if (effects[fishLocation[0]][fishLocation[1]][0] != 2) {
+						effects[fishLocation[0]][fishLocation[1]][0] = 2;
+						effects[fishLocation[0]][fishLocation[1]][1] = cell.getState(1) - 1;
+						effects[fishLocation[0]][fishLocation[1]][2] = sharkStarveTime;
 						effects[location[0]][location[1]][0] = 0;
 						break;
 					}
-					
-				} 
+				}
 			}
-			
-			
 		}
 	}
 
 	void rule2() {
+		if(cell != null && cell.getPrimaryState() == 2) {
+			if(cell.getState(1) == -1) cell.changeState(1, sharkBreedTime);
+			int[] location = cell.getLocation();
+			if(cell.getState(1) == 0) {
+				boolean bred = false;
+				refill();
+				for (int i = 0; i < choices.length; i++) {
+					Cell c = neighborhood[choices[i]];
+					if(c.getPrimaryState() == 0) {
+						int[] waterLocation = c.getLocation();
+						if (effects[waterLocation[0]][waterLocation[1]][0] == 0) {
+							bred = true;
+							effects[waterLocation[0]][waterLocation[1]][0] = 2;
+							effects[waterLocation[0]][waterLocation[1]][1] = sharkBreedTime;
+							effects[waterLocation[0]][waterLocation[1]][2] = sharkStarveTime;
+							effects[location[0]][location[1]][2] = sharkBreedTime;
+							break;
+						}
+					}
+				}
+				if(!bred) effects[location[0]][location[1]][2] = cell.getState(1) + 1;
+			} else {
+				effects[location[0]][location[1]][2] = cell.getState(1) - 1;
+			}
+		}
 	}
 
 	void rule3() {
+		if(cell != null && cell.getPrimaryState() == 1) {
+			if(cell.getState(1) == -1) cell.changeState(1, fishBreedTime);
+			int[] location = cell.getLocation();
+			if(cell.getState(1) == 0) {
+				boolean bred = false;
+				refill();
+				for (int i = 0; i < choices.length; i++) {
+					Cell c = neighborhood[choices[i]];
+					if(c.getPrimaryState() == 0) {
+						int[] waterLocation = c.getLocation();
+						if (effects[waterLocation[0]][waterLocation[1]][0] == 0) {
+							bred = true;
+							effects[waterLocation[0]][waterLocation[1]][0] = 1;
+							effects[waterLocation[0]][waterLocation[1]][1] = fishBreedTime;
+							effects[location[0]][location[1]][2] = fishBreedTime;
+							break;
+						}
+					}
+				}
+				if(!bred) effects[location[0]][location[1]][2] = cell.getState(1) + 1;
+			}
+		}
 	}
-	
+
 	void rule4() {
+		if (cell != null && cell.getPrimaryState() == 2) {
+			if(cell.getState(2) == -1) cell.changeState(2, sharkStarveTime);
+			int[] location = cell.getLocation();
+			if (cell.getState(2) != 0 && effects[location[0]][location[1]][0] == 2) {
+				effects[location[0]][location[1]][1] = cell.getState(1) - 1;
+				effects[location[0]][location[1]][2] = cell.getState(2) - 1;
+				refill();
+				for (int i = 0; i < choices.length; i++) {
+					Cell c = neighborhood[choices[i]];
+					if (c.getPrimaryState() == 0) {
+						int[] neighborLocation = c.getLocation();
+						if (effects[neighborLocation[0]][neighborLocation[1]][0] != 2) {
+							effects[neighborLocation[0]][neighborLocation[1]][0] = 2;
+							effects[neighborLocation[0]][neighborLocation[1]][1] = cell.getState(1) - 1;
+							effects[neighborLocation[0]][neighborLocation[1]][2] = cell.getState(2) - 1;
+							effects[location[0]][location[1]][0] = 0;
+							break;
+						}
+					}
+
+				}
+			} 
+		}
 	}
 
 	void rule5() {
+		if (cell != null && cell.getPrimaryState() == 1) {
+			int[] location = cell.getLocation();
+			if(effects[location[0]][location[1]][0] == 1) {
+				effects[location[0]][location[1]][0] = 1;
+				effects[location[0]][location[1]][1] = cell.getState(1) - 1;
+				effects[location[0]][location[1]][2] = cell.getState(2) - 1;
+				refill();
+				for (int i = 0; i < choices.length; i++) {
+					Cell c = neighborhood[choices[i]];
+					if (c.getPrimaryState() == 0) {
+						int[] neighborLocation = c.getLocation();
+						if (effects[neighborLocation[0]][neighborLocation[1]][0] != 1) {
+							effects[neighborLocation[0]][neighborLocation[1]][0] = 1;
+							effects[neighborLocation[0]][neighborLocation[1]][1] = cell.getState(1) - 1;
+							effects[neighborLocation[0]][neighborLocation[1]][2] = cell.getState(2) - 1;
+							effects[location[0]][location[1]][0] = 0;
+							break;
+						}
+					}
+				}
+			}
+
+		}
 	}
-	
+
 	/** This simulation uses a single array of Cell neighbors, {top, right, bottom, left}.
 	 * @see rulesets.StandardRuleSet#setNeighborhood(backend.Cell)
 	 */
@@ -74,20 +153,29 @@ public class PredatorPreyRuleSet extends StandardRuleSet {
 	protected void setNeighborhood(Cell cell) {
 		int[] location = cell.getLocation();
 		Cell[] neighbors = new Cell[4];
-		
+
 		if(location[0] == 0) neighbors[0] = myGrid[myGrid.length-1][location[1]];
 		else neighbors[0] = myGrid[location[0]-1][location[1]];
-		
+
 		if(location[1] == myGrid[0].length - 1) neighbors[1] = myGrid[location[0]][0];
 		else neighbors[1] = myGrid[location[0]][location[1]+1];
-		
+
 		if(location[0] == myGrid.length - 1) neighbors[2] = myGrid[0][location[1]];
 		else neighbors[2] = myGrid[location[0]+1][location[1]];
-		
+
 		if(location[1] == 0) neighbors[3] = myGrid[location[0]][myGrid[0].length - 1];
 		else neighbors[3] = myGrid[location[0]][location[1]-1];
-		
+
 		neighborhood = neighbors;
+	}
+
+	private Integer[] choices;
+
+	private void refill() {
+		choices = new Integer[]{0,1,2,3};
+		List<Integer> temp = Arrays.asList(choices);
+		Collections.shuffle(temp);
+		choices = (Integer[]) temp.toArray();
 	}
 
 	@Override
