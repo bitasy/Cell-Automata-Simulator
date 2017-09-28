@@ -1,6 +1,7 @@
 package frontend;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import backend.Grid;
@@ -112,7 +113,7 @@ public class CellSimulator extends Pane {
 	private void checkForErrors() {
 		alert.setTitle(CellSociety.ALERT_TITLE);
 		alert.setHeaderText(null);
-		Map<String, ArrayList<String>> errors = masterMap.getErrors();
+		Map<String, List<String>> errors = masterMap.getErrors();
 		if (errors.size() != 0) {
 			String errorMessage = String.join(", ", errors.keySet());
 			alert.setContentText(CellSociety.ALERT_MESSAGE + errorMessage);
