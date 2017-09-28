@@ -1,33 +1,35 @@
-package backend;
+/*package grids;
 
 import java.util.Arrays;
 import java.util.Map;
 
+import backend.Cell;
+import backend.IRuleSet;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Shape;
 import xml_start.SimulationParameters;
 
-/**
+*//**
  * The Grid class manages a grid of Cells to be used in a simulation. Its functions include updating the state and color of each Cell in the grid based on the rules provided by a SimulationLoader object.
  * 
  * @author Brian Nieves
- */
-public class Grid {
+ *//*
+public class RectangularGrid { //implements IGrid {
 
 	private static final int DEFAULT_STATE = 0;
 	private static final int DEFAULT_SECONDARY_STATE = -1;
 	private Map<Integer, Color> colorMap;
 	private Cell[][] grid;
 	private int numStates;
-	private RuleSet myRuleSet;
+	private IRuleSet myRuleSet;
 	private double myCellSize;
 	
-	/**
+	*//**
 	 * Creates a new Grid that holds all the Cells to be used in a simulation.
 	 * @param simdata the SimulationLoader object that holds information about the simulation parameters.
 	 * @param cellSize the side length of each cell in the grid, in pixels.
-	 */
-	public Grid(SimulationParameters simdata, double cellSize) {
+	 *//*
+	public RectangularGrid(SimulationParameters simdata, double cellSize) {
 		grid = new Cell[simdata.getNumRows()][simdata.getNumCols()];
 		colorMap = simdata.getColorScheme();
 		numStates = (int) simdata.getExtraParameters()[0];
@@ -48,9 +50,10 @@ public class Grid {
 		}
 	}
 	
-	/**
-	 * Updates the current grid by creating a new one, filling it in, and making it the new grid. This method applies the specified rules on each cell, going from left to right then top to bottom of the grid. The results of each rule are noted in the new grid that is being filled in.
-	 */
+	 (non-Javadoc)
+	 * @see backend.IGrid#update()
+	 
+	
 	public void update() {
 		int[][][] newStates = createStateGrid();
 		myRuleSet.setNewGrid(newStates);
@@ -83,9 +86,14 @@ public class Grid {
 				}
 	}
 	
+	 (non-Javadoc)
+	 * @see backend.IGrid#getCellShape(int, int)
+	 
+
 	public Shape getCellShape(int row, int col) {
 		if(row < 0 || row >= grid.length || col < 0 || col >= grid[0].length) throw new ArrayIndexOutOfBoundsException("Row and Col must be positive and within the grid.");
 		return grid[row][col].getView();
 	}
 }
 
+*/

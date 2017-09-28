@@ -3,7 +3,9 @@ package frontend;
 import java.util.ArrayList;
 import java.util.Map;
 
-import backend.Grid;
+import backend.IGrid;
+import backend.RealGrid;
+//import grids.RectangularGrid;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.control.Alert;
@@ -17,13 +19,13 @@ import xml_start.SimulationParameters;
 
 public class CellSimulator extends Pane {
 
-	private static final int HEIGHT = 4 * CellSociety.HEIGHT / 5;;
+	private static final int HEIGHT = 4 * CellSociety.HEIGHT / 5;
 	private double cellSize;
 	private int rows;
 	private int cols;
 	private Timeline animation;
 	private double step;
-	private Grid myGrid;
+	private RealGrid myGrid;
 	private MasterMap masterMap = new MasterMap();
 	private Map<String, SimulationParameters> XML_readings = masterMap.getMap();
 	private SimulationParameters data;
@@ -92,7 +94,7 @@ public class CellSimulator extends Pane {
 	}
 
 	private void addCellShapes() {
-		myGrid = new Grid(data, cellSize);
+		myGrid = new RealGrid(data, cellSize);
 		this.getChildren().removeAll(this.getChildren());
 		double totalWidthPercent = cellSize * cols / CellSociety.WIDTH;
 		double firstX = (.5 - totalWidthPercent / 2) * CellSociety.WIDTH;

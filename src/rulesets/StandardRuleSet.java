@@ -2,9 +2,9 @@ package rulesets;
 
 import java.lang.reflect.Method;
 import backend.Cell;
-import backend.RuleSet;
+import backend.IRuleSet;
 
-public abstract class StandardRuleSet implements RuleSet {
+public abstract class StandardRuleSet implements IRuleSet {
 	
 	protected Cell cell;
 	protected Cell[][] neighborhood;
