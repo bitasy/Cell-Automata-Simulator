@@ -2,6 +2,7 @@ package xml_start;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javafx.application.Application;
@@ -28,7 +29,7 @@ import javafx.stage.FileChooser.ExtensionFilter;
 public class MasterMap {
 	
 	private Map<String, SimulationParameters> simulationMap = null;
-	private Map<String, ArrayList<String>> errorsMap = new HashMap<String, ArrayList<String>>();
+	private Map<String, List<String>> errorsMap = new HashMap<String, List<String>>();
 	
 	public MasterMap() {
 		
@@ -66,17 +67,13 @@ public class MasterMap {
 	    	for (int i = 0; i < listOfFiles.length; i++) {
 	    	      if (listOfFiles[i].isFile()) {
 	    	    	  
-	    	    	  	
 	    	    	  	String fileString = listOfFiles[i].getName();
 	    	    	  	String s = fileString.replace(".xml","");
-	    	    	  	
-	    	    	  	
+	    	    	  	 	  	
 	    	    	  	SimulationParameters currentSimulation = null;
 	    				try {
 	    					currentSimulation = read(s);
 	    				} catch (Exception e) {
-
-	    					// e.printStackTrace();
 	    					
 	    		            	ArrayList<String> errorList = new ArrayList<String>();
 	    	        			errorList.add(e.getMessage());
@@ -87,14 +84,8 @@ public class MasterMap {
 	    			if (currentSimulation != null) {
 	    					simulationMap.put(s, currentSimulation);			
 	    			}
-	    	    	  	
-	    	    	  	
-	    	    	  	
 	    	      }
-	    	 
 	    	}
-    		
-    		
     		
     		return;
     }
@@ -111,7 +102,7 @@ public class MasterMap {
     }
     
     // getter for errors map
-    public Map<String, ArrayList<String>> getErrors() {
+    public Map<String, List<String>> getErrors() {
     		return errorsMap;
     }
     

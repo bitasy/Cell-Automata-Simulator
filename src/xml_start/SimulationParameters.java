@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
-import backend.RuleSet;
+import backend.IRuleSet;
 import rulesets.*;
 import javafx.scene.paint.Color;
 
@@ -31,14 +31,14 @@ public class SimulationParameters {
     });
 	
     private Color[] colors = {Color.WHITE, Color.BLACK, Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW, Color.ORANGE};
-    private RuleSet[] rules = {new FireRuleSet(), new GameOfLifeRuleSet(), new PredatorPreyRuleSet(), new SegregationRuleSet()};
-    public Map<String, RuleSet> rulesMap = new HashMap<String, RuleSet>();
+    private IRuleSet[] rules = {new FireRuleSet(), new GameOfLifeRuleSet(), new PredatorPreyRuleSet(), new SegregationRuleSet()};
+    public Map<String, IRuleSet> rulesMap = new HashMap<String, IRuleSet>();
     
     private Map<Integer, Color> simColorScheme = new HashMap<Integer, Color>();
     private int[][] simGrid;
     private String simAuthor;
     private String simTitle;
-    private RuleSet simRules;
+    private IRuleSet simRules;
     private double[] simExtraParams;
     private String simName;
     
@@ -139,13 +139,11 @@ public class SimulationParameters {
 	    	for (int i = 0; i < listOfFiles.length; i++) {
 	    	      if (listOfFiles[i].isFile()) {
 	    	    	  
-	    	    	  	
 	    	    	  	String fileString = listOfFiles[i].getName();
 	    	    	  	String simulationName = fileString.replace(".xml","");
 	    	    	  	rulesMap.put(simulationName, rules[i]);
 	    	    	  	
 	    	      }
-	    	 
 	    	}
 	    	    
     		simRules = rulesMap.get(simName);
@@ -200,7 +198,7 @@ public class SimulationParameters {
     }
     
     // get rules object
-    public RuleSet getRules() {
+    public IRuleSet getRules() {
     		return simRules;
     }
     
@@ -218,6 +216,11 @@ public class SimulationParameters {
     public int getNumCols() {
     		return simGrid[0].length;
     }
+
+	public Object getGridLayout() {
+		// TODO Auto-generated method stub
+		return null;
+	}
     
     
 }
