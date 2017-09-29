@@ -9,7 +9,12 @@ import backend.Cell;
 import backend.EffectGrid;
 import backend.IGrid;
 import backend.IRuleSet;
+import frontend.CellSociety;
+import javafx.scene.Parent;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import xml_start.SimulationParameters;
 
 /**
@@ -17,7 +22,7 @@ import xml_start.SimulationParameters;
  * 
  * @author Brian Nieves
  */
-public abstract class RectangularGrid implements IGrid {
+public class RectangularGrid extends Pane implements IGrid {
 
 	private static final int DEFAULT_STATE = 0;
 	private static final int DEFAULT_SECONDARY_STATE = -1;
@@ -26,6 +31,7 @@ public abstract class RectangularGrid implements IGrid {
 	private int numStates;
 	private IRuleSet myRuleSet;
 	private double myCellSize;
+	private Region myCanvas;
 	
 	/**
 	 * Creates a new Grid that holds all the Cells to be used in a simulation.
@@ -63,17 +69,6 @@ public abstract class RectangularGrid implements IGrid {
 		}
 		
 	}
-
-	private int[][][] createStateGrid() {
-		int[][][] newStates = new int[myGrid.length][myGrid[0].length][numStates];
-		for(int i = 0; i < newStates.length; i++) 
-			for(int j = 0; j < newStates[0].length; j++)
-				for(int k = 0; k < numStates; k++) 
-					newStates[i][j][k] = k == 0 ? DEFAULT_STATE : DEFAULT_SECONDARY_STATE;
-				
-		
-		return newStates;
-	}
 	
 	private void applyRules() {
 		for(int rule = 1; rule <= myRuleSet.numRules(); rule++)
@@ -109,11 +104,6 @@ public abstract class RectangularGrid implements IGrid {
 		
 		return neighborgrid;
 	}
-
-	/*public Shape getCellShape(int row, int col) {
-		if(row < 0 || row >= grid.length || col < 0 || col >= grid[0].length) throw new ArrayIndexOutOfBoundsException("Row and Col must be positive and within the grid.");
-		return grid[row][col].getView();
-	}*/
 	
 	private int[] getLocation(int index) {
 		return new int[] {index/myGrid.length, index%myGrid[0].length};
@@ -145,5 +135,33 @@ public abstract class RectangularGrid implements IGrid {
 		}
 		
 	}
+
+	@Override
+	public void drawTo(Region region) {
+		// TODO Graphics for Grid (Rectangular)
+		myCanvas = region;
+	}
+	
+	private void draw() {
+		this.getChildren().removeAll(this.getChildren());
+		
+		int rows = myGrid.length;
+		int cols = myGrid[0].length;
+		double totalWidthPercent = myCellSize * cols / CellSociety.WIDTH;
+		double firstX = (.5 - totalWidthPercent / 2) * CellSociety.WIDTH;
+		double totalHeightPercent = myCellSize * rows / CellSociety.HEIGHT;
+		double firstY = (.5 - totalHeightPercent / 2) * CellSociety.HEIGHT;
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < cols; j++) {
+				Rectangle cell = myGrid[i][j].getView();
+				cell.setOnMouseClicked(e -> System.out.println("Cell clicked!"));
+				cell.setX(firstX + j * myCellSize);
+				cell.setY(firstY + i * myCellSize);
+				this.getChildren().add(cell);
+			}
+		}
+	}
+	
+	
 }
 

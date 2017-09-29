@@ -1,6 +1,7 @@
 package backend;
 
 import javafx.scene.Parent;
+import javafx.scene.layout.Region;
 
 public interface IGrid {
 
@@ -13,6 +14,6 @@ public interface IGrid {
 	 * Adds all elements of this Grid to the Parent.
 	 * @param the Parent to which all elements will be added.
 	 */
-	void draw(Parent parent);
+	void drawTo(Region region);
 
 }

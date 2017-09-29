@@ -50,7 +50,7 @@ public abstract class NeighborGrid implements IGrid {
 	}
 	
 	@Override
-	public void draw(Parent parent) {
+	public void drawTo(Parent parent) {
 
 	}
 	

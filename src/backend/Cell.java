@@ -83,7 +83,8 @@ public class Cell {
 	 * Returns the Rectangle this Cell uses to display.
 	 * @return the Rectangle object.
 	 */
-	Rectangle getView() {
+	public Rectangle getView() {
+		// TODO does this have to be public?
 		return myView;
 	}
 
