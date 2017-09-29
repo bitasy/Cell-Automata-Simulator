@@ -11,7 +11,7 @@ public class Cell {
 	private int[] myState;
 	private Rectangle myView;
 	private Map<Integer, Color> myColorMap;
-	private int[] myLocation;
+	private int myTag;
 	
 	/**
 	 * Creates a new Cell with the specified parameters. A cell can have multiple states, but it must at least have one (used for coloring the cell) at all times. 
@@ -20,12 +20,12 @@ public class Cell {
 	 * @param colorMap the map of states to colors used to display the cell as having a particular state.
 	 * @param location the location of the cell inside the grid, given by {row, column}.
 	 */
-	public Cell(int initialState, int numStates, Map<Integer, Color> colorMap, int[] location, double size) {
+	public Cell(int initialState, int numStates, Map<Integer, Color> colorMap, int tag, double size) {
 		myState = new int[numStates];
 		myState[0] = initialState;
 		myColorMap = colorMap;
 		myView = new Rectangle(size, size, myColorMap.get(initialState));
-		myLocation = location;
+		myTag = tag;
 		myView.setStroke(Color.BLACK);
 		myView.setStrokeWidth(2);
 	}
@@ -72,11 +72,11 @@ public class Cell {
 	}
 	
 	/**
-	 * Returns the location of this cell in its grid.
-	 * @return the integer array [row][col] of this cell's location.
+	 * Returns the index, or tag, of this cell in its grid. This acts as a location marker for the cell in the grid.
+	 * @return the integer tag of this cell in the context of its grid..
 	 */
-	public int[] getLocation() {
-		return myLocation;
+	public int getTag() {
+		return myTag;
 	}
 	
 	/**

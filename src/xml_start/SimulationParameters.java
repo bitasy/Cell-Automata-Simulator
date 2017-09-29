@@ -218,6 +218,11 @@ public class SimulationParameters {
     public int getNumCols() {
     		return simGrid[0].length;
     }
+
+	public Object getGridLayout() {
+		// TODO Auto-generated method stub
+		return null;
+	}
     
     
 }
