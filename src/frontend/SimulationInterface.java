@@ -24,12 +24,12 @@ public class SimulationInterface extends BorderPane {
 		simulator = s;
 		this.setPrefSize(CellSociety.WIDTH, HEIGHT);
 		simNames = s.getSimulationNames();
-		createDropDown();
-		createButtons();
+		createDropDownSection();
+		createButtonsSection();
 		createSliderSection();
 	}
 
-	private void createDropDown() {
+	private void createDropDownSection() {
 		ChoiceBox<String> simulations = new ChoiceBox<>();
 		ChangeListener<String> changeListener = new ChangeListener<String>() {
 			@Override
@@ -45,10 +45,15 @@ public class SimulationInterface extends BorderPane {
 		VBox vSim = new VBox();
 		vSim.getChildren().add(simulations);
 		VBox.setMargin(simulations, new Insets(10, 10, 10, 10));
+		Button newSim = new Button(CellSociety.BUTTON_TITLES[4]);
+		newSim.setOnAction(e -> simulator.handleSimCreation());
+		newSim.setPrefWidth(150);
+		vSim.getChildren().add(newSim);
+		VBox.setMargin(newSim, new Insets(10, 10, 10, 10));
 		this.setLeft(vSim);
 	}
 
-	private void createButtons() {
+	private void createButtonsSection() {
 		BorderPane buttons = new BorderPane();
 		buttons.setMaxWidth(300);
 		VBox vLeftButtons = setLeftButtons();

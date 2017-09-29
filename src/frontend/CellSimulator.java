@@ -7,8 +7,10 @@ import java.util.Map;
 import backend.Grid;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
@@ -36,7 +38,7 @@ public class CellSimulator extends Pane {
 		stage = s;
 		checkForErrors();
 		this.resize(CellSociety.WIDTH, HEIGHT);
-		step = 1000/((CellSociety.MAXSPEED - CellSociety.MINSPEED) / 2);
+		step = 1000 / ((CellSociety.MAXSPEED - CellSociety.MINSPEED) / 2);
 	}
 
 	public void handleStart() {
@@ -60,7 +62,7 @@ public class CellSimulator extends Pane {
 	public void handleSimulatorChange(String sim) {
 		System.out.println("Change to " + sim);
 		data = XML_readings.get(sim);
-		stage.setTitle(CellSociety.TITLE + " - "+ data.getTitle());
+		stage.setTitle(CellSociety.TITLE + " - " + data.getTitle());
 		rows = data.getNumRows();
 		cols = data.getNumCols();
 		cellSize = Math.min(CellSociety.WIDTH / cols, HEIGHT / rows);
@@ -75,6 +77,17 @@ public class CellSimulator extends Pane {
 		startAnimation();
 	}
 
+	public void handleSimCreation() {
+		Stage newStage = new Stage();
+		BorderPane newRoot = new BorderPane();
+		Scene mainScene = new Scene(newRoot, CellSociety.WIDTH, CellSociety.HEIGHT, CellSociety.BACKGROUND);
+		CellSimulator simulator = new CellSimulator(stage);
+		newRoot.setTop(simulator);
+		newRoot.setBottom(new SimulationInterface(simulator));
+		newStage.setScene(mainScene);
+		newStage.show();
+	}
+
 	public String[] getSimulationNames() {
 		return XML_readings.keySet().toArray(new String[XML_readings.keySet().size()]);
 	}
@@ -84,12 +97,12 @@ public class CellSimulator extends Pane {
 	}
 
 	private void startAnimation() {
-		if(animation != null) {
+		if (animation != null) {
 			animation.stop();
 		}
 		animation = new Timeline(new KeyFrame(Duration.millis(step), e -> handleStep()));
 		animation.setCycleCount(Timeline.INDEFINITE);
-		//animation.play();
+		// animation.play();
 	}
 
 	private void addCellShapes() {
