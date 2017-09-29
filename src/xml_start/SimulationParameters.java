@@ -139,13 +139,11 @@ public class SimulationParameters {
 	    	for (int i = 0; i < listOfFiles.length; i++) {
 	    	      if (listOfFiles[i].isFile()) {
 	    	    	  
-	    	    	  	
 	    	    	  	String fileString = listOfFiles[i].getName();
 	    	    	  	String simulationName = fileString.replace(".xml","");
 	    	    	  	rulesMap.put(simulationName, rules[i]);
 	    	    	  	
 	    	      }
-	    	 
 	    	}
 	    	    
     		simRules = rulesMap.get(simName);
