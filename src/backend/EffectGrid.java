@@ -6,4 +6,5 @@ public interface EffectGrid {
 	
 	int[] getStates(int i);
 
+	int totalCells();
 }

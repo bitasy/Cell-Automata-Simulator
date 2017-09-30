@@ -4,6 +4,14 @@ import backend.Cell;
 
 public class FireRuleSet extends StandardRuleSet{
 
+	private static final int TREE = 0;
+	private static final int FIRE = 1;
+	private static final int EMPTY = 0;
+	
+	private static final int[] TREE_STATE = new int[] {0};
+	private static final int[] FIRE_STATE = new int[] {1};
+	private static final int[] EMPTY_STATE = new int[] {2};
+	
 	private double probCatch;
 	
 	@Override
@@ -12,32 +20,31 @@ public class FireRuleSet extends StandardRuleSet{
 	}
 	
 	void rule1() {
-		if(cell != null && cell.getPrimaryState() == 0) {
-			int[] location = cell.getLocation();
-			for(Cell[] a : neighborhood) {
-				for(Cell c : a) {
-					if(c != null && c != cell && c.getPrimaryState() == 1) {
-						effects[location[0]][location[1]][0] = Math.random() < probCatch ? 1: 0;
+		if(cell != null && cell.getPrimaryState() == TREE) {
+			int location = cell.getTag();
+				for(Cell c : paramCells) {
+					if(c != null && c != cell && c.getPrimaryState() == FIRE) {
+						effects.setState(location, Math.random() < probCatch ? FIRE_STATE : TREE_STATE);
 						return;
 					}
 				}
-			}
+			
 
-			effects[location[0]][location[1]][0] = 0;
+			effects.setState(location, TREE_STATE);
 		}
 	}
 	
 	void rule2() {
-		if(cell != null && cell.getPrimaryState() == 1) {
-			int[] location = cell.getLocation();
-			effects[location[0]][location[1]][0] = 2;
+		if(cell != null && cell.getPrimaryState() == FIRE) {
+			int location = cell.getTag();
+			effects.setState(location, EMPTY_STATE);
 		}
 	}
 	
 	void rule3() {
-		if(cell != null && cell.getPrimaryState() == 2) {
-			int[] location = cell.getLocation();
-			effects[location[0]][location[1]][0] = 2;
+		if(cell != null && cell.getPrimaryState() == EMPTY) {
+			int location = cell.getTag();
+			effects.setState(location, EMPTY_STATE);
 		}
 	}
 

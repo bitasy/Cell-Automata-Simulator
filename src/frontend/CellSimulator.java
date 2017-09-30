@@ -5,8 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import backend.IGrid;
-import backend.RealGrid;
-//import grids.RectangularGrid;
+import grids.RectangularGrid;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.control.Alert;
@@ -26,7 +25,7 @@ public class CellSimulator extends Pane {
 	private int cols;
 	private Timeline animation;
 	private double step;
-	private RealGrid myGrid;
+	private RectangularGrid myGrid;
 	private MasterMap masterMap = new MasterMap();
 	private Map<String, SimulationParameters> XML_readings = masterMap.getMap();
 	private SimulationParameters data;
@@ -51,7 +50,7 @@ public class CellSimulator extends Pane {
 
 	public void handleReset() {
 		System.out.println("Reset");
-		addCellShapes();
+		myGrid.drawTo(this);
 		animation.pause();
 	}
 
@@ -66,7 +65,8 @@ public class CellSimulator extends Pane {
 		rows = data.getNumRows();
 		cols = data.getNumCols();
 		cellSize = Math.min(CellSociety.WIDTH / cols, HEIGHT / rows);
-		addCellShapes();
+		myGrid = new RectangularGrid(data, cellSize);
+		myGrid.drawTo(this);
 		startAnimation();
 	}
 
@@ -93,25 +93,7 @@ public class CellSimulator extends Pane {
 		animation.setCycleCount(Timeline.INDEFINITE);
 		//animation.play();
 	}
-
-	private void addCellShapes() {
-		myGrid = new RealGrid(data, cellSize);
-		this.getChildren().removeAll(this.getChildren());
-		double totalWidthPercent = cellSize * cols / CellSociety.WIDTH;
-		double firstX = (.5 - totalWidthPercent / 2) * CellSociety.WIDTH;
-		double totalHeightPercent = cellSize * rows / HEIGHT;
-		double firstY = (.5 - totalHeightPercent / 2) * HEIGHT;
-		for (int i = 0; i < rows; i++) {
-			for (int j = 0; j < cols; j++) {
-				Rectangle cell = (Rectangle) myGrid.getCellShape(i, j);
-				cell.setOnMouseClicked(e -> System.out.println("Cell clicked!"));
-				cell.setX(firstX + j * cellSize);
-				cell.setY(firstY + i * cellSize);
-				this.getChildren().add(cell);
-			}
-		}
-	}
-
+	
 	private void checkForErrors() {
 		alert.setTitle(CellSociety.ALERT_TITLE);
 		alert.setHeaderText(null);

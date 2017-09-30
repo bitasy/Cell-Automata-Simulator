@@ -3,6 +3,15 @@ package rulesets;
 import backend.Cell;
 
 public class GameOfLifeRuleSet extends StandardRuleSet{
+	
+	private static final int MIN_NEIGHBORS = 2;
+	private static final int MAX_NEIGHBORS = 3;
+	private static final int BIRTH_NEIGHBORS = 3;
+	private final static int ON = 1;
+	private final static int OFF = 0;
+	private static final int[] ZERO = new int[] {0};
+	private static final int[] ONE = new int[] {1};
+	
 
 	@Override
 	public int numRules() {
@@ -10,33 +19,29 @@ public class GameOfLifeRuleSet extends StandardRuleSet{
 	}
 	
 	void rule1() {
-		int[] location = cell.getLocation();
-		if(cell.getPrimaryState() == 1 && liveNeighborCount() < 2 || liveNeighborCount() > 3) {
-			effects[location[0]][location[1]][0] = 0;
+		int tag = cell.getTag();
+		if(cell.getPrimaryState() == ON && liveNeighborCount() < MIN_NEIGHBORS || liveNeighborCount() > MAX_NEIGHBORS) {
+			effects.setState(tag, ZERO);
 			
 		} else {
-			if(cell.getPrimaryState() != 0)
-				effects[location[0]][location[1]][0] = 1;
+			if(cell.getPrimaryState() != OFF)
+				effects.setState(tag, ONE);
 		}
 	}
 
 	void rule2() {
-		if(cell.getPrimaryState() == 0 && liveNeighborCount() == 3) {
-			int[] location = cell.getLocation();
-			effects[location[0]][location[1]][0] = 1;
+		if(cell.getPrimaryState() == OFF && liveNeighborCount() == BIRTH_NEIGHBORS) {
+			int tag = cell.getTag();
+			effects.setState(tag, ONE);
 		}
 	}
 	
 	private int liveNeighborCount() {
 		int c = 0;
-		if(neighborhood[0][0] != null && neighborhood[0][0].getPrimaryState() == 1) c++;
-		if(neighborhood[0][1] != null && neighborhood[0][1].getPrimaryState() == 1) c++;
-		if(neighborhood[0][2] != null && neighborhood[0][2].getPrimaryState() == 1) c++;
-		if(neighborhood[1][0] != null && neighborhood[1][0].getPrimaryState() == 1) c++;
-		if(neighborhood[1][2] != null && neighborhood[1][2].getPrimaryState() == 1) c++;
-		if(neighborhood[2][0] != null && neighborhood[2][0].getPrimaryState() == 1) c++;
-		if(neighborhood[2][1] != null && neighborhood[2][1].getPrimaryState() == 1) c++;
-		if(neighborhood[2][2] != null && neighborhood[2][2].getPrimaryState() == 1) c++;
+		
+		for(Cell cell : paramCells ) {
+			if(cell.getPrimaryState() != 0) c++;
+		}
 		
 		return c;
 	}

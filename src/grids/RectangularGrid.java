@@ -10,9 +10,7 @@ import backend.EffectGrid;
 import backend.IGrid;
 import backend.IRuleSet;
 import frontend.CellSociety;
-import javafx.scene.Parent;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import xml_start.SimulationParameters;
@@ -22,16 +20,17 @@ import xml_start.SimulationParameters;
  * 
  * @author Brian Nieves
  */
-public class RectangularGrid extends Pane implements IGrid {
+public class RectangularGrid implements IGrid {
 
 	private static final int DEFAULT_STATE = 0;
 	private static final int DEFAULT_SECONDARY_STATE = -1;
+	
 	private Map<Integer, Color> colorMap;
 	private Cell[][] myGrid;
 	private int numStates;
 	private IRuleSet myRuleSet;
 	private double myCellSize;
-	private Region myCanvas;
+	private Pane myCanvas; //Pane is a base class, but still all that is necessary
 	
 	/**
 	 * Creates a new Grid that holds all the Cells to be used in a simulation.
@@ -134,16 +133,19 @@ public class RectangularGrid extends Pane implements IGrid {
 			return newStates[loc[0]][loc[1]];
 		}
 		
+		public int totalCells() {
+			return newStates.length*newStates[0].length;
+		}
 	}
 
 	@Override
-	public void drawTo(Region region) {
-		// TODO Graphics for Grid (Rectangular)
-		myCanvas = region;
+	public void drawTo(Pane pane) {
+		myCanvas = pane;
+		draw();
 	}
 	
 	private void draw() {
-		this.getChildren().removeAll(this.getChildren());
+		myCanvas.getChildren().removeAll(myCanvas.getChildren());
 		
 		int rows = myGrid.length;
 		int cols = myGrid[0].length;
@@ -157,7 +159,7 @@ public class RectangularGrid extends Pane implements IGrid {
 				cell.setOnMouseClicked(e -> System.out.println("Cell clicked!"));
 				cell.setX(firstX + j * myCellSize);
 				cell.setY(firstY + i * myCellSize);
-				this.getChildren().add(cell);
+				myCanvas.getChildren().add(cell);
 			}
 		}
 	}

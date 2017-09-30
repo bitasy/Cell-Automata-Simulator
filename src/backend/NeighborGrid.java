@@ -1,12 +1,11 @@
 package backend;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javafx.scene.Parent;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import xml_start.SimulationParameters;
 
@@ -49,11 +48,6 @@ public abstract class NeighborGrid implements IGrid {
 					myRuleSet.applyRule(rule, myGrid.get(c).get(0), myGrid.get(c));
 	}
 	
-	@Override
-	public void drawTo(Parent parent) {
-
-	}
-	
 	class NeighborEffectGrid implements EffectGrid{
 		private Map<Integer, int[]> newStates = new HashMap<>();
 		
@@ -66,18 +60,10 @@ public abstract class NeighborGrid implements IGrid {
 		public int[] getStates(int i) {
 			return newStates.get(i);
 		}
-		
-		/*@Override
-		public int getIndex(Cell cell) {
-			Map<Integer, List<Cell>> grid = myGrid;
-			for(int i : grid.keySet()) {
-				if(grid.get(i).get(0) == cell) return i; //The use of reference equality for objects in this line is intended.
-			}
-			
-			return -1;
-		}*/
 
-		
+		public int totalCells() {
+			return myGrid.size();
+		}
 	}
 
 }
