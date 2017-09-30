@@ -49,6 +49,8 @@ public class SegregationRuleSet extends StandardRuleSet {
 
 	private int nextPosition() {
 		//Algorithm adapted from Jon Skeet at https://stackoverflow.com/questions/4040001/creating-random-numbers-with-no-duplicates	
+		possibilities = effects.totalCells();
+		
 		int chosen = r.nextInt(possibilities);
         int extra = 0;
         for(int usedNum : used) {
@@ -82,7 +84,6 @@ public class SegregationRuleSet extends StandardRuleSet {
 	@Override
 	public void setParams(double[] params) {
 		t = params[0];
-		possibilities = effects.totalCells();
 	}
 
 }

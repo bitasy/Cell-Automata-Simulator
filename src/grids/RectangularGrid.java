@@ -50,7 +50,7 @@ public class RectangularGrid implements IGrid {
 	private void populate(int[][] initialState) {
 		for(int i = 0; i < initialState.length; i++) {
 			for(int j = 0; j < initialState[0].length; j++) {
-				myGrid[i][j] = new Cell(initialState[i][j], numStates, colorMap, i*myGrid.length+j, myCellSize);
+				myGrid[i][j] = new Cell(initialState[i][j], numStates, colorMap, i*myGrid[0].length+j, myCellSize);
 				for(int k = 1; k < numStates; k++) myGrid[i][j].changeState(k, DEFAULT_SECONDARY_STATE);
 			}
 		}
@@ -63,7 +63,7 @@ public class RectangularGrid implements IGrid {
 		
 		for(int i = 0; i < myGrid.length; i++) {
 			for(int j = 0; j < myGrid[0].length; j++) {
-				myGrid[i][j].changeState(newStates.getStates(i*myGrid.length+j));
+				myGrid[i][j].changeState(newStates.getStates(i*myGrid[0].length+j));
 			}
 		}
 		
@@ -96,7 +96,7 @@ public class RectangularGrid implements IGrid {
 		
 		for (int rowNum=startPosY; rowNum<=endPosY; rowNum++) {
 		    for (int colNum=startPosX; colNum<=endPosX; colNum++) {
-		    	if(rowNum != location[0] && colNum != location[1])
+		    	if(rowNum != location[0] || colNum != location[1])
 		    		neighborgrid.add(myGrid[rowNum][colNum]);
 		    }
 		}
@@ -105,7 +105,7 @@ public class RectangularGrid implements IGrid {
 	}
 	
 	private int[] getLocation(int index) {
-		return new int[] {index/myGrid.length, index%myGrid[0].length};
+		return new int[] {index/myGrid[0].length, index%myGrid[0].length};
 	}
 	
 	class RectangularEffectGrid implements EffectGrid {
@@ -122,7 +122,7 @@ public class RectangularGrid implements IGrid {
 		
 		@Override
 		public void setState(int index, int[] states) {
-			int row = index/newStates.length;
+			int row = index/newStates[0].length;
 			int col = index%newStates[0].length;
 			newStates[row][col] = states;
 		}

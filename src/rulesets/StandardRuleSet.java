@@ -26,6 +26,7 @@ public abstract class StandardRuleSet implements IRuleSet {
 			Method m = this.getClass().getDeclaredMethod("rule"+ruleNum, new Class[] {});
 			m.invoke(this, new Object[] {});
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new IllegalArgumentException("Could not find method rule"+ruleNum+". Please make sure it exists in "+this.getClass().getName()+" and is package visible.");
 		}
 	}

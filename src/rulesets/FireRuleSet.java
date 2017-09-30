@@ -6,7 +6,7 @@ public class FireRuleSet extends StandardRuleSet{
 
 	private static final int TREE = 0;
 	private static final int FIRE = 1;
-	private static final int EMPTY = 0;
+	private static final int EMPTY = 2;
 	
 	private static final int[] TREE_STATE = new int[] {0};
 	private static final int[] FIRE_STATE = new int[] {1};
