@@ -25,13 +25,18 @@ public class RectangularGrid implements IGrid {
 	private static final int DEFAULT_STATE = 0;
 	private static final int DEFAULT_SECONDARY_STATE = -1;
 	
+	protected int[][] NEIGHBOR_SET = new int[][]{ {-1, -1}, {-1, 0}, 
+			   {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, 1} };
+	
 	private Map<Integer, Color> colorMap;
-	private Cell[][] myGrid;
 	private int numStates;
 	private IRuleSet myRuleSet;
 	private double myCellSize;
-	private Pane myCanvas; //Pane is a base class, but still all that is necessary
-	
+	private boolean toroidal;
+	private Pane myCanvas; 	//Pane is a base class, but still all that is necessary
+
+	protected Cell[][] myGrid;
+
 	/**
 	 * Creates a new Grid that holds all the Cells to be used in a simulation.
 	 * @param simdata the SimulationLoader object that holds information about the simulation parameters.
@@ -41,6 +46,7 @@ public class RectangularGrid implements IGrid {
 		myGrid = new Cell[simdata.getNumRows()][simdata.getNumCols()];
 		colorMap = simdata.getColorScheme();
 		numStates = (int) simdata.getExtraParameters()[0];
+		//toroidal = simdata.isToroidal();
 		myCellSize = cellSize;
 		populate(simdata.getGrid());
 		myRuleSet = simdata.getRules();
@@ -84,27 +90,27 @@ public class RectangularGrid implements IGrid {
 	 * @return the array of cells in the parameter cell's neighborhood.
 	 */
 	protected List<Cell> getNeighborhood(Cell cell) {
-		//This method adapted from Vivek at https://stackoverflow.com/questions/4120609/more-efficient-way-to-check-neighbours-in-a-two-dimensional-array-in-java
+		//This method adapted from Simon Forsberg at https://codereview.stackexchange.com/questions/68627/getting-the-neighbors-of-a-point-in-a-2d-grid
 		int[] location = getLocation(cell.getTag());
 		
-		int startPosX = (location[1] - 1 < 0) ? location[1] : location[1]-1;
-		int startPosY = (location[0] - 1 < 0) ? location[0] : location[0]-1;
-		int endPosX =   (location[1] + 1 > myGrid[0].length-1) ? location[1] : location[1]+1;
-		int endPosY =   (location[0] + 1 > myGrid.length-1) ? location[0] : location[0]+1;
-		
-		List<Cell> neighborgrid = new ArrayList<>();
-		
-		for (int rowNum=startPosY; rowNum<=endPosY; rowNum++) {
-		    for (int colNum=startPosX; colNum<=endPosX; colNum++) {
-		    	if(rowNum != location[0] || colNum != location[1])
-		    		neighborgrid.add(myGrid[rowNum][colNum]);
-		    }
+		List<Cell> neighbors = new ArrayList<>();
+		for (int[] neighbor : NEIGHBOR_SET) {
+			if (isOnMap(location[0] + neighbor[0], location[1] + neighbor[1])) {
+				neighbors.add(myGrid[location[1] + neighbor[1]][location[0] + neighbor[0]]);
+			} else if (toroidal) {
+				neighbors.add(myGrid[(location[1] + neighbor[1]+myGrid.length)%myGrid.length]
+						[(location[0] + neighbor[0]+myGrid[0].length)%myGrid[0].length]);
+			}
 		}
 		
-		return neighborgrid;
+		return neighbors;
 	}
 	
-	private int[] getLocation(int index) {
+	private boolean isOnMap(int i, int j) {
+		return (0<=i&&i<myGrid[0].length)&&(0<=j&&j<myGrid.length);
+	}
+
+	protected int[] getLocation(int index) {
 		return new int[] {index/myGrid[0].length, index%myGrid[0].length};
 	}
 	
@@ -144,7 +150,7 @@ public class RectangularGrid implements IGrid {
 		draw();
 	}
 	
-	private void draw() {
+	protected void draw() {
 		myCanvas.getChildren().removeAll(myCanvas.getChildren());
 		
 		int rows = myGrid.length;

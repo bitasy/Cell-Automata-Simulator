@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import backend.IGrid;
+import grids.CardinalGrid;
 import grids.RectangularGrid;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
