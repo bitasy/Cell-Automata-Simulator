@@ -22,9 +22,6 @@ public class CellSociety extends Application {
 	public static final Paint BACKGROUND = Color.WHITE;
 	public static final double MAXSPEED = 10.;
 	public static final double MINSPEED = 0.;
-	
-	private BorderPane root = new BorderPane();
-	private Scene mainScene;
 
 	public static void main(String[] args) {
 		launch(args);
@@ -32,7 +29,8 @@ public class CellSociety extends Application {
 
 	@Override
 	public void start(Stage s) throws Exception {
-		mainScene = new Scene(root, WIDTH, HEIGHT, BACKGROUND);
+		BorderPane root = new BorderPane();
+		Scene mainScene = new Scene(root, WIDTH, HEIGHT, BACKGROUND);
 		CellSimulator simulator = new CellSimulator(s);
 		root.setTop(simulator);
 		root.setBottom(new SimulationInterface(simulator));
