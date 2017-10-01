@@ -205,7 +205,6 @@ public class RectangularGrid implements IGrid {
 			for (int j = 0; j < cols; j++) {
 				Rectangle cell = (Rectangle)myGrid[i][j].getView();
 				cell.setOnMouseClicked(e -> System.out.println("Cell clicked!"));
-				//cell.sex
 				cell.setX(firstX + j * cellSize);
 				cell.setY(firstY + i * cellSize);
 				myCanvas.getChildren().add(cell);
