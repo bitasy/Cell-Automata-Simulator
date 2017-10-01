@@ -52,9 +52,9 @@ public class SimulationInterface extends BorderPane {
 		VBox.setMargin(saveSim, new Insets(5, 10, 0, 10));
 		this.setLeft(vSim);
 	}
-	
+
 	private void createGraphInfo() {
-		VBox topBox = new VBox(); 
+		VBox topBox = new VBox();
 		Text populationText = new Text("Insert Population Info Here!");
 		populationText.setFill(Color.BLACK);
 		topBox.getChildren().add(populationText);
@@ -163,6 +163,9 @@ public class SimulationInterface extends BorderPane {
 			Text value = (Text) sliderBox.getChildren().get(1);
 			slider.valueProperty().addListener(new ChangeListener<Number>() {
 				public void changed(ObservableValue<? extends Number> ov, Number old_val, Number new_val) {
+					if (!sliderInformation.isContinuous()) {
+						slider.setValue(Math.round(new_val.doubleValue()));
+					}
 					simulator.handleExtraParameters(new_val.doubleValue(), i);
 					value.setText(String.format("%.2f", new_val));
 				}

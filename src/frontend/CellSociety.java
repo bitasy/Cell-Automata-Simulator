@@ -18,6 +18,7 @@ public class CellSociety extends Application {
 	public static final String ALERT_TITLE = labels.getString("alert");
 	public static final String ALERT_MESSAGE = labels.getString("alertMessage");
 	public static final String SAVE = labels.getString("alertMessage");
+	public static final String GRAPH_TITLE = labels.getString("graph");
 	public static final int WIDTH = 700;
 	public static final int HEIGHT = 700;
 	public static final Paint BACKGROUND = Color.WHITE;

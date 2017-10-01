@@ -40,16 +40,15 @@ public class CellSimulator extends Pane {
 	private Alert alert = new Alert(AlertType.INFORMATION);
 	private List<Double> parameters;
 	private Text populationText;
+	private CellGraph myGraph;
 
 	public CellSimulator(Stage s) {
 		super();
 		stage = s;
 		masterMap = new MasterMap();
 		XML_readings = masterMap.getMap();
+		myGraph = new CellGraph();
 		checkForErrors();
-		// this.resize(CellSociety.WIDTH, HEIGHT);
-		// this.setMaxSize(CellSociety.WIDTH, HEIGHT);
-		// this.setMinSize(CellSociety.WIDTH, HEIGHT);
 		this.setPrefSize(CellSociety.WIDTH, HEIGHT);
 		step = 1000 / ((CellSociety.MAXSPEED - CellSociety.MINSPEED) / 2);
 	}
@@ -71,6 +70,7 @@ public class CellSimulator extends Pane {
 	public void handleStep() {
 		myGrid.update();
 		// populationText.setText(myGrid.status());
+		myGraph.addPoints(new Double[] { 1., 2. });
 	}
 
 	public void handleSimulatorChange(String sim) {
@@ -81,6 +81,9 @@ public class CellSimulator extends Pane {
 		cols = data.getNumCols();
 		cellSize = Math.min(CellSociety.WIDTH / cols, HEIGHT / rows);
 		// parameters = new ArrayList<Double>(data.getSliderInfo().size());
+		// populationText.setText(myGrid.status());
+		myGraph.reset();
+		myGraph.addStartingPoints(new Double[] { 1., 2. });
 		addCellShapes();
 		startAnimation();
 	}
@@ -144,7 +147,7 @@ public class CellSimulator extends Pane {
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < cols; j++) {
 				Rectangle cell = (Rectangle) myGrid.getCellShape(i, j);
-//				cell.setOnMouseClicked(e -> updateCell());
+				// cell.setOnMouseClicked(e -> updateCell());
 				cell.setX(firstX + j * cellSize);
 				cell.setY(firstY + i * cellSize);
 				this.getChildren().add(cell);
