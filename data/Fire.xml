@@ -4,6 +4,12 @@
     <author>Angela B. Shiflet</author>
     <colorScheme>2 -1 -1 -1 0 -1 1</colorScheme>
     <extraParams>1 0.3</extraParams>
+    <shape>square</shape>
+    <hasOutline>true</hasOutline>
+    <neighborsConsidered>all</neighborsConsidered>
+    <sliders>ratio 0 1 true;</sliders>
+    <toroidal>false</toroidal>
+    <initialConfig>fixed</initialConfig>
     <grid> 2 2 2 2 2 2 2 2 2 2;
      	   2 0 0 0 0 0 0 0 0 2;
      	   2 0 0 0 0 0 0 0 0 2;

@@ -42,8 +42,9 @@ public class XMLParserCS {
 	
 	/**
      * Get the data contained in this XML file as an object
+	 * @throws Exception 
      */
-    public SimulationParameters getSimulation (File dataFile, String simName) {
+    public SimulationParameters getSimulation (File dataFile, String simName) throws Exception, XMLFormatException {
         Element root = getRootElement(dataFile);
         // System.out.println(root);
         if (! isValidFile(root, SimulationParameters.DATA_TYPE)) {
@@ -54,7 +55,10 @@ public class XMLParserCS {
         for (String field : SimulationParameters.DATA_FIELDS) {
             results.put(field, getTextValue(root, field));
         }
-        return new SimulationParameters(results, simName);
+        
+       return new SimulationParameters(results, simName);
+        
+        
     }
     
     
@@ -73,14 +77,15 @@ public class XMLParserCS {
     
     
     // Get value of Element's text
-    private String getTextValue (Element e, String tagName) {
+    private String getTextValue (Element e, String tagName) throws Exception {
         NodeList nodeList = e.getElementsByTagName(tagName);
         if (nodeList != null && nodeList.getLength() > 0) {
             return nodeList.item(0).getTextContent();
         }
         else {
-            // FIXME: empty string or null, is it an error to not find the text value?
-            return "";
+            
+        		throw new Exception("No value in XML element");
+            
         }
     }
     
