@@ -1,8 +1,6 @@
 package frontend;
 
-import java.util.ArrayList;
 import java.util.List;
-
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
@@ -15,10 +13,11 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import xml_start.SliderInfo;
 
 public class SimulationInterface extends BorderPane {
 
-	private static final int HEIGHT = CellSociety.HEIGHT / 4;
+	private static final double HEIGHT =  .3 * CellSociety.HEIGHT;
 	private String[] simNames;
 	private Text authorText = new Text();
 	private CellSimulator simulator;
@@ -31,7 +30,7 @@ public class SimulationInterface extends BorderPane {
 		createDropDownSection();
 		createButtonsSection();
 		createSpeedSection();
-		// createSliderSection();
+		createSliderSection();
 		createGraphInfo();
 	}
 
@@ -131,7 +130,7 @@ public class SimulationInterface extends BorderPane {
 		speedSection.setTop(sliderBox);
 		authorText.setFill(Color.BLACK);
 		speedSection.setCenter(authorText);
-		BorderPane.setMargin(authorText, new Insets(0, 0, 30, 0));
+		BorderPane.setMargin(authorText, new Insets(0, 0, 10, 0));
 		this.setRight(speedSection);
 	}
 
@@ -154,24 +153,26 @@ public class SimulationInterface extends BorderPane {
 		GridPane grid = new GridPane();
 		grid.setHgap(10);
 		grid.setPadding(new Insets(0, 10, 0, 10));
-		ArrayList<SliderInfo> sliders = simulator.getSliderInfo();
+		List<SliderInfo> sliders = simulator.getSliderInfo();
 		for (int i = 0; i < sliders.size(); i++) {
 			SliderInfo sliderInformation = sliders.get(i);
 			VBox sliderBox = setSliderBox(sliderInformation.getMin(), sliderInformation.getMax(),
-					sliderInformation.getDefault(), sliderInformation.getUnits());
+					sliderInformation.getDefault(), sliderInformation.getTitle());
 			Slider slider = (Slider) sliderBox.getChildren().get(0);
 			Text value = (Text) sliderBox.getChildren().get(1);
+			final int constantIndex = i;
 			slider.valueProperty().addListener(new ChangeListener<Number>() {
 				public void changed(ObservableValue<? extends Number> ov, Number old_val, Number new_val) {
 					if (!sliderInformation.isContinuous()) {
 						slider.setValue(Math.round(new_val.doubleValue()));
 					}
-					simulator.handleExtraParameters(new_val.doubleValue(), i);
+					simulator.handleExtraParameters(new_val.doubleValue(), constantIndex);
 					value.setText(String.format("%.2f", new_val));
 				}
 			});
 			grid.add(sliderBox, i, 0);
 		}
+		BorderPane.setAlignment(grid, Pos.TOP_CENTER);
 		this.setBottom(grid);
 	}
 }

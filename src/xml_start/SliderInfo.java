@@ -41,8 +41,7 @@ public class SliderInfo {
 		return isContinuous;
 	}
 	
-	
-	
-	
-	
+	public double getDefault() {
+		return (max-min)/2;
+	}
 }

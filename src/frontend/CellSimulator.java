@@ -1,32 +1,27 @@
 package frontend;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import backend.Grid;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import xml_start.MasterMap;
 import xml_start.SimulationParameters;
+import xml_start.SliderInfo;
+import xml_start.XMLWrite;
 
 public class CellSimulator extends Pane {
 
 	private static final double COS_THIRTY = Math.cos(Math.PI / 6);
 	private static final double SIN_THIRTY = Math.sin(Math.PI / 6);
-	private static final int HEIGHT = 3 * CellSociety.HEIGHT / 4;
+	private static final double HEIGHT = .7 * CellSociety.HEIGHT;
 	private double cellSize;
 	private int rows;
 	private int cols;
@@ -38,7 +33,7 @@ public class CellSimulator extends Pane {
 	private SimulationParameters data;
 	private Stage stage;
 	private Alert alert = new Alert(AlertType.INFORMATION);
-	private List<Double> parameters;
+	private double[] parameters;
 	private Text populationText;
 	private CellGraph myGraph;
 
@@ -70,7 +65,7 @@ public class CellSimulator extends Pane {
 	public void handleStep() {
 		myGrid.update();
 		// populationText.setText(myGrid.status());
-		myGraph.addPoints(new Double[] { 1., 2. });
+		// myGraph.addPoints(myGrid.information);
 	}
 
 	public void handleSimulatorChange(String sim) {
@@ -80,10 +75,9 @@ public class CellSimulator extends Pane {
 		rows = data.getNumRows();
 		cols = data.getNumCols();
 		cellSize = Math.min(CellSociety.WIDTH / cols, HEIGHT / rows);
-		// parameters = new ArrayList<Double>(data.getSliderInfo().size());
-		// populationText.setText(myGrid.status());
+		parameters = new double[data.getSliders().size()];
 		myGraph.reset();
-		myGraph.addStartingPoints(new Double[] { 1., 2. });
+		myGraph.addStartingPoints(new Integer[] { 1, 2 });
 		addCellShapes();
 		startAnimation();
 	}
@@ -96,9 +90,8 @@ public class CellSimulator extends Pane {
 	}
 
 	public void handleExtraParameters(double newValue, int index) {
-		System.out.println("Value Changed!");
-		parameters.set(index, newValue);
-		myGrid.setParameters(parameters);
+		parameters[index] = newValue;
+		// myGrid.setParameters(parameters);
 		animation.stop();
 		startAnimation();
 	}
@@ -111,6 +104,14 @@ public class CellSimulator extends Pane {
 
 	public void handleSaveState() {
 		System.out.println("Save the state!");
+		XMLWrite xmlWriter = new XMLWrite();
+		try {
+			// xmlWriter.saveState(data, Current version of grid, parameters);
+		} catch (Exception e) {
+			// remove e.printstackTrace
+			e.printStackTrace();
+			// Throw alert
+		}
 	}
 
 	public String[] getSimulationNames() {
@@ -122,7 +123,7 @@ public class CellSimulator extends Pane {
 	}
 
 	public List<SliderInfo> getSliderInfo() {
-		return data.getSliderInfo();
+		return data.getSliders();
 	}
 
 	public void setText(Text text) {
