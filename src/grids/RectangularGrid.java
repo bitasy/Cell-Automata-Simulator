@@ -25,18 +25,18 @@ public class RectangularGrid implements IGrid {
 	private static final int DEFAULT_STATE = 0;
 	private static final int DEFAULT_SECONDARY_STATE = -1;
 	
-	protected int[][] NEIGHBOR_SET = new int[][]{ {-1, -1}, {-1, 0}, 
+	protected int[][] NEIGHBOR_SET = new int[][]{ {-1, -1}, {-1, 0},
 		   {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, 1} };
-
 	
 	private Map<Integer, Color> colorMap;
-	private Cell[][] myGrid;
 	private int numStates;
 	private boolean toroidal = true;
 	private IRuleSet myRuleSet;
 	private double myCellSize;
-	private Pane myCanvas; //Pane is a base class, but still all that is necessary
-	
+	private Pane myCanvas; 	//Pane is a base class, but still all that is necessary
+
+	protected Cell[][] myGrid;
+
 	/**
 	 * Creates a new Grid that holds all the Cells to be used in a simulation.
 	 * @param simdata the SimulationLoader object that holds information about the simulation parameters.
@@ -46,6 +46,7 @@ public class RectangularGrid implements IGrid {
 		myGrid = new Cell[simdata.getNumRows()][simdata.getNumCols()];
 		colorMap = simdata.getColorScheme();
 		numStates = (int) simdata.getExtraParameters()[0];
+		//toroidal = simdata.isToroidal();
 		myCellSize = cellSize;
 		populate(simdata.getGrid());
 		myRuleSet = simdata.getRules();
@@ -90,6 +91,7 @@ public class RectangularGrid implements IGrid {
 	 */
 	protected List<Cell> getNeighborhood(Cell cell) {
 		//This method adapted from Simon Forsberg at https://codereview.stackexchange.com/questions/68627/getting-the-neighbors-of-a-point-in-a-2d-grid
+
 				int[] location = getLocation(cell.getTag());
 				
 				List<Cell> neighbors = new ArrayList<>();
@@ -111,8 +113,7 @@ public class RectangularGrid implements IGrid {
 		return (0<=i&&i<myGrid.length)&&(0<=j&&j<myGrid[0].length);
 	}
 
-	
-	private int[] getLocation(int index) {
+	protected int[] getLocation(int index) {
 		return new int[] {index/myGrid[0].length, index%myGrid[0].length};
 	}
 	
@@ -157,7 +158,7 @@ public class RectangularGrid implements IGrid {
 		draw();
 	}
 	
-	private void draw() {
+	protected void draw() {
 		myCanvas.getChildren().removeAll(myCanvas.getChildren());
 		
 		int rows = myGrid.length;

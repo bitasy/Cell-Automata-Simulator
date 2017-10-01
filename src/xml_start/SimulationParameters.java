@@ -221,6 +221,11 @@ public class SimulationParameters {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	public boolean isToroidal() {
+		// TODO Auto-generated method stub
+		return true;
+	}
     
     
 }

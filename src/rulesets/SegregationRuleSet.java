@@ -32,7 +32,7 @@ public class SegregationRuleSet extends StandardRuleSet {
 			possibilities = effects.totalCells();
 			int position = nextPosition();
 			while (!valid) {
-				
+				//System.out.println(position);
 				int[] states = effects.getStates(position);
 				if (states[0] == EMPTY)
 					valid = true;
@@ -63,7 +63,7 @@ public class SegregationRuleSet extends StandardRuleSet {
         }
         possibilities--;
         used.add(chosen);
-        return chosen+extra;
+        return chosen+extra < effects.totalCells() ? chosen+extra : effects.totalCells()-1;
 	}
 	
 	private boolean isSatisfied() {
