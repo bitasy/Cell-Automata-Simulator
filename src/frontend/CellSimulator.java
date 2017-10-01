@@ -59,6 +59,7 @@ public class CellSimulator extends Pane {
 
 	public void handleReset() {
 		System.out.println("Reset");
+		myGrid = new RectangularGrid(data, cellSize);
 		myGrid.drawTo(this);
 		animation.pause();
 	}
@@ -66,7 +67,7 @@ public class CellSimulator extends Pane {
 	public void handleStep() {
 		myGrid.update();
 		// populationText.setText(myGrid.status());
-		// myGraph.addPoints(myGrid.information);
+		myGraph.addPoints(new Integer[] {1, 2});
 	}
 
 	public void handleSimulatorChange(String sim) {
@@ -76,10 +77,10 @@ public class CellSimulator extends Pane {
 		rows = data.getNumRows();
 		cols = data.getNumCols();
 		cellSize = Math.min(CellSociety.WIDTH / cols, HEIGHT / rows);
-//<<<<<<< HEAD
+		// <<<<<<< HEAD
 		myGrid = new RectangularGrid(data, cellSize);
 		myGrid.drawTo(this);
-//======= TODO choose grid dynamically
+		// ======= TODO choose grid dynamically
 		parameters = new double[data.getSliders().size()];
 		myGraph.reset();
 		myGraph.addStartingPoints(new Integer[] { 1, 2 });
@@ -141,7 +142,6 @@ public class CellSimulator extends Pane {
 		animation = new Timeline(new KeyFrame(Duration.millis(step), e -> handleStep()));
 		animation.setCycleCount(Timeline.INDEFINITE);
 	}
-	
 
 	// private void addCellShapes() {
 	// this.getChildren().removeAll(this.getChildren());
