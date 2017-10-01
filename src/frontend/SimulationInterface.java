@@ -32,9 +32,38 @@ public class SimulationInterface extends BorderPane {
 		createButtonsSection();
 		createSpeedSection();
 		// createSliderSection();
+		createGraphInfo();
 	}
 
 	private void createDropDownSection() {
+		VBox vSim = new VBox();
+		ChoiceBox<String> simulations = createChoiceBox();
+		vSim.getChildren().add(simulations);
+		VBox.setMargin(simulations, new Insets(10, 10, 5, 10));
+		Button newSim = new Button(CellSociety.BUTTON_TITLES[4]);
+		newSim.setOnAction(e -> simulator.handleSimCreation());
+		newSim.setPrefWidth(150);
+		vSim.getChildren().add(newSim);
+		VBox.setMargin(newSim, new Insets(5, 10, 5, 10));
+		Button saveSim = new Button(CellSociety.BUTTON_TITLES[5]);
+		saveSim.setOnAction(e -> simulator.handleSaveState());
+		saveSim.setPrefWidth(100);
+		vSim.getChildren().add(saveSim);
+		VBox.setMargin(saveSim, new Insets(5, 10, 0, 10));
+		this.setLeft(vSim);
+	}
+	
+	private void createGraphInfo() {
+		VBox topBox = new VBox(); 
+		Text populationText = new Text("Insert Population Info Here!");
+		populationText.setFill(Color.BLACK);
+		topBox.getChildren().add(populationText);
+		topBox.setAlignment(Pos.CENTER);
+		simulator.setText(populationText);
+		this.setTop(topBox);
+	}
+
+	private ChoiceBox<String> createChoiceBox() {
 		ChoiceBox<String> simulations = new ChoiceBox<>();
 		ChangeListener<String> changeListener = new ChangeListener<String>() {
 			@Override
@@ -47,15 +76,7 @@ public class SimulationInterface extends BorderPane {
 		simulations.getItems().addAll(simNames);
 		simulations.setValue(simNames[0]);
 		simulations.setPadding(new Insets(3, 3, 3, 3));
-		VBox vSim = new VBox();
-		vSim.getChildren().add(simulations);
-		VBox.setMargin(simulations, new Insets(10, 10, 10, 10));
-		Button newSim = new Button(CellSociety.BUTTON_TITLES[4]);
-		newSim.setOnAction(e -> simulator.handleSimCreation());
-		newSim.setPrefWidth(150);
-		vSim.getChildren().add(newSim);
-		VBox.setMargin(newSim, new Insets(10, 10, 10, 10));
-		this.setLeft(vSim);
+		return simulations;
 	}
 
 	private void createButtonsSection() {

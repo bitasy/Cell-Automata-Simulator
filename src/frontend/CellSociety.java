@@ -17,6 +17,7 @@ public class CellSociety extends Application {
 	public static final String UNIT_TITLE = labels.getString("units");
 	public static final String ALERT_TITLE = labels.getString("alert");
 	public static final String ALERT_MESSAGE = labels.getString("alertMessage");
+	public static final String SAVE = labels.getString("alertMessage");
 	public static final int WIDTH = 700;
 	public static final int HEIGHT = 700;
 	public static final Paint BACKGROUND = Color.WHITE;
@@ -28,7 +29,7 @@ public class CellSociety extends Application {
 	}
 
 	@Override
-	public void start(Stage s) throws Exception {
+	public void start(Stage s) {
 		BorderPane root = new BorderPane();
 		Scene mainScene = new Scene(root, WIDTH, HEIGHT, BACKGROUND);
 		CellSimulator simulator = new CellSimulator(s);

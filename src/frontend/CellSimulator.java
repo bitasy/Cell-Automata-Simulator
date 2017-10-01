@@ -16,6 +16,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import xml_start.MasterMap;
@@ -38,6 +39,7 @@ public class CellSimulator extends Pane {
 	private Stage stage;
 	private Alert alert = new Alert(AlertType.INFORMATION);
 	private List<Double> parameters;
+	private Text populationText;
 
 	public CellSimulator(Stage s) {
 		super();
@@ -68,6 +70,7 @@ public class CellSimulator extends Pane {
 
 	public void handleStep() {
 		myGrid.update();
+		// populationText.setText(myGrid.status());
 	}
 
 	public void handleSimulatorChange(String sim) {
@@ -77,7 +80,7 @@ public class CellSimulator extends Pane {
 		rows = data.getNumRows();
 		cols = data.getNumCols();
 		cellSize = Math.min(CellSociety.WIDTH / cols, HEIGHT / rows);
-//		parameters = new ArrayList<Double>(data.getSliderInfo().size());
+		// parameters = new ArrayList<Double>(data.getSliderInfo().size());
 		addCellShapes();
 		startAnimation();
 	}
@@ -88,10 +91,10 @@ public class CellSimulator extends Pane {
 		animation.stop();
 		startAnimation();
 	}
-	
+
 	public void handleExtraParameters(double newValue, int index) {
 		System.out.println("Value Changed!");
-		parameters.get(index) = newValue; 
+		parameters.set(index, newValue);
 		myGrid.setParameters(parameters);
 		animation.stop();
 		startAnimation();
@@ -99,13 +102,12 @@ public class CellSimulator extends Pane {
 
 	public void handleSimCreation() {
 		Stage newStage = new Stage();
-		BorderPane newRoot = new BorderPane();
-		Scene mainScene = new Scene(newRoot, CellSociety.WIDTH, CellSociety.HEIGHT, CellSociety.BACKGROUND);
-		CellSimulator simulator = new CellSimulator(newStage);
-		newRoot.setTop(simulator);
-		newRoot.setBottom(new SimulationInterface(simulator));
-		newStage.setScene(mainScene);
-		newStage.show();
+		CellSociety game = new CellSociety();
+		game.start(newStage);
+	}
+
+	public void handleSaveState() {
+		System.out.println("Save the state!");
 	}
 
 	public String[] getSimulationNames() {
@@ -115,9 +117,13 @@ public class CellSimulator extends Pane {
 	public String getAuthor() {
 		return data.getAuthor();
 	}
-	
+
 	public List<SliderInfo> getSliderInfo() {
 		return data.getSliderInfo();
+	}
+
+	public void setText(Text text) {
+		populationText = text;
 	}
 
 	private void startAnimation() {
@@ -126,66 +132,73 @@ public class CellSimulator extends Pane {
 		}
 		animation = new Timeline(new KeyFrame(Duration.millis(step), e -> handleStep()));
 		animation.setCycleCount(Timeline.INDEFINITE);
-		// animation.play();
 	}
 
-	// private void addCellShapes() {
-	// myGrid = new Grid(data, cellSize);
-	// this.getChildren().removeAll(this.getChildren());
-	// double totalWidthPercent = cellSize * cols / CellSociety.WIDTH;
-	// double firstX = (.5 - totalWidthPercent / 2) * CellSociety.WIDTH;
-	// double totalHeightPercent = cellSize * rows / HEIGHT;
-	// double firstY = (.5 - totalHeightPercent / 2) * HEIGHT;
-	// for (int i = 0; i < rows; i++) {
-	// for (int j = 0; j < cols; j++) {
-	// Rectangle cell = (Rectangle) myGrid.getCellShape(i, j);
-	// cell.setOnMouseClicked(e -> System.out.println("Cell clicked!"));
-	// cell.setX(firstX + j * cellSize);
-	// cell.setY(firstY + i * cellSize);
-	// this.getChildren().add(cell);
-	// }
-	// }
-	// }
-
 	private void addCellShapes() {
+		myGrid = new Grid(data, cellSize);
 		this.getChildren().removeAll(this.getChildren());
-		// Calculations are set by taking the totalWidth/totalHeight, equating them to
-		// the respective widths/heights, solving for the side length, and taking the
-		// minimum value as this ensures that all hexagons will be shown on screen.
-		// tl;dr: math
-		double sideLength = Math.min(CellSociety.WIDTH / ((1 + 2 * SIN_THIRTY) * (cols + .5)-(cols*SIN_THIRTY)+SIN_THIRTY),
-				HEIGHT / 1.1 / (rows * 2 * COS_THIRTY + COS_THIRTY));
-		double hexagonalWidth = sideLength + 2 * SIN_THIRTY * sideLength;
-		double hexagonalHeight = 2 * sideLength * COS_THIRTY;
-		double totalWidth = cols * hexagonalWidth + hexagonalWidth / 2 - ((cols-1)*sideLength*SIN_THIRTY);
-		double totalHeight = rows * hexagonalHeight + sideLength * COS_THIRTY;
-		double totalWidthPercent = totalWidth / CellSociety.WIDTH;
-		double firstX = (.5 - totalWidthPercent / 2) * CellSociety.WIDTH + sideLength * SIN_THIRTY;
-		double totalHeightPercent = totalHeight / HEIGHT;
-		double firstY = (.5 - totalHeightPercent / 2) * HEIGHT + sideLength * COS_THIRTY;
+		double totalWidthPercent = cellSize * cols / CellSociety.WIDTH;
+		double firstX = (.5 - totalWidthPercent / 2) * CellSociety.WIDTH;
+		double totalHeightPercent = cellSize * rows / HEIGHT;
+		double firstY = (.5 - totalHeightPercent / 2) * HEIGHT;
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < cols; j++) {
-				double x, y;
-				if (j % 2 == 0) {
-					x = firstX + j * (hexagonalWidth - SIN_THIRTY * sideLength);
-					y = firstY + i * hexagonalHeight;
-				} else {
-					x = firstX + j * (hexagonalWidth - SIN_THIRTY * sideLength);
-					y = firstY + i * hexagonalHeight + hexagonalHeight / 2;
-				}
-				Polygon cell = new Polygon();
-				// Adding coordinates to the polygon
-				cell.getPoints().addAll(new Double[] { x, y, x - sideLength * SIN_THIRTY, y - sideLength * COS_THIRTY,
-						x, y - 2 * sideLength * COS_THIRTY, x + sideLength, y - 2 * sideLength * COS_THIRTY,
-						x + sideLength + sideLength * SIN_THIRTY, y - sideLength * COS_THIRTY, x + sideLength, y });
-				cell.setOnMouseClicked(e -> System.out.println("Cell clicked!"));
-				cell.setFill(Color.WHITE);
-				cell.setStroke(Color.BLACK);
-				cell.setStrokeWidth(2);
+				Rectangle cell = (Rectangle) myGrid.getCellShape(i, j);
+//				cell.setOnMouseClicked(e -> updateCell());
+				cell.setX(firstX + j * cellSize);
+				cell.setY(firstY + i * cellSize);
 				this.getChildren().add(cell);
 			}
 		}
 	}
+
+	// private void addCellShapes() {
+	// this.getChildren().removeAll(this.getChildren());
+	// // Calculations are set by taking the totalWidth/totalHeight, equating them
+	// to
+	// // the respective widths/heights, solving for the side length, and taking the
+	// // minimum value as this ensures that all hexagons will be shown on screen.
+	// // tl;dr: math
+	// double sideLength = Math.min(CellSociety.WIDTH / ((1 + 2 * SIN_THIRTY) *
+	// (cols + .5)-(cols*SIN_THIRTY)+SIN_THIRTY),
+	// HEIGHT / 1.1 / (rows * 2 * COS_THIRTY + COS_THIRTY));
+	// double hexagonalWidth = sideLength + 2 * SIN_THIRTY * sideLength;
+	// double hexagonalHeight = 2 * sideLength * COS_THIRTY;
+	// double totalWidth = cols * hexagonalWidth + hexagonalWidth / 2 -
+	// ((cols-1)*sideLength*SIN_THIRTY);
+	// double totalHeight = rows * hexagonalHeight + sideLength * COS_THIRTY;
+	// double totalWidthPercent = totalWidth / CellSociety.WIDTH;
+	// double firstX = (.5 - totalWidthPercent / 2) * CellSociety.WIDTH + sideLength
+	// * SIN_THIRTY;
+	// double totalHeightPercent = totalHeight / HEIGHT;
+	// double firstY = (.5 - totalHeightPercent / 2) * HEIGHT + sideLength *
+	// COS_THIRTY;
+	// for (int i = 0; i < rows; i++) {
+	// for (int j = 0; j < cols; j++) {
+	// double x, y;
+	// if (j % 2 == 0) {
+	// x = firstX + j * (hexagonalWidth - SIN_THIRTY * sideLength);
+	// y = firstY + i * hexagonalHeight;
+	// } else {
+	// x = firstX + j * (hexagonalWidth - SIN_THIRTY * sideLength);
+	// y = firstY + i * hexagonalHeight + hexagonalHeight / 2;
+	// }
+	// Polygon cell = new Polygon();
+	// // Adding coordinates to the polygon
+	// cell.getPoints().addAll(new Double[] { x, y, x - sideLength * SIN_THIRTY, y -
+	// sideLength * COS_THIRTY,
+	// x, y - 2 * sideLength * COS_THIRTY, x + sideLength, y - 2 * sideLength *
+	// COS_THIRTY,
+	// x + sideLength + sideLength * SIN_THIRTY, y - sideLength * COS_THIRTY, x +
+	// sideLength, y });
+	// cell.setOnMouseClicked(e -> updateCell());
+	// cell.setFill(Color.WHITE);
+	// cell.setStroke(Color.BLACK);
+	// cell.setStrokeWidth(2);
+	// this.getChildren().add(cell);
+	// }
+	// }
+	// }
 
 	// private void addCellShapes() {
 	// this.getChildren().removeAll(this.getChildren());
@@ -219,7 +232,7 @@ public class CellSimulator extends Pane {
 	// }
 	// cell.getPoints().addAll(positions);
 	// // Adding coordinates to the polygon
-	// cell.setOnMouseClicked(e -> System.out.println("Cell clicked!"));
+	// cell.setOnMouseClicked(e -> updateCell());
 	// cell.setFill(Color.WHITE);
 	// cell.setStroke(Color.BLACK);
 	// cell.setStrokeWidth(2);
