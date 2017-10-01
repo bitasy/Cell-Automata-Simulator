@@ -14,5 +14,4 @@ public interface IGrid {
 	 * @param the Pane to which all elements will be added.
 	 */
 	void drawTo(Pane pane);
-
 }

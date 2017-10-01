@@ -400,7 +400,16 @@ public class SimulationParameters {
 
 	public int[] getInitialStates() {
 		// TODO replace getGrid with this
-		return null;
+		int[][] grid = getGrid();
+		int[] cellList = new int[grid.length*grid[0].length];
+		int tag = 0;
+		for(int[] row : grid) {
+			for(int state : row) {
+				cellList[tag] = state;
+				tag++;
+			}
+		}
+		return cellList;
 	}
     
     

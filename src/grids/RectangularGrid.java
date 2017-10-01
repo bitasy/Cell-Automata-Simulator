@@ -55,7 +55,7 @@ public class RectangularGrid implements IGrid {
 	
 	private void populate(int[] initialState) {
 		for(int i = 0; i < initialState.length; i++) {
-			int[] location = getLocation(initialState[i]);
+			int[] location = getLocation(i);
 			myGrid[location[0]][location[1]] = new Cell(initialState[i], numStates, colorMap, i, myCellSize);
 			for(int k = 1; k < numStates; k++) myGrid[location[0]][location[1]].changeState(k, DEFAULT_SECONDARY_STATE);
 			
@@ -158,6 +158,9 @@ public class RectangularGrid implements IGrid {
 		draw();
 	}
 	
+
+	private static final double HEIGHT = .7 * CellSociety.HEIGHT;
+	
 	protected void draw() {
 		myCanvas.getChildren().removeAll(myCanvas.getChildren());
 		
@@ -165,8 +168,8 @@ public class RectangularGrid implements IGrid {
 		int cols = myGrid[0].length;
 		double totalWidthPercent = myCellSize * cols / CellSociety.WIDTH;
 		double firstX = (.5 - totalWidthPercent / 2) * CellSociety.WIDTH;
-		double totalHeightPercent = myCellSize * rows / CellSociety.HEIGHT;
-		double firstY = (.5 - totalHeightPercent / 2) * CellSociety.HEIGHT;
+		double totalHeightPercent = myCellSize * rows / HEIGHT;
+		double firstY = (.5 - totalHeightPercent / 2) * HEIGHT;
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < cols; j++) {
 				Rectangle cell = myGrid[i][j].getView();
