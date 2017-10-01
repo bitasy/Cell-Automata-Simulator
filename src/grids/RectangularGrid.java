@@ -25,9 +25,14 @@ public class RectangularGrid implements IGrid {
 	private static final int DEFAULT_STATE = 0;
 	private static final int DEFAULT_SECONDARY_STATE = -1;
 	
+	protected int[][] NEIGHBOR_SET = new int[][]{ {-1, -1}, {-1, 0}, 
+		   {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, 1} };
+
+	
 	private Map<Integer, Color> colorMap;
 	private Cell[][] myGrid;
 	private int numStates;
+	private boolean toroidal = true;
 	private IRuleSet myRuleSet;
 	private double myCellSize;
 	private Pane myCanvas; //Pane is a base class, but still all that is necessary
@@ -78,31 +83,34 @@ public class RectangularGrid implements IGrid {
 	}
 	
 	/**
-	 * Returns a 3x3 array that contains references to a cell and its neighbors on all sides. The parameter cell is in the position (1,1). If the cell is on the edge, the neighbors that do not exist are null.
+	 * Returns a list that contains references to a cell's neighbors on all sides. If the cell is on the edge and toroidal is false, the neighbors that do not exist are null.
 	 * @param cell the cell whose neighbors are being returned.
 	 * @return 
 	 * @return the array of cells in the parameter cell's neighborhood.
 	 */
 	protected List<Cell> getNeighborhood(Cell cell) {
-		//This method adapted from Vivek at https://stackoverflow.com/questions/4120609/more-efficient-way-to-check-neighbours-in-a-two-dimensional-array-in-java
-		int[] location = getLocation(cell.getTag());
-		
-		int startPosX = (location[1] - 1 < 0) ? location[1] : location[1]-1;
-		int startPosY = (location[0] - 1 < 0) ? location[0] : location[0]-1;
-		int endPosX =   (location[1] + 1 > myGrid[0].length-1) ? location[1] : location[1]+1;
-		int endPosY =   (location[0] + 1 > myGrid.length-1) ? location[0] : location[0]+1;
-		
-		List<Cell> neighborgrid = new ArrayList<>();
-		
-		for (int rowNum=startPosY; rowNum<=endPosY; rowNum++) {
-		    for (int colNum=startPosX; colNum<=endPosX; colNum++) {
-		    	if(rowNum != location[0] || colNum != location[1])
-		    		neighborgrid.add(myGrid[rowNum][colNum]);
-		    }
-		}
-		
-		return neighborgrid;
+		//This method adapted from Simon Forsberg at https://codereview.stackexchange.com/questions/68627/getting-the-neighbors-of-a-point-in-a-2d-grid
+				int[] location = getLocation(cell.getTag());
+				
+				List<Cell> neighbors = new ArrayList<>();
+				for (int[] neighbor : NEIGHBOR_SET) {
+					if (isOnMap(location[0] + neighbor[0], location[1] + neighbor[1])) {
+						neighbors.add(myGrid[location[0] + neighbor[0]][location[1] + neighbor[1]]);
+					} else if (toroidal) {
+						neighbors.add(myGrid[(location[0] + neighbor[0]+myGrid.length)%myGrid.length]
+								[(location[1] + neighbor[1]+myGrid[0].length)%myGrid[0].length]);
+					}
+
+				}
+				
+				return neighbors;
+
 	}
+	
+	private boolean isOnMap(int i, int j) {
+		return (0<=i&&i<myGrid.length)&&(0<=j&&j<myGrid[0].length);
+	}
+
 	
 	private int[] getLocation(int index) {
 		return new int[] {index/myGrid[0].length, index%myGrid[0].length};
@@ -131,6 +139,11 @@ public class RectangularGrid implements IGrid {
 		public int[] getStates(int index) {
 			int[] loc = RectangularGrid.this.getLocation(index);
 			return newStates[loc[0]][loc[1]];
+		}
+		
+		public int getPrimaryState(int index) {
+			int[] loc = RectangularGrid.this.getLocation(index);
+			return newStates[loc[0]][loc[1]][0];
 		}
 		
 		public int totalCells() {

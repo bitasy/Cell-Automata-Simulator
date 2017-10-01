@@ -29,6 +29,7 @@ public class SegregationRuleSet extends StandardRuleSet {
 		if (cell.getPrimaryState() != EMPTY && !isSatisfied()) {
 			boolean valid = false;
 			used = new ArrayList<>();
+			possibilities = effects.totalCells();
 			int position = nextPosition();
 			while (!valid) {
 				
@@ -49,7 +50,7 @@ public class SegregationRuleSet extends StandardRuleSet {
 
 	private int nextPosition() {
 		//Algorithm adapted from Jon Skeet at https://stackoverflow.com/questions/4040001/creating-random-numbers-with-no-duplicates	
-		possibilities = effects.totalCells();
+		
 		
 		int chosen = r.nextInt(possibilities);
         int extra = 0;

@@ -1,17 +1,15 @@
 package frontend;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import backend.IGrid;
+import grids.CardinalGrid;
 import grids.RectangularGrid;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.Pane;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import xml_start.MasterMap;
@@ -65,7 +63,7 @@ public class CellSimulator extends Pane {
 		rows = data.getNumRows();
 		cols = data.getNumCols();
 		cellSize = Math.min(CellSociety.WIDTH / cols, HEIGHT / rows);
-		myGrid = new RectangularGrid(data, cellSize);
+		myGrid = new CardinalGrid(data, cellSize);
 		myGrid.drawTo(this);
 		startAnimation();
 	}

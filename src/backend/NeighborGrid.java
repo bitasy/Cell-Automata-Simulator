@@ -60,6 +60,10 @@ public abstract class NeighborGrid implements IGrid {
 		public int[] getStates(int i) {
 			return newStates.get(i);
 		}
+		
+		public int getPrimaryState(int i) {
+			return newStates.get(i)[0];
+		}
 
 		public int totalCells() {
 			return myGrid.size();

@@ -3,7 +3,7 @@
 	<title>Predator Prey</title>
 	<author>Mike Scott</author>
 	<colorScheme>-1 -1 -1 0 1 2</colorScheme>
-	<extraParams>3 5 20 4</extraParams>
+	<extraParams>3 3 5 8</extraParams>
 	<grid> 1 0 0 2 1 1 1 1 1 1 1 1 1 1 2 1 1 1 1 1 1 0 1 1 1 1 1 0 1 1 1 1 1 0 1 1 1 1 1 1 1 2 1 0 2 1 2 1 2 1;
 		   1 1 1 0 1 1 1 0 1 2 0 1 1 1 2 1 1 0 1 1 1 0 1 1 1 1 1 2 1 1 1 1 2 0 1 2 1 1 1 1 1 1 2 2 1 2 1 1 1 1;
 		   2 2 1 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 1 1 1 0 1 1 2 1 1 1 1 1 1 1 1 1;

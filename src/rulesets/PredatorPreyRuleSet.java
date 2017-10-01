@@ -28,14 +28,15 @@ public class PredatorPreyRuleSet extends StandardRuleSet {
 	/**
 	 * Sharks breed.
 	 */
-	void rule1new() {
+	void rule1() {
 		if (cell != null && cell.getPrimaryState() == SHARK) {
-			if(cell.getState(BREED_STATE) == -1) cell.changeState(1, sharkBreedTime);
+			if(cell.getState(BREED_STATE) == -1) cell.changeState(BREED_STATE, sharkBreedTime);
 			if(cell.getState(BREED_STATE) <= 0) {
 				int waterLocation = findState(WATER);
 				if(waterLocation >=0) effects.setState(waterLocation, new int[] {SHARK, sharkBreedTime, sharkStarveTime});
+				//cell.changeState(BREED_STATE, sharkBreedTime);
 			}
-			cell.changeState(1, cell.getState(1)-1);
+			cell.changeState(BREED_STATE, cell.getState(BREED_STATE)-1);
 		}
 	}
 
@@ -58,7 +59,7 @@ public class PredatorPreyRuleSet extends StandardRuleSet {
 				int waterLocation = findState(WATER);
 				if(waterLocation >=0) effects.setState(waterLocation, new int[] {FISH, fishBreedTime, 0});
 			} 
-			cell.changeState(1, cell.getState(1)-1);
+			cell.changeState(BREED_STATE, cell.getState(BREED_STATE)-1);
 		}
 	}
 
@@ -68,9 +69,8 @@ public class PredatorPreyRuleSet extends StandardRuleSet {
 	void rule4() {
 		if (cell != null && cell.getPrimaryState() == SHARK) {
 			int location = cell.getTag();
-			if(effects.getStates(location) == WATER_STATE) {
-				cell.changeState(STARVE_STATE, sharkStarveTime);
-			} else if (cell.getState(STARVE_STATE) >= 0) {
+			
+			if(effects.getPrimaryState(location) == SHARK && cell.getState(STARVE_STATE) > 0) {
 				cell.changeState(STARVE_STATE, cell.getState(STARVE_STATE)-1);
 				moveTo(WATER);
 			} else effects.setState(location, WATER_STATE);
@@ -82,8 +82,7 @@ public class PredatorPreyRuleSet extends StandardRuleSet {
 	 */
 	void rule5() {
 		if (cell != null && cell.getPrimaryState() == FISH) {
-			int[] current = effects.getStates(cell.getTag());
-			if(current[0] != SHARK)
+			if(effects.getPrimaryState(cell.getTag()) != SHARK)
 				moveTo(WATER);
 		}
 	}
@@ -91,7 +90,8 @@ public class PredatorPreyRuleSet extends StandardRuleSet {
 	private void moveTo(int state) {
 		int location = findState(state);
 		if(location >= 0) {
-			effects.setState(location, new int[] {cell.getPrimaryState(), cell.getState(BREED_STATE), cell.getState(STARVE_STATE)});
+			int starveState = state == FISH ? sharkStarveTime : 0;
+			effects.setState(location, new int[] {cell.getPrimaryState(), cell.getState(BREED_STATE), starveState});
 			effects.setState(cell.getTag(), WATER_STATE);
 			return;
 		}
@@ -104,8 +104,8 @@ public class PredatorPreyRuleSet extends StandardRuleSet {
 			Cell c = paramCells.get(choices[i]);
 			if(c.getPrimaryState() == state) {
 				int location = c.getTag();
-				int[] states = effects.getStates(location);
-				if (states[0] == state) {
+				if (effects.getPrimaryState(location) == state || state > WATER) {
+					System.out.println(choices[i]);
 					return location;
 				}
 			}

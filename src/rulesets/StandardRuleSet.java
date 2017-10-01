@@ -1,5 +1,6 @@
 package rulesets;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 
@@ -25,9 +26,21 @@ public abstract class StandardRuleSet implements IRuleSet {
 		try {
 			Method m = this.getClass().getDeclaredMethod("rule"+ruleNum, new Class[] {});
 			m.invoke(this, new Object[] {});
-		} catch (Exception e) {
+		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
 			throw new IllegalArgumentException("Could not find method rule"+ruleNum+". Please make sure it exists in "+this.getClass().getName()+" and is package visible.");
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 	
