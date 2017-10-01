@@ -36,14 +36,14 @@ public class XMLWrite {
 		docFactory = DocumentBuilderFactory.newInstance();
 	}
 
-
+	// make document builder
 	private DocumentBuilder makeDocumentBuilder() throws ParserConfigurationException {
 		return docFactory.newDocumentBuilder();
 	}
 	
 	
-	// TODO add the current parameters representation method input from Simran
-	public void saveState(SimulationParameters currentSim, int[][] grid) throws TransformerException, ParserConfigurationException {
+	// saves state of current simulation
+	public void saveState(SimulationParameters currentSim, int[] grid, double[] sliderParams) throws TransformerException, ParserConfigurationException {
 		
 		docBuilder = makeDocumentBuilder();
 		currSimObject = currentSim;
@@ -57,7 +57,7 @@ public class XMLWrite {
 		attr.setValue("SimulationParameters");
 		rootElement.setAttributeNode(attr);
 		
-		addElements(doc, rootElement, grid);
+		addElements(doc, rootElement, grid, sliderParams);
 					
 		// write the content into xml file
 		TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -75,6 +75,12 @@ public class XMLWrite {
 		
 	}
 
+	// get how many files already exist in the directory
+	private int getXMLFileNumber() {
+    		File folder = new File("saved_states/");
+    		File[] listOfFiles = folder.listFiles();
+    		return listOfFiles.length;
+	}
 	
     /*=============================================================================
     |
@@ -84,31 +90,32 @@ public class XMLWrite {
     |
     *===========================================================================*/
     
-	
-
-	// TODO: add any other info you add to XML format;
-	private void addElements(Document doc, Element rootElement, int[][] grid) {
-		addTitle(doc, rootElement);
-		addAuthor(doc, rootElement);
+	// add all elements to XML file
+	private void addElements(Document doc, Element rootElement, int[] grid, double[] sliderExtraParams) {
+		
+		String[] elements = {"title", "author", "hasOutline", "initialConfig", "neighborsConsidered", "sliders", "toroidal"};
+		for (String s : elements) { addTag(doc, rootElement, s); }
 		addColorScheme(doc, rootElement);
-		addParams(doc, rootElement);
+		addParams(doc, rootElement, sliderExtraParams);
 		addGrid(doc, rootElement, grid);
+		addShape(doc, rootElement);
+		
 	}
-
-	// add title
-	private void addTitle(Document doc, Element rootElement) {
-		Element title = doc.createElement("title");
-		title.appendChild(doc.createTextNode(currSimObject.getTitle()));
-		rootElement.appendChild(title);
+	
+	// add shape
+	private void addShape(Document doc, Element rootElement) {
+		Element shape = doc.createElement("shape");
+		shape.appendChild(doc.createTextNode(currSimObject.getSimShape()));
+		rootElement.appendChild(shape);
 	}
-
-	// add author
-	private void addAuthor(Document doc, Element rootElement) {
-		Element author = doc.createElement("author");
-		author.appendChild(doc.createTextNode(currSimObject.getAuthor()));
-		rootElement.appendChild(author);
+	
+	// add initial config
+	private void addTag(Document doc, Element rootElement, String tag) {
+		Element e = doc.createElement(tag);
+		if (tag.equals("initialConfig")) {e.appendChild(doc.createTextNode("fixed"));}
+		else {e.appendChild(doc.createTextNode(currSimObject.getXMLTag(tag)));}
+		rootElement.appendChild(e);
 	}
-
 
 	// color scheme
 	private void addColorScheme(Document doc, Element rootElement) {
@@ -117,47 +124,59 @@ public class XMLWrite {
 		rootElement.appendChild(colorScheme);
 	}
 
-	// TODO: extra parameters
-	private void addParams(Document doc, Element rootElement) {
+	// extra parameters
+	private void addParams(Document doc, Element rootElement, double[] sliderExtraParams) {
 		Element extraParams = doc.createElement("extraParams");
-		extraParams.appendChild(doc.createTextNode("1 0.3"));
+		double numStates = currSimObject.getNumStates();
+		StringBuffer result = new StringBuffer(String.valueOf(numStates));
+		for (double d : sliderExtraParams) { result.append(" " + String.valueOf(d)); }
+		extraParams.appendChild(doc.createTextNode(result.toString()));
 		rootElement.appendChild(extraParams);
 	}
 
 	// add grid
-	private void addGrid(Document doc, Element rootElement, int[][] grid) {
+	private void addGrid(Document doc, Element rootElement, int[] grid) {
 		Element gridElement = doc.createElement("grid");
 		String gridAsString = makeGridString(grid);
 		gridElement.appendChild(doc.createTextNode(gridAsString));
 		rootElement.appendChild(gridElement);
 	}
-	
 
 	// make grid as string
-	private String makeGridString(int[][] grid) {
+	private String makeGridString(int[] grid) {
 		
+		if (currSimObject.getSimShape().equals("other")) {
+			return gridFromList(grid);
+		} else {
+			return gridFromMatrix(grid);
+		}
+		
+	}
+	
+	// makes grid layout as a full list (for simulations like penrose)
+	private String gridFromList(int[] grid) {
 		StringBuffer gridString = new StringBuffer("");
+		for (int i = 0; i < grid.length-1; i++) {
+			gridString.append(String.valueOf(grid[i]));
+			gridString.append(" ");
+		}
+		gridString.append(String.valueOf(grid[grid.length-1]));
+		return gridString.toString();
+	}
+	
+	// makes matrix grid layout (for normal simulations)
+	private String gridFromMatrix(int[] grid) {
+		StringBuffer gridString = new StringBuffer("");
+		int numCols = currSimObject.getNumCols();
+		// int numRows = currSimObject.getNumRows();
 		
-		for (int row = 0; row < grid.length; row++) {
-			
-			gridString = gridString.append(" ");
-			for (int col = 0; col < grid[0].length-1; col++) {
-				gridString.append(String.valueOf(grid[row][col]));
-				gridString.append(" ");
-			}
-			gridString.append(String.valueOf(grid[row][grid[0].length-1]));
-			gridString.append(";");
+		for (int i = 0; i < grid.length; i++) {
+			gridString.append(" ");
+			gridString.append(String.valueOf(grid[i]));
+			if ((i+1) % numCols == 0) { gridString.append(";"); }
 		}
 		
 		return gridString.toString();
+	}
 		
-	}
-	
-	private int getXMLFileNumber() {
-    		File folder = new File("saved_states/");
-    		File[] listOfFiles = folder.listFiles();
-    		return listOfFiles.length;
-	}
-	
-	
 }

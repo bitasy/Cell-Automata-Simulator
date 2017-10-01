@@ -7,6 +7,13 @@
 - Details about what kinds of errors are checked for or not are included in the last section;
 - It is the responsibility of whoever is adding the XML file(s) to ensure it is formatted correctly as best as possible by following the rules below;
 
+## Saving States
+
+- When choosing to save the current state to XML, an XML file will be created under the folder "/saved_states"
+- It will save all the parameters of the simulations type and current state (including exact grid arrangement and slider values)
+- This data from the file may be directly copy and pasted from that file and into the specific simulation type file (in folder "/data")
+- By doing so, this will enable the simulation to start at the point where it was saved at 
+
 ## Description
 
 **Title** is simply a text sequence

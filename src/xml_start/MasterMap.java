@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 
 import javafx.application.Application;
 import javafx.application.Platform;
