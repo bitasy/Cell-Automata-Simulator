@@ -105,7 +105,7 @@ public class XMLWrite {
 	// add shape
 	private void addShape(Document doc, Element rootElement) {
 		Element shape = doc.createElement("shape");
-		shape.appendChild(doc.createTextNode(currSimObject.getSimShape()));
+		shape.appendChild(doc.createTextNode(currSimObject.getGridShape()));
 		rootElement.appendChild(shape);
 	}
 	
@@ -145,7 +145,7 @@ public class XMLWrite {
 	// make grid as string
 	private String makeGridString(int[] grid) {
 		
-		if (currSimObject.getSimShape().equals("other")) {
+		if (currSimObject.getGridShape().equals("other")) {
 			return gridFromList(grid);
 		} else {
 			return gridFromMatrix(grid);

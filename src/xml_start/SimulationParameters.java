@@ -106,8 +106,9 @@ public class SimulationParameters {
     // setup shape value
     private void setupShape() {
     		String s = myDataValues.get("shape");
-    		if (!s.equals("square") && !s.equals("triangle") && !s.equals("hexagon") && !s.equals("other")) {
-    			s = "square";
+    		if (!s.equals("CardinalGrid") && !s.equals("HexagonalGrid") &&
+    				!s.equals("NeighborGrid") && !s.equals("RectangularGrid") && !s.equals("TriangularGrid")) {
+    			s = "RectangularGrid";
     		}
     		simShape = s; 
 	}
@@ -121,7 +122,7 @@ public class SimulationParameters {
         		setupGridRandom();
         		copy2DGridToArrayGrid();
     		} else if (simInitialConfig.equals("fixed")) {
-    			if (simShape.equals("other")) { // only case in pemrose
+    			if (simShape.equals("NeighborGrid")) { // only case in pemrose
     				setupGridFixedArray();
     			} else {
     				setupGridFixedMatrix();
@@ -427,7 +428,7 @@ public class SimulationParameters {
     		return simGrid[0].length;
     }
 
-    // TODO: method would be implemented if we did pemrose simulation
+    // method would be implemented if we did pemrose simulation (left intentionally empty)
     // gets mapping of state tag to list of neighbor tags
 	public Map<Integer, List<Integer>> getGridLayout() {
 		return null;
@@ -443,8 +444,8 @@ public class SimulationParameters {
     		return myDataValues.get("colorScheme");
     }
     
-    // get shape type
-	public String getSimShape() {
+    // get grid shape type
+	public String getGridShape() {
 		return simShape;
 	}
 	
