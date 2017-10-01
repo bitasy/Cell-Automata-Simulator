@@ -105,7 +105,6 @@ public class PredatorPreyRuleSet extends StandardRuleSet {
 			if(c.getPrimaryState() == state) {
 				int location = c.getTag();
 				if (effects.getPrimaryState(location) == state || state > WATER) {
-					System.out.println(choices[i]);
 					return location;
 				}
 			}

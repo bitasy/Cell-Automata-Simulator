@@ -217,7 +217,7 @@ public class SimulationParameters {
     		return simGrid[0].length;
     }
 
-	public Object getGridLayout() {
+	public Map<Integer, List<Integer>> getGridLayout() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -225,6 +225,11 @@ public class SimulationParameters {
 	public boolean isToroidal() {
 		// TODO Auto-generated method stub
 		return true;
+	}
+
+	public int[] getInitialStates() {
+		// TODO replace getGrid with this
+		return null;
 	}
     
     

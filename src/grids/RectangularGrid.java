@@ -48,17 +48,17 @@ public class RectangularGrid implements IGrid {
 		numStates = (int) simdata.getExtraParameters()[0];
 		//toroidal = simdata.isToroidal();
 		myCellSize = cellSize;
-		populate(simdata.getGrid());
+		populate(simdata.getInitialStates());
 		myRuleSet = simdata.getRules();
 		myRuleSet.setParams(Arrays.copyOfRange(simdata.getExtraParameters(), 1, numStates+1));
 	}
 	
-	private void populate(int[][] initialState) {
+	private void populate(int[] initialState) {
 		for(int i = 0; i < initialState.length; i++) {
-			for(int j = 0; j < initialState[0].length; j++) {
-				myGrid[i][j] = new Cell(initialState[i][j], numStates, colorMap, i*myGrid[0].length+j, myCellSize);
-				for(int k = 1; k < numStates; k++) myGrid[i][j].changeState(k, DEFAULT_SECONDARY_STATE);
-			}
+			int[] location = getLocation(initialState[i]);
+			myGrid[location[0]][location[1]] = new Cell(initialState[i], numStates, colorMap, i, myCellSize);
+			for(int k = 1; k < numStates; k++) myGrid[location[0]][location[1]].changeState(k, DEFAULT_SECONDARY_STATE);
+			
 		}
 	}
 	
