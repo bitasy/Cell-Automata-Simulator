@@ -2,6 +2,7 @@ package grids;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -145,6 +146,39 @@ public class RectangularGrid implements IGrid {
 		public int getPrimaryState(int index) {
 			int[] loc = RectangularGrid.this.getLocation(index);
 			return newStates[loc[0]][loc[1]][0];
+		}
+		
+		public int[] getPrimaryStates() {
+			int[] states = new int[myGrid.length*myGrid[0].length];
+			int c = 0;
+			for(Cell[] row : myGrid) {
+				for(Cell cell : row) {
+					states[c] = cell.getPrimaryState();
+					c++;
+				}
+			}
+			return states;
+		}
+		
+		public Map<Color, Integer> getStateCount(){
+			Map<Color, Integer> stateMap = new HashMap<>();
+			for(int state: colorMap.keySet()) {
+				stateMap.put(colorMap.get(state), getCellCount(state));
+			}
+			return stateMap;
+		}
+		
+		private int getCellCount(int state){
+			int counter = 0;
+			int c = 0;
+			for(Cell[] row : myGrid) {
+				for(Cell cell : row) {
+					counter = (cell.getPrimaryState() == state) ? counter+1 : counter;
+					c++;
+				}
+			}
+			
+			return counter;
 		}
 		
 		public int totalCells() {
