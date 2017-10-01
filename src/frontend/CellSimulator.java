@@ -1,5 +1,6 @@
 package frontend;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +25,7 @@ public class CellSimulator extends Pane {
 
 	private static final double COS_THIRTY = Math.cos(Math.PI / 6);
 	private static final double SIN_THIRTY = Math.sin(Math.PI / 6);
-	private static final int HEIGHT = 4 * CellSociety.HEIGHT / 5;;
+	private static final int HEIGHT = 3 * CellSociety.HEIGHT / 4;
 	private double cellSize;
 	private int rows;
 	private int cols;
@@ -36,6 +37,7 @@ public class CellSimulator extends Pane {
 	private SimulationParameters data;
 	private Stage stage;
 	private Alert alert = new Alert(AlertType.INFORMATION);
+	private List<Double> parameters;
 
 	public CellSimulator(Stage s) {
 		super();
@@ -75,6 +77,7 @@ public class CellSimulator extends Pane {
 		rows = data.getNumRows();
 		cols = data.getNumCols();
 		cellSize = Math.min(CellSociety.WIDTH / cols, HEIGHT / rows);
+//		parameters = new ArrayList<Double>(data.getSliderInfo().size());
 		addCellShapes();
 		startAnimation();
 	}
@@ -82,6 +85,14 @@ public class CellSimulator extends Pane {
 	public void handleSpeedChange(double speed) {
 		System.out.println("Speed Change!!");
 		step = 1000 / speed;
+		animation.stop();
+		startAnimation();
+	}
+	
+	public void handleExtraParameters(double newValue, int index) {
+		System.out.println("Value Changed!");
+		parameters.get(index) = newValue; 
+		myGrid.setParameters(parameters);
 		animation.stop();
 		startAnimation();
 	}
@@ -103,6 +114,10 @@ public class CellSimulator extends Pane {
 
 	public String getAuthor() {
 		return data.getAuthor();
+	}
+	
+	public List<SliderInfo> getSliderInfo() {
+		return data.getSliderInfo();
 	}
 
 	private void startAnimation() {

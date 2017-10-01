@@ -1,5 +1,8 @@
 package frontend;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
@@ -8,6 +11,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -26,7 +30,8 @@ public class SimulationInterface extends BorderPane {
 		simNames = s.getSimulationNames();
 		createDropDownSection();
 		createButtonsSection();
-		createSliderSection();
+		createSpeedSection();
+		// createSliderSection();
 	}
 
 	private void createDropDownSection() {
@@ -90,34 +95,59 @@ public class SimulationInterface extends BorderPane {
 		return vLeftButtons;
 	}
 
-	private void createSliderSection() {
-		BorderPane sliderSection = new BorderPane();
-		VBox sliderBox = setSliderBox();
-		sliderSection.setTop(sliderBox);
-		authorText.setFill(Color.BLACK);
-		sliderSection.setCenter(authorText);
-		BorderPane.setMargin(authorText, new Insets(0, 0, 30, 0));
-		this.setRight(sliderSection);
-	}
-
-	private VBox setSliderBox() {
-		VBox sliderBox = new VBox(5);
-		Slider slider = new Slider(CellSociety.MINSPEED, CellSociety.MAXSPEED, (CellSociety.MAXSPEED - CellSociety.MINSPEED) / 2);
-		slider.setShowTickMarks(true);
-		slider.setMajorTickUnit(0.25f);
-		slider.setBlockIncrement(0.1f);
-		Text speed = new Text(String.format("%.2f", (CellSociety.MAXSPEED - CellSociety.MINSPEED) / 2));
-		speed.setFill(Color.BLACK);
+	private void createSpeedSection() {
+		BorderPane speedSection = new BorderPane();
+		VBox sliderBox = setSliderBox(CellSociety.MINSPEED, CellSociety.MAXSPEED,
+				(CellSociety.MAXSPEED - CellSociety.MINSPEED) / 2, CellSociety.UNIT_TITLE);
+		Slider slider = (Slider) sliderBox.getChildren().get(0);
+		Text value = (Text) sliderBox.getChildren().get(1);
 		slider.valueProperty().addListener(new ChangeListener<Number>() {
 			public void changed(ObservableValue<? extends Number> ov, Number old_val, Number new_val) {
 				simulator.handleSpeedChange(new_val.doubleValue());
-				speed.setText(String.format("%.2f", new_val));
+				value.setText(String.format("%.2f", new_val));
 			}
 		});
-		Text units = new Text(CellSociety.UNIT_TITLE);
+		speedSection.setTop(sliderBox);
+		authorText.setFill(Color.BLACK);
+		speedSection.setCenter(authorText);
+		BorderPane.setMargin(authorText, new Insets(0, 0, 30, 0));
+		this.setRight(speedSection);
+	}
+
+	private VBox setSliderBox(double min, double max, double def, String unitDescription) {
+		VBox sliderBox = new VBox(5);
+		Slider slider = new Slider(min, max, def);
+		slider.setShowTickMarks(true);
+		slider.setMajorTickUnit(0.25f);
+		slider.setBlockIncrement(0.1f);
+		Text speed = new Text(String.format("%.2f", def));
+		speed.setFill(Color.BLACK);
+		Text units = new Text(unitDescription);
 		units.setFill(Color.BLACK);
 		sliderBox.getChildren().addAll(slider, speed, units);
 		BorderPane.setMargin(sliderBox, new Insets(30, 15, 0, 0));
 		return sliderBox;
+	}
+
+	private void createSliderSection() {
+		GridPane grid = new GridPane();
+		grid.setHgap(10);
+		grid.setPadding(new Insets(0, 10, 0, 10));
+		ArrayList<SliderInfo> sliders = simulator.getSliderInfo();
+		for (int i = 0; i < sliders.size(); i++) {
+			SliderInfo sliderInformation = sliders.get(i);
+			VBox sliderBox = setSliderBox(sliderInformation.getMin(), sliderInformation.getMax(),
+					sliderInformation.getDefault(), sliderInformation.getUnits());
+			Slider slider = (Slider) sliderBox.getChildren().get(0);
+			Text value = (Text) sliderBox.getChildren().get(1);
+			slider.valueProperty().addListener(new ChangeListener<Number>() {
+				public void changed(ObservableValue<? extends Number> ov, Number old_val, Number new_val) {
+					simulator.handleExtraParameters(new_val.doubleValue(), i);
+					value.setText(String.format("%.2f", new_val));
+				}
+			});
+			grid.add(sliderBox, i, 0);
+		}
+		this.setBottom(grid);
 	}
 }
