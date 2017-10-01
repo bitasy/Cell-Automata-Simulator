@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.parsers.ParserConfigurationException;
+
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
@@ -53,8 +55,6 @@ public class MasterMap {
         return mySimulation;
     }
     	
-    	
-    	
     	// creates map of all SimulationParameter instances for each simulation type
     	private void makeMap() {
     	
@@ -73,13 +73,21 @@ public class MasterMap {
 	    	    	  	SimulationParameters currentSimulation = null;
 	    				try {
 	    					currentSimulation = read(s);
+	    				} catch (XMLFormatException e) {
+    	            		
+	    		            	List<String> errorList = new ArrayList<String>();
+	    	        			errorList.add(e.getMessage());
+	    	        			errorsMap.put(s, errorList);    
+	    					
 	    				} catch (Exception e) {
 	    					
-	    		            	ArrayList<String> errorList = new ArrayList<String>();
-	    	        			errorList.add(e.getMessage());
+	    		            	List<String> errorList = errorsMap.get(s);
+	    		            	if (errorList == null) {errorList = new ArrayList<String>();}
+	    		            	String errorMsg = "Error loading XML for " + s;
+	    		            	errorList.add(errorMsg);
 	    	        			errorsMap.put(s, errorList);          		
 
-	    	            }	
+	    	            } 
 	    				
 	    			if (currentSimulation != null) {
 	    					simulationMap.put(s, currentSimulation);			

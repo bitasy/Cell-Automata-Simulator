@@ -4,6 +4,12 @@
     <author>John Horton Conway</author>
     <colorScheme>0 1</colorScheme>
     <extraParams>1</extraParams>
+    <shape>square</shape>
+    <hasOutline>true</hasOutline>
+    <neighborsConsidered>all</neighborsConsidered>
+    <sliders>ratio 0 1 true</sliders>
+    <toroidal>false</toroidal>
+    <initialConfig>fixed</initialConfig>
     <grid> 0 0 0 0 0 0 0 0 0 0;
      	   0 0 1 0 0 0 0 0 0 0;
      	   0 0 0 1 0 0 0 0 0 0;

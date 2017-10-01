@@ -1,13 +1,14 @@
 package xml_start;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-
 import backend.IRuleSet;
+import java.util.Random;
 import rulesets.*;
 import javafx.scene.paint.Color;
 
@@ -27,7 +28,13 @@ public class SimulationParameters {
     		"author",
         "colorScheme",
         "extraParams",
-        "grid"
+        "grid",
+        "initialConfig",
+        "shape",
+        "hasOutline",
+        "neighborsConsidered",
+        "toroidal",
+        "sliders"
     });
 	
     private Color[] colors = {Color.WHITE, Color.BLACK, Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW, Color.ORANGE};
@@ -41,12 +48,15 @@ public class SimulationParameters {
     private IRuleSet simRules;
     private double[] simExtraParams;
     private String simName;
+    private String simInitialConfig;
+    private String simShape;
+    private List<SliderInfo> simSliders;
     
     // specific data values for this instance
     private Map<String, String> myDataValues;
 
     // constructor initializing all parameters for simulation
-    public SimulationParameters (Map<String, String> dataValues, String simPathName) {
+    public SimulationParameters (Map<String, String> dataValues, String simPathName) throws XMLFormatException {
     	
         myDataValues = dataValues;    
         simName = simPathName;
@@ -64,7 +74,7 @@ public class SimulationParameters {
     
     
     // calls all setup methods
-    public void setupAllParameters() {
+    public void setupAllParameters() throws XMLFormatException {
     	
     		setupGrid();
     		setupAuthor();
@@ -72,6 +82,68 @@ public class SimulationParameters {
     		setupColorScheme();
     		setupExtraParams();
     		setupRules();
+    		setupShape();
+    		setupSliders();
+    	
+    }
+    
+    private void setupSliders() throws XMLFormatException {
+    	
+    		simSliders = new ArrayList<SliderInfo>();
+    		String allSliders = myDataValues.get("sliders");
+    		if (allSliders.contains("none")) {return;}
+    		String[] sliderArray = allSliders.split(";");
+    		
+    		for (String data : sliderArray) {
+    			SliderInfo sldr = new SliderInfo(data);
+    			simSliders.add(sldr);
+    		}
+    	
+    }
+    
+    public List<SliderInfo> getSliders() {
+    		return simSliders;
+    }
+    
+    private void setupShape() {
+    		String s = myDataValues.get("shape");
+    		if (!s.equals("square") && !s.equals("triangle") && !s.equals("hexagon")) {
+    			s = "square";
+    		}
+    		simShape = s; 
+	}
+    
+    private boolean hasOutline() {
+    		String outline = myDataValues.get("hasOutline");
+    		return outline.contains("true");
+    }
+    
+    public String getNeighborsConsidered() {
+    		String n = myDataValues.get("neighborsConsidered");
+    		if (!n.equals("cardinal") && !n.equals("diagonal") && !n.equals("all")) {n = "all";}
+    		return n;
+    }
+    
+    private boolean isToroidal() {
+		String outline = myDataValues.get("toroidal");
+		return outline.contains("true");
+}
+
+	public void setupGrid() throws XMLFormatException {
+    	
+    		simInitialConfig = myDataValues.get("initialConfig");
+    		
+    		if (simInitialConfig.equals("random")) {
+        		setupGridRandom();
+    		} else if (simInitialConfig.equals("fixed")) {
+    			setupGridFixed();
+    		} else if (simInitialConfig.equals("probability")) {
+    			setupGridProbability();
+    		} else {
+    			// throw new XMLFormatException();
+    			simInitialConfig = " ";
+    			setupGridRandom();
+    		}
     	
     }
     
@@ -93,8 +165,8 @@ public class SimulationParameters {
 	    	
     }
     
-    // convert String grid to int[][]
-    public void setupGrid() {
+    // setup "fixed" grid
+    public void setupGridFixed() throws XMLFormatException {
     	
     		String s = myDataValues.get("grid");
     		
@@ -108,7 +180,11 @@ public class SimulationParameters {
     			String[] rowString = rows[r].split("\\s+");
     			for (int c = 1; c < cols.length; c++) {
     				
-    				myGrid[r][c-1] = Integer.valueOf(rowString[c]);
+    				int stateValue = Integer.valueOf(rowString[c]);
+    				
+    				if (stateValue < 0) {throw new XMLFormatException();}
+    				
+    				myGrid[r][c-1] = stateValue;
     				
     			}
     		}
@@ -116,6 +192,105 @@ public class SimulationParameters {
     		simGrid = myGrid;
     		return;
     		
+    }
+    
+    // setup "random" grid
+    public void setupGridRandom() {
+    	
+    		int numRows; int numCols; int totalStates; int totalCells;
+    	
+    		String s = myDataValues.get("grid");
+    		String[] s_array = s.split("\\s+");
+    		
+    		if (s_array.length == 4) {
+        		numRows = Integer.valueOf(s_array[0]);
+        		numCols = Integer.valueOf(s_array[1]);
+        		totalStates = Integer.valueOf(s_array[2]);
+        		totalCells = Integer.valueOf(s_array[3]);
+    		} else { // fill in default values if incorrect formatting
+    			numRows = 10;
+    			numCols = 10;
+    			totalStates = 1;
+    			totalCells = 30;
+    		}
+    		
+    		
+    		int[][] myGrid = new int[numRows][numCols];
+    		
+    		// list of open grid positions
+    		List<Integer> openSpaces = new ArrayList<Integer>();
+    		for (int i = 0; i < numRows*numCols; i++) { openSpaces.add(i); }
+    		
+    		while (totalCells > 0) {
+    			
+    			// remove random open position
+    			Random rand = new Random();
+    			int  n = rand.nextInt(openSpaces.size());
+    			int position = openSpaces.remove(n);
+    			int row = position / numCols;
+    			int col = position % numCols;
+    			
+    			int state = rand.nextInt(totalStates) + 1;
+    			myGrid[row][col] = state;
+    			totalCells--;
+    			
+    		}
+    		
+    		simGrid = myGrid;
+    		return;
+    		
+    }
+    
+    // setup "probability" grid
+    public void setupGridProbability() {
+    	
+		String s = myDataValues.get("grid");
+		String[] s_array = s.split("\\s+");
+		
+		int numRows = Integer.valueOf(s_array[0]);
+		int numCols = Integer.valueOf(s_array[1]);
+		double totalCells = numRows * numCols;
+		double[] probabilities = new double[s_array.length-2];
+		for (int i = 0; i < s_array.length-2; i++) { probabilities[i] = Double.valueOf(s_array[i+2]);}
+		int[][] myGrid = new int[numRows][numCols];
+		
+		// list of open grid positions
+		List<Integer> openSpaces = new ArrayList<Integer>();
+		for (int a = 0; a < numRows*numCols; a++) { openSpaces.add(a); }
+		
+		// make probability distribution list
+		List<Integer> stateProbability = new ArrayList<Integer>();
+		for (int j = 0; j < probabilities.length; j++) {
+			
+			double prob = probabilities[j];
+			int currState = j+1;
+			int stateCells = (int) (prob*totalCells);
+			for (int k = 0; k < stateCells; k++) { stateProbability.add(currState);}
+			
+		}
+		
+		int cellsToAdd = stateProbability.size();
+		while (cellsToAdd > 0) {
+			
+			// remove random open position
+			Random rand = new Random();
+			int n = rand.nextInt(openSpaces.size());
+			int position = openSpaces.remove(n);
+			int row = position / numCols;
+			int col = position % numCols;
+			
+			int stateIndex = rand.nextInt(stateProbability.size());
+			int state = stateProbability.remove(stateIndex);
+			
+			myGrid[row][col] = state;
+			cellsToAdd--;
+			
+		}
+		
+		simGrid = myGrid;
+		return;
+		
+    	
     }
     
     
@@ -181,7 +356,6 @@ public class SimulationParameters {
     		return simColorScheme;
     }
     
-    
     // get Grid
     public int[][] getGrid() {
     		return simGrid; 
@@ -207,10 +381,12 @@ public class SimulationParameters {
     		return simExtraParams;
     }
     
+    
     // get num of rows
     public int getNumRows() {
     		return simGrid.length;
     }
+    
     
     // get num of cols
     public int getNumCols() {
@@ -222,15 +398,19 @@ public class SimulationParameters {
 		return null;
 	}
 
-	public boolean isToroidal() {
-		// TODO Auto-generated method stub
-		return true;
-	}
-
 	public int[] getInitialStates() {
 		// TODO replace getGrid with this
 		return null;
 	}
     
+    
+    // get color scheme string
+    public String getColorSchemeString() {
+    		return myDataValues.get("colorScheme");
+    }
+    
+	public String getSimShape() {
+		return simShape;
+	}
     
 }
