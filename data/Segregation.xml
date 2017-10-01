@@ -3,15 +3,12 @@
     <title>Segregation</title>
     <author>Frank McCown</author>
     <colorScheme>0 -1 1 2</colorScheme>
+    <shape>square</shape>
+    <hasOutline>true</hasOutline>
     <extraParams>1 0.7</extraParams>
-    <grid> 0 0 0 0 0 0 0 0 1 2 0 1 2 1 0;
-     	   0 0 0 0 0 0 0 0 0 0 0 1 2 1 0;
-     	   0 1 1 1 2 1 2 0 0 0 0 1 0 0 0;
-     	   0 0 0 2 2 2 2 0 0 0 0 0 0 0 0;
-     	   0 0 0 0 0 0 0 0 0 0 0 1 2 1 0;
-     	   0 0 0 0 0 0 0 0 0 0 0 1 2 1 0;
-     	   0 2 1 1 2 1 0 0 0 0 0 0 0 0 0;
-     	   0 0 1 2 1 1 2 0 2 0 0 1 2 1 0;
-     	   0 0 0 0 0 0 0 0 1 0 0 1 2 1 0;
-     	   0 0 0 0 0 0 0 0 0 0 1 1 2 0 1;</grid>
+    <toroidal>false</toroidal>
+    <sliders>ratio 0 1 true</sliders>
+    <neighborsConsidered>all</neighborsConsidered>
+    <initialConfig>random</initialConfig>
+	<grid>15 15 2 120</grid>
 </data>
