@@ -36,7 +36,7 @@ public class CellGraph extends Stage {
 		this.show();
 	}
 
-	public void addStartingPoints(Integer[] values) {
+	public void addStartingPoints(int[] values) {
 		for (Integer value : values) {
 			XYChart.Series series = new XYChart.Series();
 			series.getData().add(new XYChart.Data(count, value));
@@ -46,7 +46,7 @@ public class CellGraph extends Stage {
 		count++;
 	}
 
-	public void addPoints(Integer[] values) {
+	public void addPoints(int[] values) {
 		for (int i = 0; i < values.length; i++) {
 			Integer value = values[i];
 			XYChart.Series series = allSeries.get(i);

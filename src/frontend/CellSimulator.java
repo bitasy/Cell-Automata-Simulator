@@ -21,7 +21,7 @@ import xml_start.SliderInfo;
 import xml_start.XMLWrite;
 
 public class CellSimulator extends Pane {
-	
+
 	private static final double HEIGHT = .7 * CellSociety.HEIGHT;
 	private Timeline animation;
 	private double step;
@@ -68,8 +68,9 @@ public class CellSimulator extends Pane {
 
 	public void handleStep() {
 		myGrid.update();
-		// populationText.setText(myGrid.status());
-		// myGraph.addPoints(myGrid.information);
+//		int[] statusUpdate = myGrid.getPrimaryStates();
+//		populationText.setText(readStatus(statusUpdate));
+//		myGraph.addPoints(statusUpdate);
 	}
 
 	public void handleSimulatorChange(String sim) {
@@ -82,7 +83,7 @@ public class CellSimulator extends Pane {
 		// ======= TODO choose grid dynamically
 		parameters = new double[data.getSliders().size()];
 		myGraph.reset();
-		myGraph.addStartingPoints(new Integer[] { 1, 2 });
+		myGraph.addStartingPoints(myGrid.getPrimaryStates());
 		startAnimation();
 	}
 
@@ -151,5 +152,15 @@ public class CellSimulator extends Pane {
 			alert.setContentText(CellSociety.ALERT_MESSAGE + errorMessage);
 			alert.showAndWait();
 		}
+	}
+	
+
+	private String readStatus(int[] statusUpdate) {
+		String status = "";
+		for(int i = 0; i<statusUpdate.length; i++)
+		{
+			status += CellSociety.STATE + Integer.toString(i) + "  ";
+		}
+		return status;
 	}
 }

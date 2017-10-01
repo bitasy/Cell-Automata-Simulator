@@ -1,6 +1,9 @@
 package backend;
 
+import java.util.Map;
+
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 
 public interface IGrid {
 
@@ -14,4 +17,8 @@ public interface IGrid {
 	 * @param the Pane to which all elements will be added.
 	 */
 	void drawTo(Pane pane);
+	
+	public int[] getPrimaryStates();
+	
+	public Map<Color, Integer> getStateCount();
 }
