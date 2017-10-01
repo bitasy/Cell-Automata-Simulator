@@ -17,22 +17,22 @@ public class CellSociety extends Application {
 	public static final String UNIT_TITLE = labels.getString("units");
 	public static final String ALERT_TITLE = labels.getString("alert");
 	public static final String ALERT_MESSAGE = labels.getString("alertMessage");
+	public static final String SAVE = labels.getString("alertMessage");
+	public static final String GRAPH_TITLE = labels.getString("graph");
 	public static final int WIDTH = 700;
 	public static final int HEIGHT = 700;
 	public static final Paint BACKGROUND = Color.WHITE;
 	public static final double MAXSPEED = 10.;
 	public static final double MINSPEED = 0.;
-	
-	private BorderPane root = new BorderPane();
-	private Scene mainScene;
 
 	public static void main(String[] args) {
 		launch(args);
 	}
 
 	@Override
-	public void start(Stage s) throws Exception {
-		mainScene = new Scene(root, WIDTH, HEIGHT, BACKGROUND);
+	public void start(Stage s) {
+		BorderPane root = new BorderPane();
+		Scene mainScene = new Scene(root, WIDTH, HEIGHT, BACKGROUND);
 		CellSimulator simulator = new CellSimulator(s);
 		root.setTop(simulator);
 		root.setBottom(new SimulationInterface(simulator));

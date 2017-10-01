@@ -7,15 +7,11 @@ import backend.Cell;
 
 public class SegregationRuleSet extends StandardRuleSet {
 	
-	private double t;
-	private int width;
-	private int height;
-	private int possibilities;
-	private Random r;
+	private final static int EMPTY = 0;
 	
-	{
-		r = new Random();
-	}
+	private double t;
+	private int possibilities;
+	private Random r = new Random();
 	
 	@Override
 	public int numRules() {
@@ -23,27 +19,28 @@ public class SegregationRuleSet extends StandardRuleSet {
 	}
 	
 	void rule1() {
-		int[] location = cell.getLocation();
-		if(cell.getPrimaryState() != 0 && isSatisfied()) {
-			effects[location[0]][location[1]][0] = cell.getPrimaryState();
+		int tag = cell.getTag();
+		if(cell.getPrimaryState() != EMPTY && isSatisfied()) {
+			effects.setState(tag, new int[] {cell.getPrimaryState()});
 		}
 	}
 
 	void rule2() {
-		if (cell.getPrimaryState() != 0 && !isSatisfied()) {
+		if (cell.getPrimaryState() != EMPTY && !isSatisfied()) {
 			boolean valid = false;
-			int row = 0;
-			int col = 0;
-			possibilities = width*height;
 			used = new ArrayList<>();
+			possibilities = effects.totalCells();
+			int position = nextPosition();
 			while (!valid) {
-				int position = nextPosition();
-				row = position/width;
-				col = position%width;
-				if (effects[row][col][0] == 0)
+				//System.out.println(position);
+				int[] states = effects.getStates(position);
+				if (states[0] == EMPTY)
 					valid = true;
+				else
+					position = nextPosition();
 			}
-			effects[row][col][0] = cell.getPrimaryState();
+			int[] state = new int[] {cell.getState(0)};
+			effects.setState(position, state);
 
 		}
 		
@@ -53,6 +50,8 @@ public class SegregationRuleSet extends StandardRuleSet {
 
 	private int nextPosition() {
 		//Algorithm adapted from Jon Skeet at https://stackoverflow.com/questions/4040001/creating-random-numbers-with-no-duplicates	
+		
+		
 		int chosen = r.nextInt(possibilities);
         int extra = 0;
         for(int usedNum : used) {
@@ -64,27 +63,20 @@ public class SegregationRuleSet extends StandardRuleSet {
         }
         possibilities--;
         used.add(chosen);
-        return chosen+extra;
-	}
-	
-	private void rule3() {
-		
+        return chosen+extra < effects.totalCells() ? chosen+extra : effects.totalCells()-1;
 	}
 	
 	private boolean isSatisfied() {
 		int goodState = cell.getPrimaryState();
 		int numSame = 0;
 		int total = 0;
-		for(Cell[] a : neighborhood) {
-			for(Cell c : a) {
-				if(c != null && c != cell && c.getPrimaryState() != 0) {
-					total++;
-					numSame = c.getPrimaryState() == goodState ? numSame + 1 : numSame;
-				}
-				
+		for(Cell c : paramCells) {
+			if(c != null && c != cell && c.getPrimaryState() != EMPTY) {
+				total++;
+				numSame = c.getPrimaryState() == goodState ? numSame + 1 : numSame;
 			}
+
 		}
-		//System.out.println(t + " " + numSame/total);
 		if(total != 0)
 			return t <= (double)numSame/total;
 		return true;
@@ -93,9 +85,6 @@ public class SegregationRuleSet extends StandardRuleSet {
 	@Override
 	public void setParams(double[] params) {
 		t = params[0];
-		width = myGrid[0].length;
-		height = myGrid.length;
-		possibilities = width*height;
 	}
 
 }
