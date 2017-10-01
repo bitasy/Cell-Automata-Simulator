@@ -36,7 +36,7 @@ public abstract class NeighborGrid implements IGrid {
 	
 	private void populate(Map<Integer, List<Integer>> gridLayout, int[] initialStates) {
 		for(int i : gridLayout.keySet()) {
-			myGrid.put(new Cell(initialStates[i], numStates, myColorMap, i, 10), new ArrayList<Cell>());
+			//myGrid.put(new Cell(initialStates[i], numStates, myColorMap, i, 10), new ArrayList<Cell>());
 		}
 		for(int i : gridLayout.keySet()) {
 			for(int j : gridLayout.get(i)) {

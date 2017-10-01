@@ -10,8 +10,8 @@ public class HexagonalGrid extends RectangularGrid {
 		{0, -1}, {0, 1}, {1, -1}, {1, 0} };}
 	
 
-	public HexagonalGrid(SimulationParameters simdata, double cellSize) {
-		super(simdata, cellSize);
+	public HexagonalGrid(SimulationParameters simdata) {
+		super(simdata);
 	}
 	
 	protected void draw() {

@@ -10,7 +10,6 @@ import javafx.animation.Timeline;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.Pane;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -73,11 +72,8 @@ public class CellSimulator extends Pane {
 		System.out.println("Change to " + sim);
 		data = XML_readings.get(sim);
 		stage.setTitle(CellSociety.TITLE + " - " + data.getTitle());
-		rows = data.getNumRows();
-		cols = data.getNumCols();
-		cellSize = Math.min(CellSociety.WIDTH / cols, HEIGHT / rows);
 //<<<<<<< HEAD
-		myGrid = new RectangularGrid(data, cellSize);
+		myGrid = new RectangularGrid(data);
 		myGrid.drawTo(this);
 //======= TODO choose grid dynamically
 		parameters = new double[data.getSliders().size()];

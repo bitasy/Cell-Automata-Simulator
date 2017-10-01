@@ -124,7 +124,7 @@ public class SimulationParameters {
     		return n;
     }
     
-    private boolean isToroidal() {
+    public boolean isToroidal() {
 		String outline = myDataValues.get("toroidal");
 		return outline.contains("true");
 }
