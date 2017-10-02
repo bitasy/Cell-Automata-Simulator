@@ -70,8 +70,8 @@ public class CellSimulator extends Pane {
 	public void handleStep() {
 		myGrid.update();
 		int[] statusUpdate = myGrid.getPrimaryStates();
-		 populationText.setText(readStatus(statusUpdate));
-		 myGraph.addPoints(statusUpdate);
+		populationText.setText(readStatus(statusUpdate));
+		myGraph.addPoints(statusUpdate);
 	}
 
 	public void handleSimulatorChange(String sim) {
@@ -110,11 +110,11 @@ public class CellSimulator extends Pane {
 		System.out.println("Save the state!");
 		XMLWrite xmlWriter = new XMLWrite();
 		try {
-			// xmlWriter.saveState(data, Current version of grid, parameters);
+			xmlWriter.saveState(data, myGrid.getPrimaryStates(), parameters);
 		} catch (Exception e) {
-			// remove e.printstackTrace
 			e.printStackTrace();
-			// Throw alert
+			alert.setContentText(CellSociety.SAVING_ERROR);
+			alert.showAndWait();
 		}
 	}
 
@@ -155,8 +155,8 @@ public class CellSimulator extends Pane {
 
 	private String readStatus(int[] stateCount) {
 		String status = "";
-		for (int i = 0; i<stateCount.length; i++) {
-			status += CellSociety.STATE + (i+1) + ": " + stateCount[i];
+		for (int i = 0; i < stateCount.length; i++) {
+			status += CellSociety.STATE + (i + 1) + ": " + stateCount[i];
 		}
 		return status;
 	}

@@ -20,6 +20,7 @@ public class CellSociety extends Application {
 	public static final String SAVE = labels.getString("alertMessage");
 	public static final String GRAPH_TITLE = labels.getString("graph");
 	public static final String STATE = labels.getString("state");
+	public static final String SAVING_ERROR = labels.getString("saveError");
 	public static final int WIDTH = 700;
 	public static final int HEIGHT = 700;
 	public static final Paint BACKGROUND = Color.WHITE;
