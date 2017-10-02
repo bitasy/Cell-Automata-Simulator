@@ -8,16 +8,17 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
+import java.util.Random;
 
 import backend.IGrid;
 import backend.IRuleSet;
 import frontend.SliderInfo;
-
-import java.util.Random;
-import rulesets.*;
-import grids.*;
+import grids.RectangularGrid;
 import javafx.scene.paint.Color;
+import rulesets.FireRuleSet;
+import rulesets.GameOfLifeRuleSet;
+import rulesets.PredatorPreyRuleSet;
+import rulesets.SegregationRuleSet;
 
 /**
  * Contains simulation parameters for a unique simulation, loaded from XML file

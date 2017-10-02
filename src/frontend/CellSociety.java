@@ -1,7 +1,6 @@
 ﻿package frontend;
 
 import java.util.ResourceBundle;
-
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
@@ -36,7 +35,7 @@ public class CellSociety extends Application {
 		BorderPane root = new BorderPane();
 		Scene mainScene = new Scene(root, WIDTH, HEIGHT, BACKGROUND);
 		CellSimulator simulator = new CellSimulator(s);
-		root.setTop(simulator);
+		root.setTop(simulator.getPane());
 		root.setBottom(new SimulationInterface(simulator));
 		s.setScene(mainScene);
 		s.show();
