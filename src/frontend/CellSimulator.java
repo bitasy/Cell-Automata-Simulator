@@ -12,6 +12,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -68,20 +69,18 @@ public class CellSimulator extends Pane {
 
 	public void handleStep() {
 		myGrid.update();
-//		int[] statusUpdate = myGrid.getPrimaryStates();
-//		populationText.setText(readStatus(statusUpdate));
-//		myGraph.addPoints(statusUpdate);
+		int[] statusUpdate = myGrid.getPrimaryStates();
+		 populationText.setText(readStatus(statusUpdate));
+		 myGraph.addPoints(statusUpdate);
 	}
 
 	public void handleSimulatorChange(String sim) {
 		System.out.println("Change to " + sim);
 		data = XML_readings.get(sim);
 		stage.setTitle(CellSociety.TITLE + " - " + data.getTitle());
-		// <<<<<<< HEAD
-		myGrid = new RectangularGrid(data);
+		myGrid = data.getGridObject();
 		myGrid.drawTo(this);
-		// ======= TODO choose grid dynamically
-		parameters = new double[data.getSliders().size()];
+		parameters = new double[data.getRules().getSliders().size()];
 		myGraph.reset();
 		myGraph.addStartingPoints(myGrid.getPrimaryStates());
 		startAnimation();
@@ -95,9 +94,9 @@ public class CellSimulator extends Pane {
 	}
 
 	public void handleExtraParameters(double newValue, int index) {
-		parameters[index] = newValue;
-		// myGrid.setParameters(parameters);
 		animation.stop();
+		parameters[index] = newValue;
+		data.getRules().setParams(parameters);
 		startAnimation();
 	}
 
@@ -153,13 +152,11 @@ public class CellSimulator extends Pane {
 			alert.showAndWait();
 		}
 	}
-	
 
-	private String readStatus(int[] statusUpdate) {
+	private String readStatus(int[] stateCount) {
 		String status = "";
-		for(int i = 0; i<statusUpdate.length; i++)
-		{
-			status += CellSociety.STATE + Integer.toString(i) + "  ";
+		for (int i = 0; i<stateCount.length; i++) {
+			status += CellSociety.STATE + (i+1) + ": " + stateCount[i];
 		}
 		return status;
 	}
