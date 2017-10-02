@@ -1,6 +1,7 @@
 package rulesets;
 
 import backend.Cell;
+import frontend.SliderInfo;
 
 public class FireRuleSet extends StandardRuleSet{
 
@@ -51,6 +52,12 @@ public class FireRuleSet extends StandardRuleSet{
 	@Override
 	public void setParams(double[] params) {
 		probCatch = params[0];
+	}
+	
+	public SliderInfo[] getSliders() {
+		return new SliderInfo[] {
+				new SliderInfo("Catch Fire Probability", 0, 1, true)
+		};
 	}
 	
 }

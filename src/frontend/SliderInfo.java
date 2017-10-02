@@ -1,4 +1,6 @@
-package xml_start;
+package frontend;
+
+import xml_start.XMLFormatException;
 
 public class SliderInfo {
 
@@ -9,6 +11,13 @@ public class SliderInfo {
 	
 	public SliderInfo(String s) throws XMLFormatException {
 		setupSlider(s);
+	}
+	
+	public SliderInfo(String title, double min, double max, boolean isContinuous) {
+		this.title = title;
+		this.min = min;
+		this.max = max;
+		this.isContinuous = isContinuous;
 	}
 	
 	private void setupSlider(String s) throws XMLFormatException {

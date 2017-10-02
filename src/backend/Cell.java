@@ -4,11 +4,12 @@ import java.util.Map;
 
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 
 public class Cell {
 	
 	private int[] myState;
-	private Rectangle myView;
+	private Shape myView;
 	private Map<Integer, Color> myColorMap;
 	private int myTag;
 	
@@ -19,14 +20,11 @@ public class Cell {
 	 * @param colorMap the map of states to colors used to display the cell as having a particular state.
 	 * @param location the location of the cell inside the grid, given by {row, column}.
 	 */
-	public Cell(int initialState, int numStates, Map<Integer, Color> colorMap, int tag, double size) {
+	public Cell(int initialState, int numStates, Map<Integer, Color> colorMap, int tag) {
 		myState = new int[numStates];
 		myState[0] = initialState;
 		myColorMap = colorMap;
-		myView = new Rectangle(size, size, myColorMap.get(initialState));
 		myTag = tag;
-		myView.setStroke(Color.BLACK);
-		myView.setStrokeWidth(2);
 	}
 	
 	/**
@@ -82,9 +80,13 @@ public class Cell {
 	 * Returns the Rectangle this Cell uses to display.
 	 * @return the Rectangle object.
 	 */
-	public Rectangle getView() {
+	public Shape getShape() {
 		// TODO does this have to be public?
 		return myView;
+	}
+	
+	public void setShape(Shape shape) {
+		myView = shape;
 	}
 
 }

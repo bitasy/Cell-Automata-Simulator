@@ -2,6 +2,8 @@ package backend;
 
 import java.util.List;
 
+import frontend.SliderInfo;
+
 public interface IRuleSet {
 
 	/**
@@ -29,4 +31,6 @@ public interface IRuleSet {
 	 * @param params the list of parameters.
 	 */
 	void setParams(double[] params);
+	
+	SliderInfo[] getSliders();
 }

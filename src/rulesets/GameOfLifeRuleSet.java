@@ -1,6 +1,7 @@
 package rulesets;
 
 import backend.Cell;
+import frontend.SliderInfo;
 
 public class GameOfLifeRuleSet extends StandardRuleSet{
 	
@@ -49,5 +50,9 @@ public class GameOfLifeRuleSet extends StandardRuleSet{
 	@Override
 	public void setParams(double[] params) {
 		//This simulation requires no parameters.
+	}
+	
+	public SliderInfo[] getSliders() {
+		return new SliderInfo[0];
 	}
 }

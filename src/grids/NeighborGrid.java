@@ -1,4 +1,4 @@
-package backend;
+package grids;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,6 +8,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import backend.Cell;
+import backend.EffectGrid;
+import backend.IGrid;
+import backend.IRuleSet;
 import javafx.scene.paint.Color;
 import xml_start.SimulationParameters;
 

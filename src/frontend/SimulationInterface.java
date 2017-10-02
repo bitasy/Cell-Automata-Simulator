@@ -13,7 +13,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import xml_start.SliderInfo;
 
 public class SimulationInterface extends BorderPane {
 

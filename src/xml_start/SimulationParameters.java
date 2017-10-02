@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import backend.IRuleSet;
+import frontend.SliderInfo;
+
 import java.util.Random;
 import rulesets.*;
 import javafx.scene.paint.Color;
@@ -22,6 +24,7 @@ import javafx.scene.paint.Color;
 public class SimulationParameters {
 
     // XML related variables
+	public static final Color[] COLORS = {Color.WHITE, Color.BLACK, Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW, Color.ORANGE};
     public static final String DATA_TYPE = "SimulationParameters";
     public static final List<String> DATA_FIELDS = Arrays.asList(new String[] {
     		"title",
@@ -36,8 +39,7 @@ public class SimulationParameters {
         "toroidal",
         "sliders"
     });
-	
-    private Color[] colors = {Color.WHITE, Color.BLACK, Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW, Color.ORANGE};
+    
     private IRuleSet[] rules = {new FireRuleSet(), new GameOfLifeRuleSet(), new PredatorPreyRuleSet(), new SegregationRuleSet()};
     public Map<String, IRuleSet> rulesMap = new HashMap<String, IRuleSet>();
     
@@ -113,7 +115,7 @@ public class SimulationParameters {
     		simShape = s; 
 	}
     
-    private boolean hasOutline() {
+    public boolean hasOutline() {
     		String outline = myDataValues.get("hasOutline");
     		return outline.contains("true");
     }
@@ -158,7 +160,7 @@ public class SimulationParameters {
 	    	for (int i = 0; i < colorSchemeStringArray.length; i++) {
 	    		int state = Integer.valueOf(colorSchemeStringArray[i]);
 	    		if (state > -1) {
-	    			simColorScheme.put(state, colors[Integer.valueOf(i)]);
+	    			simColorScheme.put(state, COLORS[Integer.valueOf(i)]);
 	    		}
 	    		
 	    	}

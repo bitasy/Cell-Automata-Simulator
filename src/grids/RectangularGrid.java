@@ -14,6 +14,7 @@ import frontend.CellSociety;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 import xml_start.SimulationParameters;
 
 /**
@@ -26,6 +27,7 @@ public class RectangularGrid implements IGrid {
 	private static final int DEFAULT_STATE = 0;
 	private static final int DEFAULT_SECONDARY_STATE = -1;
 	private static final double HEIGHT = .7 * CellSociety.HEIGHT;
+	private static final double GRID_LINE_WIDTH = 2;
 	
 	protected int[][] NEIGHBOR_SET = new int[][]{ {-1, -1}, {-1, 0},
 		   {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, 1} };
@@ -34,8 +36,8 @@ public class RectangularGrid implements IGrid {
 	private int numStates;
 	private boolean toroidal;
 	private IRuleSet myRuleSet;
-	private double myCellSize;
-	private Pane myCanvas;
+	protected Pane myCanvas;
+	private double strokeWidth;
 
 	protected Cell[][] myGrid;
 
@@ -49,7 +51,7 @@ public class RectangularGrid implements IGrid {
 		colorMap = simdata.getColorScheme();
 		numStates = (int) simdata.getExtraParameters()[0];
 		toroidal = simdata.isToroidal();
-		myCellSize = Math.min(CellSociety.WIDTH / simdata.getNumCols(), HEIGHT / simdata.getNumRows());
+		strokeWidth = simdata.hasOutline() ? GRID_LINE_WIDTH : 0;
 		populate(simdata.getInitialStates());
 		myRuleSet = simdata.getRules();
 		myRuleSet.setParams(Arrays.copyOfRange(simdata.getExtraParameters(), 1, numStates+1));
@@ -58,7 +60,7 @@ public class RectangularGrid implements IGrid {
 	private void populate(int[] initialState) {
 		for(int i = 0; i < initialState.length; i++) {
 			int[] location = getLocation(i);
-			myGrid[location[0]][location[1]] = new Cell(initialState[i], numStates, colorMap, i, myCellSize);
+			myGrid[location[0]][location[1]] = new Cell(initialState[i], numStates, colorMap, i);
 			for(int k = 1; k < numStates; k++) myGrid[location[0]][location[1]].changeState(k, DEFAULT_SECONDARY_STATE);
 			
 		}
@@ -129,25 +131,6 @@ public class RectangularGrid implements IGrid {
 		return states;
 	}
 	
-	public Map<Color, Integer> getStateCount(){
-		Map<Color, Integer> stateMap = new HashMap<>();
-		for(int state: colorMap.keySet()) {
-			stateMap.put(colorMap.get(state), getCellCount(state));
-		}
-		return stateMap;
-	}
-	
-	private int getCellCount(int state){
-		int counter = 0;
-		for(Cell[] row : myGrid) {
-			for(Cell cell : row) {
-				counter = (cell.getPrimaryState() == state) ? counter+1 : counter;
-			}
-		}
-		
-		return counter;
-	}
-	
 	class RectangularEffectGrid implements EffectGrid {
 		
 		int[][][] newStates;
@@ -203,12 +186,15 @@ public class RectangularGrid implements IGrid {
 		double firstY = (.5 - totalHeightPercent / 2) * HEIGHT;
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < cols; j++) {
-				Rectangle cell = (Rectangle)myGrid[i][j].getView();
-				cell.setOnMouseClicked(e -> System.out.println("Cell clicked!"));
-				//cell.sex
-				cell.setX(firstX + j * cellSize);
-				cell.setY(firstY + i * cellSize);
-				myCanvas.getChildren().add(cell);
+				Cell c = myGrid[i][j];
+				Rectangle body = new Rectangle(cellSize, cellSize, colorMap.get(myGrid[i][j].getPrimaryState()));
+				body.setOnMouseClicked(e -> c.changeState((c.getPrimaryState()+1)%colorMap.size()));
+				body.setX(firstX + j * cellSize);
+				body.setY(firstY + i * cellSize);
+				body.setStroke(Color.BLACK);
+				body.setStrokeWidth(strokeWidth);
+				myCanvas.getChildren().add(body);
+				c.setShape(body);
 			}
 		}
 	}

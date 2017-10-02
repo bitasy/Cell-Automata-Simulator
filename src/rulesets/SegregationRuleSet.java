@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import backend.Cell;
+import frontend.SliderInfo;
 
 public class SegregationRuleSet extends StandardRuleSet {
 	
@@ -86,5 +87,10 @@ public class SegregationRuleSet extends StandardRuleSet {
 	public void setParams(double[] params) {
 		t = params[0];
 	}
-
+	
+	public SliderInfo[] getSliders() {
+		return new SliderInfo[] {
+				new SliderInfo("Tolerance", 0, 1, true)
+		};
+	}
 }
