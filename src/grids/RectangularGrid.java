@@ -202,9 +202,9 @@ public class RectangularGrid implements IGrid {
 		int cols = myGrid[0].length;
 		double cellSize = Math.min(CellSociety.WIDTH / cols, SIM_HEIGHT / rows);
 		double totalWidthPercent = cellSize * cols / CellSociety.WIDTH;
-		double firstX = (.5 - totalWidthPercent / 2) * CellSociety.WIDTH + 200;
+		double firstX = (.5 - totalWidthPercent / 2) * CellSociety.WIDTH;
 		double totalHeightPercent = cellSize * rows / SIM_HEIGHT;
-		double firstY = (.5 - totalHeightPercent / 2) * SIM_HEIGHT + 200;
+		double firstY = (.5 - totalHeightPercent / 2) * SIM_HEIGHT;
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < cols; j++) {
 				Cell c = myGrid[i][j];

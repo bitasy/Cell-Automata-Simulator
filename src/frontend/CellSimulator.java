@@ -43,17 +43,9 @@ public class CellSimulator {
 		pane = new Pane();
 		scroll = new ScrollPane();
 		scroll.setContent(pane);
-		scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS); // Horizontal scroll bar
-		scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS); // Vertical scroll bar
+		scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED); // Horizontal scroll bar
+		scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED); // Vertical scroll bar
 		scroll.setPrefSize(CellSociety.WIDTH, HEIGHT);
-		// scroll.viewportBoundsProperty().addListener(new ChangeListener<Bounds>() {
-		// @Override
-		// public void changed(ObservableValue<? extends Bounds> ov, Bounds oldBounds,
-		// Bounds bounds) {
-		// pane.setPrefWidth(bounds.getWidth());
-		// pane.setPrefHeight(bounds.getHeight());
-		// }
-		// });
 		stage = s;
 		masterMap = new MasterMap();
 		XML_readings = masterMap.getMap();
@@ -106,7 +98,6 @@ public class CellSimulator {
 
 	public void handleSpeedChange(double speed) {
 		System.out.println("Speed Change!!");
-		System.out.println(pane.getWidth());
 		step = 1000 / speed;
 		animation.stop();
 		startAnimation();
