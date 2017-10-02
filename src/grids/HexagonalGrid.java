@@ -1,5 +1,9 @@
 package grids;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import backend.Cell;
 import frontend.CellSociety;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
@@ -10,14 +14,42 @@ public class HexagonalGrid extends RectangularGrid {
 	private static final double COS_THIRTY = Math.cos(Math.PI / 6);
 	private static final double SIN_THIRTY = Math.sin(Math.PI / 6);
 
-	{
-		NEIGHBOR_SET = new int[][] { { -1, 0 }, { -1, 1 }, { 0, -1 }, { 0, 1 }, { 1, -1 }, { 1, 0 } };
-	}
-
 	public HexagonalGrid(SimulationParameters simdata) {
 		super(simdata);
+		NEIGHBOR_SET = new int[][]{ {-1, 0}, {0, -1}, {0, 1}, {1, 0} };
 	}
 
+	protected List<Cell> getNeighborhood(Cell cell) {
+		
+		int[] location = getLocation(cell.getTag());
+
+		List<Cell> neighbors = new ArrayList<>();
+		for (int[] neighbor : NEIGHBOR_SET) {
+			addNeighbor(location, neighbors, neighbor);
+		}
+		
+		boolean up = (location[1])%2 == 0;
+		if(up) {
+			addNeighbor(location, neighbors, new int[] {-1, -1});
+			addNeighbor(location, neighbors, new int[] {-1, 1});
+		} else {
+			addNeighbor(location, neighbors, new int[] {1, -1});
+			addNeighbor(location, neighbors, new int[] {1, 1});
+		}
+		return neighbors;
+
+	}
+	
+	private void addNeighbor(int[] location, List<Cell> neighbors, int[] neighbor) {
+		//This method adapted from Simon Forsberg at https://codereview.stackexchange.com/questions/68627/getting-the-neighbors-of-a-point-in-a-2d-grid
+		if (isOnMap(location[0] + neighbor[0], location[1] + neighbor[1])) {
+			neighbors.add(myGrid[location[0] + neighbor[0]][location[1] + neighbor[1]]);
+		} else if (toroidal) {
+			neighbors.add(myGrid[(location[0] + neighbor[0]+myGrid.length)%myGrid.length]
+					[(location[1] + neighbor[1]+myGrid[0].length)%myGrid[0].length]);
+		}
+	}
+	
 	protected void draw() {
 		myCanvas.getChildren().removeAll(myCanvas.getChildren());
 		int rows = myGrid.length;
@@ -39,6 +71,7 @@ public class HexagonalGrid extends RectangularGrid {
 		double firstY = (.5 - totalHeightPercent / 2) * SIM_HEIGHT + sideLength * COS_THIRTY;
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < cols; j++) {
+				Cell c = myGrid[i][j];
 				double x, y;
 				if (j % 2 == 0) {
 					x = firstX + j * (hexagonalWidth - SIN_THIRTY * sideLength);
@@ -52,10 +85,8 @@ public class HexagonalGrid extends RectangularGrid {
 				cell.getPoints().addAll(new Double[] { x, y, x - sideLength * SIN_THIRTY, y - sideLength * COS_THIRTY,
 						x, y - 2 * sideLength * COS_THIRTY, x + sideLength, y - 2 * sideLength * COS_THIRTY,
 						x + sideLength + sideLength * SIN_THIRTY, y - sideLength * COS_THIRTY, x + sideLength, y });
-				cell.setOnMouseClicked(e -> System.out.println("Cell clicked!"));
-				cell.setFill(Color.WHITE);
-				cell.setStroke(Color.BLACK);
-				cell.setStrokeWidth(2);
+				prepare(cell, c);
+				c.setShape(cell);
 				myCanvas.getChildren().add(cell);
 			}
 		}

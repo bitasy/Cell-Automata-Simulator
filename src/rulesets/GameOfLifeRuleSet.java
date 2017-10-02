@@ -5,9 +5,9 @@ import frontend.SliderInfo;
 
 public class GameOfLifeRuleSet extends StandardRuleSet{
 	
-	private static final int MIN_NEIGHBORS = 2;
-	private static final int MAX_NEIGHBORS = 3;
-	private static final int BIRTH_NEIGHBORS = 3;
+	private int minNeighbors = 2;
+	private int maxNeighbors = 3;
+	private int birthNeighbors = 3;
 	private final static int ON = 1;
 	private final static int OFF = 0;
 	private static final int[] ZERO = new int[] {0};
@@ -21,7 +21,7 @@ public class GameOfLifeRuleSet extends StandardRuleSet{
 	
 	void rule1() {
 		int tag = cell.getTag();
-		if(cell.getPrimaryState() == ON && liveNeighborCount() < MIN_NEIGHBORS || liveNeighborCount() > MAX_NEIGHBORS) {
+		if(cell.getPrimaryState() == ON && liveNeighborCount() < minNeighbors || liveNeighborCount() > maxNeighbors) {
 			effects.setState(tag, ZERO);
 			
 		} else {
@@ -31,7 +31,7 @@ public class GameOfLifeRuleSet extends StandardRuleSet{
 	}
 
 	void rule2() {
-		if(cell.getPrimaryState() == OFF && liveNeighborCount() == BIRTH_NEIGHBORS) {
+		if(cell.getPrimaryState() == OFF && liveNeighborCount() == birthNeighbors) {
 			int tag = cell.getTag();
 			effects.setState(tag, ONE);
 		}
@@ -49,10 +49,16 @@ public class GameOfLifeRuleSet extends StandardRuleSet{
 
 	@Override
 	public void setParams(double[] params) {
-		//This simulation requires no parameters.
+		minNeighbors = (int)params[0];
+		maxNeighbors = (int)params[1];
+		birthNeighbors = (int)params[2];
 	}
 	
 	public SliderInfo[] getSliders() {
-		return new SliderInfo[0];
+		return new SliderInfo[] {
+				new SliderInfo("Minimum Population", 1, 3, false),
+				new SliderInfo("Maximum Population", 2, 6, false),
+				new SliderInfo("Reproduction Population", 1, 5, false)
+		};
 	}
 }

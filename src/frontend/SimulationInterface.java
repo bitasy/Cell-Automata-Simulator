@@ -68,6 +68,7 @@ public class SimulationInterface extends BorderPane {
 			public void changed(ObservableValue<? extends String> observables, String oldV, String newV) {
 				simulator.handleSimulatorChange(newV);
 				authorText.setText(simulator.getAuthor());
+				createSliderSection();
 			}
 		};
 		simulations.getSelectionModel().selectedItemProperty().addListener(changeListener);

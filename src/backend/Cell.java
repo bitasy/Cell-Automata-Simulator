@@ -86,6 +86,7 @@ public class Cell {
 	
 	public void setShape(Shape shape) {
 		myView = shape;
+		myView.setFill(myColorMap.get(myState[0]));
 	}
 
 }

@@ -1,5 +1,9 @@
 package grids;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import backend.Cell;
 import frontend.CellSociety;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
@@ -9,14 +13,39 @@ public class TriangularGrid extends RectangularGrid {
 
 	private static final double COS_THIRTY = Math.cos(Math.PI / 6);
 
-	{
-		NEIGHBOR_SET = new int[][] { { -1, 0 }, { -1, 1 }, { 0, -1 }, { 0, 1 }, { 1, -1 }, { 1, 0 } };
-	}
-
 	public TriangularGrid(SimulationParameters simdata) {
 		super(simdata);
+		NEIGHBOR_SET = new int[][] { { 0, -1 }, { 0, 1 }};
+	}
+	
+	protected List<Cell> getNeighborhood(Cell cell) {
+		
+		int[] location = getLocation(cell.getTag());
+
+		List<Cell> neighbors = new ArrayList<>();
+		for (int[] neighbor : NEIGHBOR_SET) {
+			addNeighbor(location, neighbors, neighbor);
+		}
+		
+		boolean up = (location[0]+location[1])%2 == 1;
+		if(up) {
+			addNeighbor(location, neighbors, new int[] {-1,0});
+		} else {
+			addNeighbor(location, neighbors, new int[] {1,0});
+		}
+		return neighbors;
+
 	}
 
+	private void addNeighbor(int[] location, List<Cell> neighbors, int[] neighbor) {
+		//This method adapted from Simon Forsberg at https://codereview.stackexchange.com/questions/68627/getting-the-neighbors-of-a-point-in-a-2d-grid
+		if (isOnMap(location[0] + neighbor[0], location[1] + neighbor[1])) {
+			neighbors.add(myGrid[location[0] + neighbor[0]][location[1] + neighbor[1]]);
+		} else if (toroidal) {
+			neighbors.add(myGrid[(location[0] + neighbor[0]+myGrid.length)%myGrid.length]
+					[(location[1] + neighbor[1]+myGrid[0].length)%myGrid[0].length]);
+		}
+	}
 	protected void draw() {
 		myCanvas.getChildren().removeAll(myCanvas.getChildren());
 		int rows = myGrid.length;
@@ -33,8 +62,9 @@ public class TriangularGrid extends RectangularGrid {
 		double firstX = (.5 - totalWidthPercent / 2) * CellSociety.WIDTH;
 		double totalHeightPercent = totalHeight / SIM_HEIGHT;
 		double firstY = (.5 - totalHeightPercent / 2) * SIM_HEIGHT;
-		for (double i = 0; i < rows; i++) {
-			for (double j = 0; j < cols; j++) {
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < cols; j++) {
+				Cell c = myGrid[i][j];
 				double x, y;
 				Double[] positions;
 				Polygon cell = new Polygon();
@@ -47,10 +77,8 @@ public class TriangularGrid extends RectangularGrid {
 					positions = new Double[] { x, y + sideLength, x - sideLength / 2, y, x + sideLength / 2, y };
 				}
 				cell.getPoints().addAll(positions);
-				cell.setOnMouseClicked(e -> System.out.println("Cell clicked!"));
-				cell.setFill(Color.WHITE);
-				cell.setStroke(Color.BLACK);
-				cell.setStrokeWidth(2);
+				prepare(cell, c);
+				c.setShape(cell);
 				myCanvas.getChildren().add(cell);
 			}
 		}

@@ -35,7 +35,7 @@ public class RectangularGrid implements IGrid {
 	
 	private Map<Integer, Color> colorMap;
 	private int numStates;
-	private boolean toroidal;
+	protected boolean toroidal;
 	private IRuleSet myRuleSet;
 	protected Pane myCanvas;
 	private double strokeWidth;
@@ -56,7 +56,7 @@ public class RectangularGrid implements IGrid {
 		strokeWidth = simdata.hasOutline() ? GRID_LINE_WIDTH : 0;
 		populate(simdata.getInitialStates());
 		myRuleSet = simdata.getRules();
-		myRuleSet.setParams(Arrays.copyOfRange(simdata.getExtraParameters(), 1, numStates+1));
+		myRuleSet.setParams(Arrays.copyOfRange(simdata.getExtraParameters(), 1, simdata.getExtraParameters().length));
 	}
 	
 //	public RectangularGrid() {
@@ -118,7 +118,7 @@ public class RectangularGrid implements IGrid {
 
 	}
 
-	private boolean isOnMap(int i, int j) {
+	protected boolean isOnMap(int i, int j) {
 		return (0<=i&&i<myGrid.length)&&(0<=j&&j<myGrid[0].length);
 	}
 
@@ -209,15 +209,19 @@ public class RectangularGrid implements IGrid {
 			for (int j = 0; j < cols; j++) {
 				Cell c = myGrid[i][j];
 				Rectangle body = new Rectangle(cellSize, cellSize, colorMap.get(myGrid[i][j].getPrimaryState()));
-				body.setOnMouseClicked(e -> c.changeState((c.getPrimaryState()+1)%colorMap.size()));
 				body.setX(firstX + j * cellSize);
 				body.setY(firstY + i * cellSize);
-				body.setStroke(Color.BLACK);
-				body.setStrokeWidth(strokeWidth);
+				prepare(body, c);
 				myCanvas.getChildren().add(body);
 				c.setShape(body);
 			}
 		}
+	}
+	
+	protected void prepare(Shape shape, Cell c) {
+		shape.setOnMouseClicked(e -> c.changeState((c.getPrimaryState()+1)%colorMap.size()));
+		shape.setStroke(Color.BLACK);
+		shape.setStrokeWidth(strokeWidth);
 	}
 }
 

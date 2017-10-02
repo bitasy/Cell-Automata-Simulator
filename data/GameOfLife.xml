@@ -3,11 +3,11 @@
     <title>Game of Life</title>
     <author>John Horton Conway</author>
     <colorScheme>0 1</colorScheme>
-    <extraParams>1</extraParams>
-    <shape>TriangularGrid</shape>
+    <extraParams>1 2 3 3</extraParams>
+    <shape>HexagonalGrid</shape>
     <hasOutline>true</hasOutline>
     <neighborsConsidered>all</neighborsConsidered>
-    <sliders>ratio 0 1 true</sliders>
+    <sliders>ratio 0 1 true;</sliders>
     <toroidal>false</toroidal>
     <initialConfig>fixed</initialConfig>
     <grid> 0 0 0 0 0 0 0 0 0 0;
