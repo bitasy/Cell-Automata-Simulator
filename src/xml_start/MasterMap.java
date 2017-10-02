@@ -5,18 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-
-import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.paint.Color;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
-import javafx.stage.FileChooser.ExtensionFilter;
-
 /**
  * Creates all SimulationParameter objects from all different XML files available;
  * Also creates Map<String, SimulationParameter>, mapping the title of the simulation to the SimulationParameter object
@@ -60,25 +48,6 @@ public class MasterMap {
         return mySimulation;
     }
     
-    // checks to see if there is a file name in rule sets
-    private boolean isValidName(String s) {
-    	
-	    	File folder = new File("rulesets/");
-	    	File[] listOfFiles = folder.listFiles();
-	
-	    	for (int i = 0; i < listOfFiles.length; i++) {
-	    	      if (listOfFiles[i].isFile()) {
-	    	    	  
-	    	    	  	String fileString = listOfFiles[i].getName();
-	    	    	  	if (fileString.contains(s)) {return true;}
-	    	      }
-	    	}
-    	
-	    	return false;
-	    	
-    }
-    
-    	
     	// creates map of all SimulationParameter instances for each simulation type
     	private void makeMap() {
     	

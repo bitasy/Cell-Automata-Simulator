@@ -2,7 +2,6 @@ package grids;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,7 +17,7 @@ import javafx.scene.shape.Shape;
 import xml_start.SimulationParameters;
 
 /**
- * The Grid class manages a grid of Cells to be used in a simulation. Its functions include updating the state and color of each Cell in the grid based on the rules provided by a SimulationLoader object.
+ * The RectangularGrid class manages a grid of Cells to be used in a simulation. Its functions include updating the state and color of each Cell in the grid based on the rules provided by a SimulationLoader object. Every Grid with this type is represented by a 2D array of Cells.
  * 
  * @author Brian Nieves
  */
@@ -26,12 +25,11 @@ public class RectangularGrid implements IGrid {
 
 	private static final int DEFAULT_STATE = 0;
 	private static final int DEFAULT_SECONDARY_STATE = -1;
-	private static final double HEIGHT = .7 * CellSociety.HEIGHT;
 	private static final double GRID_LINE_WIDTH = 2;
-	protected static final double SIM_HEIGHT = .7 * CellSociety.HEIGHT;
 	
 	protected int[][] NEIGHBOR_SET = new int[][]{ {-1, -1}, {-1, 0},
 		   {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, 1} };
+	protected static final double HEIGHT = .7 * CellSociety.HEIGHT;
 	
 	private Map<Integer, Color> colorMap;
 	private int numStates;
@@ -59,11 +57,6 @@ public class RectangularGrid implements IGrid {
 		myRuleSet.setParams(Arrays.copyOfRange(simdata.getExtraParameters(), 1, simdata.getExtraParameters().length));
 	}
 	
-//	public RectangularGrid() {
-//		
-//	}
-
-	
 	private void populate(int[] initialState) {
 		for(int i = 0; i < initialState.length; i++) {
 			int[] location = getLocation(i);
@@ -73,6 +66,7 @@ public class RectangularGrid implements IGrid {
 		}
 	}
 	
+	@Override
 	public void update() {
 		EffectGrid newStates = new RectangularEffectGrid();
 		myRuleSet.setNewGrid(newStates);
@@ -97,7 +91,6 @@ public class RectangularGrid implements IGrid {
 	/**
 	 * Returns a list that contains references to a cell's neighbors on all sides. If the cell is on the edge and toroidal is false, the neighbors that do not exist are null.
 	 * @param cell the cell whose neighbors are being returned.
-	 * @return 
 	 * @return the array of cells in the parameter cell's neighborhood.
 	 */
 	protected List<Cell> getNeighborhood(Cell cell) {
@@ -126,6 +119,7 @@ public class RectangularGrid implements IGrid {
 		return new int[] {index/myGrid[0].length, index%myGrid[0].length};
 	}
 	
+	@Override
 	public int[] getPrimaryStates() {
 		int[] states = new int[myGrid.length*myGrid[0].length];
 		int c = 0;
@@ -138,6 +132,7 @@ public class RectangularGrid implements IGrid {
 		return states;
 	}
 	
+	@Override
 	public int[] getCellCounts() {
 		int[] states = new int[colorMap.size()];
 		for(int i = 0; i < states.length; i++) {
@@ -157,7 +152,10 @@ public class RectangularGrid implements IGrid {
 	}
 	
 	class RectangularEffectGrid implements EffectGrid {
-		
+		/**
+		 * This class represents how new states are held for a RectangularGrid.
+		 * @author Brian Nieves
+		 */
 		int[][][] newStates;
 		
 		RectangularEffectGrid(){
@@ -181,10 +179,12 @@ public class RectangularGrid implements IGrid {
 			return newStates[loc[0]][loc[1]];
 		}
 		
+		@Override
 		public int getPrimaryState(int index) {
 			return getStates(index)[0];
 		}
 		
+		@Override
 		public int totalCells() {
 			return newStates.length*newStates[0].length;
 		}
@@ -196,15 +196,18 @@ public class RectangularGrid implements IGrid {
 		draw();
 	}
 	
+	/**
+	 * Draws the grid by assigning each cell a Shape and adding that to the Pane specified by drawTo.
+	 */
 	protected void draw() {
 		myCanvas.getChildren().removeAll(myCanvas.getChildren());
 		int rows = myGrid.length;
 		int cols = myGrid[0].length;
-		double cellSize = Math.min(CellSociety.WIDTH / cols, SIM_HEIGHT / rows);
+		double cellSize = Math.min(CellSociety.WIDTH / cols, HEIGHT / rows);
 		double totalWidthPercent = cellSize * cols / CellSociety.WIDTH;
 		double firstX = (.5 - totalWidthPercent / 2) * CellSociety.WIDTH;
-		double totalHeightPercent = cellSize * rows / SIM_HEIGHT;
-		double firstY = (.5 - totalHeightPercent / 2) * SIM_HEIGHT;
+		double totalHeightPercent = cellSize * rows / HEIGHT;
+		double firstY = (.5 - totalHeightPercent / 2) * HEIGHT;
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < cols; j++) {
 				Cell c = myGrid[i][j];

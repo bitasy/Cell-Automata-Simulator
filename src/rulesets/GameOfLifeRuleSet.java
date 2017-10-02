@@ -56,9 +56,9 @@ public class GameOfLifeRuleSet extends StandardRuleSet{
 	
 	public SliderInfo[] getSliders() {
 		return new SliderInfo[] {
-				new SliderInfo("Minimum Population", 1, 3, false),
-				new SliderInfo("Maximum Population", 2, 6, false),
-				new SliderInfo("Reproduction Population", 1, 5, false)
+				new SliderInfo("Minimum Population", 1, 3, false, minNeighbors),
+				new SliderInfo("Maximum Population", 2, 6, false, maxNeighbors),
+				new SliderInfo("Reproduction Population", 1, 5, false, birthNeighbors)
 		};
 	}
 }

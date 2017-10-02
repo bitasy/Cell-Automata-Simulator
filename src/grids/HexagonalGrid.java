@@ -1,3 +1,8 @@
+/**
+ * Describes the Grid in which cells are hexagons, and neighbors share a side.
+ * @author Brian Nieves
+ * @author Simran Singh
+ */
 package grids;
 
 import java.util.ArrayList;
@@ -5,7 +10,6 @@ import java.util.List;
 
 import backend.Cell;
 import frontend.CellSociety;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import xml_start.SimulationParameters;
 
@@ -18,7 +22,8 @@ public class HexagonalGrid extends RectangularGrid {
 		super(simdata);
 		NEIGHBOR_SET = new int[][]{ {-1, 0}, {0, -1}, {0, 1}, {1, 0} };
 	}
-
+	
+	@Override
 	protected List<Cell> getNeighborhood(Cell cell) {
 		
 		int[] location = getLocation(cell.getTag());
@@ -50,6 +55,10 @@ public class HexagonalGrid extends RectangularGrid {
 		}
 	}
 	
+	/**
+	 * The author of this method is Simran Singh.
+	 */
+	@Override
 	protected void draw() {
 		myCanvas.getChildren().removeAll(myCanvas.getChildren());
 		int rows = myGrid.length;
@@ -60,15 +69,15 @@ public class HexagonalGrid extends RectangularGrid {
 		// tl;dr: math
 		double sideLength = Math.min(
 				CellSociety.WIDTH / ((1 + 2 * SIN_THIRTY) * (cols + .5) - (cols * SIN_THIRTY) + SIN_THIRTY),
-				SIM_HEIGHT / 1.1 / (rows * 2 * COS_THIRTY + COS_THIRTY));
+				HEIGHT / 1.1 / (rows * 2 * COS_THIRTY + COS_THIRTY));
 		double hexagonalWidth = sideLength + 2 * SIN_THIRTY * sideLength;
 		double hexagonalHeight = 2 * sideLength * COS_THIRTY;
 		double totalWidth = cols * hexagonalWidth + hexagonalWidth / 2 - ((cols - 1) * sideLength * SIN_THIRTY);
 		double totalHeight = rows * hexagonalHeight + sideLength * COS_THIRTY;
 		double totalWidthPercent = totalWidth / CellSociety.WIDTH;
 		double firstX = (.5 - totalWidthPercent / 2) * CellSociety.WIDTH + sideLength * SIN_THIRTY;
-		double totalHeightPercent = totalHeight / SIM_HEIGHT;
-		double firstY = (.5 - totalHeightPercent / 2) * SIM_HEIGHT + sideLength * COS_THIRTY;
+		double totalHeightPercent = totalHeight / HEIGHT;
+		double firstY = (.5 - totalHeightPercent / 2) * HEIGHT + sideLength * COS_THIRTY;
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < cols; j++) {
 				Cell c = myGrid[i][j];

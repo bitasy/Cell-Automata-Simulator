@@ -16,6 +16,7 @@ public class CellGraph extends Stage {
 	final NumberAxis yAxis = new NumberAxis();
 
 	private LineChart<Number, Number> lineChart;
+	@SuppressWarnings("rawtypes")
 	private ArrayList<XYChart.Series> allSeries;
 	private int count;
 
@@ -25,6 +26,7 @@ public class CellGraph extends Stage {
 	// easy/elegant way to fix them and since the code was also directly from the
 	// java documentation I figured it was okay
 
+	@SuppressWarnings("rawtypes")
 	public CellGraph() {
 		super();
 		lineChart = new LineChart<Number, Number>(xAxis, yAxis);
@@ -33,10 +35,12 @@ public class CellGraph extends Stage {
 		count = 0;
 		Scene scene = new Scene(lineChart, WIDTH, HEIGHT);
 		this.setScene(scene);
+		this.setAlwaysOnTop(true);
 		this.setTitle(CellSociety.GRAPH_TITLE);
 		this.show();
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void addStartingPoints(int[] values) {
 		for (Integer value : values) {
 			XYChart.Series series = new XYChart.Series();
@@ -47,6 +51,7 @@ public class CellGraph extends Stage {
 		count++;
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void addPoints(int[] values) {
 		for (int i = 0; i < values.length; i++) {
 			Integer value = values[i];
@@ -57,7 +62,6 @@ public class CellGraph extends Stage {
 	}
 
 	public void reset() {
-		System.out.println("reset");
 		count = 0;
 		lineChart.getData().removeAll(lineChart.getData());
 		allSeries.clear();

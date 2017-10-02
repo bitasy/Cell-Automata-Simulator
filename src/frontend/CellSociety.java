@@ -32,6 +32,7 @@ public class CellSociety extends Application {
 
 	@Override
 	public void start(Stage s) {
+		s.setResizable(false);
 		BorderPane root = new BorderPane();
 		Scene mainScene = new Scene(root, WIDTH, HEIGHT, BACKGROUND);
 		CellSimulator simulator = new CellSimulator(s);

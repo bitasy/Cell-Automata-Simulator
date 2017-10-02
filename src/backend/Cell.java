@@ -1,3 +1,7 @@
+/**
+ *Cell represents a single cell automata in the simulation. It contains information regarding its shape, position, and states.  
+ * @author Brian Nieves
+ */
 package backend;
 
 import java.util.Map;
@@ -15,9 +19,9 @@ public class Cell {
 	/**
 	 * Creates a new Cell with the specified parameters. A cell can have multiple states, but it must at least have one (used for coloring the cell) at all times. 
 	 * @param initialState the initial state to set the cell to at the beginning of the simulation.
-	 * @param size the side length of the cell's image in pixels.
+	 * @param numStates the number of different kinds of states this cell can hold.
 	 * @param colorMap the map of states to colors used to display the cell as having a particular state.
-	 * @param location the location of the cell inside the grid, given by {row, column}.
+	 * @param tag the unique identifier used by the grid to keep track of this cell.
 	 */
 	public Cell(int initialState, int numStates, Map<Integer, Color> colorMap, int tag) {
 		myState = new int[numStates];
@@ -28,15 +32,15 @@ public class Cell {
 	
 	/**
 	 * Changes the primary state of the cell and updates its display color.
-	 * @param newState the state to which the cell will be changed.
+	 * @param value the state to which the cell will be changed.
 	 */
 	public void changeState(int value) {
 		changeState(0, value);
 	}
 	
 	/**
-	 * Changes the specified state of this cell.
-	 * @param newState the state of this cell to update.
+	 * Changes the specified state of this cell. Updates its color if the state is the primary one.
+	 * @param state the state of this cell to update.
 	 * @param value the value to update the specified state to.
 	 */
 	public void changeState(int state, int value) {
@@ -45,6 +49,10 @@ public class Cell {
 			myView.setFill(myColorMap.get(value));
 	}
 	
+	/**
+	 * Changes all of the states of this cell. The array of new states must be of the correct size.
+	 * @param newStates the integer array containing the cell's new states.
+	 */
 	public void changeState(int[] newStates) {
 		if(newStates.length == myState.length) {
 			myState = newStates;
@@ -53,13 +61,18 @@ public class Cell {
 	}
 	
 	/**
-	 * Returns the current state of the cell.
+	 * Returns the current primary state of the cell.
 	 * @return the integer state of the cell.
 	 */
 	public int getPrimaryState() {
 		return myState[0];
 	}
 	
+	/**
+	 * Returns the current specified state of the cell.
+	 * @param state which state's value to get.
+	 * @return the integer value of the specified state.
+	 */
 	public int getState(int state) {
 		if(myState.length>state) {
 			return myState[state];
@@ -69,21 +82,16 @@ public class Cell {
 	
 	/**
 	 * Returns the index, or tag, of this cell in its grid. This acts as a location marker for the cell in the grid.
-	 * @return the integer tag of this cell in the context of its grid..
+	 * @return the integer tag of this cell in the context of its grid.
 	 */
 	public int getTag() {
 		return myTag;
 	}
 	
 	/**
-	 * Returns the Rectangle this Cell uses to display.
-	 * @return the Rectangle object.
+	 * Sets the shape for this cell to display on the grid.
+	 * @param shape The shape to be displayed.
 	 */
-	public Shape getShape() {
-		// TODO does this have to be public?
-		return myView;
-	}
-	
 	public void setShape(Shape shape) {
 		myView = shape;
 		myView.setFill(myColorMap.get(myState[0]));

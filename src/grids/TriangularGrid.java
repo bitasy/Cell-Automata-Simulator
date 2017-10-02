@@ -1,3 +1,8 @@
+/**
+ * Describes the Grid in which cells are triangles, and neighbors share a side.
+ * @author Brian Nieves
+ * @author Simran Singh
+ */
 package grids;
 
 import java.util.ArrayList;
@@ -5,7 +10,6 @@ import java.util.List;
 
 import backend.Cell;
 import frontend.CellSociety;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import xml_start.SimulationParameters;
 
@@ -18,6 +22,7 @@ public class TriangularGrid extends RectangularGrid {
 		NEIGHBOR_SET = new int[][] { { 0, -1 }, { 0, 1 }};
 	}
 	
+	@Override
 	protected List<Cell> getNeighborhood(Cell cell) {
 		
 		int[] location = getLocation(cell.getTag());
@@ -46,6 +51,11 @@ public class TriangularGrid extends RectangularGrid {
 					[(location[1] + neighbor[1]+myGrid[0].length)%myGrid[0].length]);
 		}
 	}
+	
+	/**
+	 * The author of this method is Simran Singh.
+	 */
+	@Override
 	protected void draw() {
 		myCanvas.getChildren().removeAll(myCanvas.getChildren());
 		int rows = myGrid.length;
@@ -54,14 +64,14 @@ public class TriangularGrid extends RectangularGrid {
 		// the respective widths/heights, solving for the side length, and taking the
 		// minimum value as this ensures that all triangles will be shown on screen.
 		// tl;dr: math
-		double sideLength = Math.min(CellSociety.WIDTH / cols, SIM_HEIGHT / (rows * COS_THIRTY * 1.2));
+		double sideLength = Math.min(CellSociety.WIDTH / cols, HEIGHT / (rows * COS_THIRTY * 1.2));
 		double triangularHeight = sideLength * COS_THIRTY * 1.15;
 		double totalWidth = cols / 2 * sideLength + sideLength;
 		double totalHeight = rows * triangularHeight;
 		double totalWidthPercent = totalWidth / CellSociety.WIDTH;
 		double firstX = (.5 - totalWidthPercent / 2) * CellSociety.WIDTH;
-		double totalHeightPercent = totalHeight / SIM_HEIGHT;
-		double firstY = (.5 - totalHeightPercent / 2) * SIM_HEIGHT;
+		double totalHeightPercent = totalHeight / HEIGHT;
+		double firstY = (.5 - totalHeightPercent / 2) * HEIGHT;
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < cols; j++) {
 				Cell c = myGrid[i][j];

@@ -6,11 +6,7 @@ import xml_start.SimulationParameters;
 import xml_start.XMLWrite;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
-import javafx.geometry.Bounds;
-import javafx.geometry.Insets;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ScrollPane;
@@ -19,6 +15,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -89,7 +87,7 @@ public class CellSimulator {
 		stage.setTitle(CellSociety.TITLE + " - " + data.getTitle());
 		myGrid = data.getGridObject();
 		myGrid.drawTo(pane);
-		parameters = new double[data.getRules().getSliders().length];
+		parameters = Arrays.copyOfRange(data.getExtraParameters(), 1, data.getExtraParameters().length);//new double[data.getRules().getSliders().length];
 		myGraph.reset();
 		myGraph.addStartingPoints(myGrid.getCellCounts());
 		startAnimation();

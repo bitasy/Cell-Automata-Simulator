@@ -5,7 +5,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -70,7 +69,7 @@ public class XMLWrite {
 		// StreamResult result = new StreamResult(System.out);
 
 		transformer.transform(source, result);
-		System.out.println("File saved!");
+		System.out.println("File saved! Look in saved_states. Replace the xml file for the simulation with this file (rename it) and you're good to go.");
 			
 		
 	}

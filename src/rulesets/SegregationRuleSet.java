@@ -33,7 +33,6 @@ public class SegregationRuleSet extends StandardRuleSet {
 			possibilities = effects.totalCells();
 			int position = nextPosition();
 			while (!valid) {
-				//System.out.println(position);
 				int[] states = effects.getStates(position);
 				if (states[0] == EMPTY)
 					valid = true;
@@ -90,7 +89,7 @@ public class SegregationRuleSet extends StandardRuleSet {
 	
 	public SliderInfo[] getSliders() {
 		return new SliderInfo[] {
-				new SliderInfo("Tolerance", 0, 1, true)
+				new SliderInfo("Tolerance", 0, 1, true, t)
 		};
 	}
 }

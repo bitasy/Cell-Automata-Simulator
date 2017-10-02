@@ -4,7 +4,7 @@
 	<author>Mike Scott</author>
 	<colorScheme>-1 -1 -1 0 1 2</colorScheme>
 	<extraParams>3 3 5 8</extraParams>
-	<shape>square</shape>
+	<shape>CardinalGrid</shape>
 	<hasOutline>true</hasOutline>
 	<neighborsConsidered>all</neighborsConsidered>
 	<sliders>ratio 0 1 true;sharkStarveTime 0 10 false</sliders>

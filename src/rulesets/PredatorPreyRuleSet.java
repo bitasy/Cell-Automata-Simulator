@@ -132,9 +132,9 @@ public class PredatorPreyRuleSet extends StandardRuleSet {
 	
 	public SliderInfo[] getSliders() {
 		return new SliderInfo[] {
-				new SliderInfo("Shark Starve Time", 2, 10, false),
-				new SliderInfo("Shark Breed Time", 11, 20, false),
-				new SliderInfo("Fish Breed Time", 2, 10, false)
+				new SliderInfo("Shark Starve Time", 2, 10, false, sharkStarveTime),
+				new SliderInfo("Shark Breed Time", 11, 20, false, sharkBreedTime),
+				new SliderInfo("Fish Breed Time", 2, 10, false, fishBreedTime)
 		};
 	}
 }

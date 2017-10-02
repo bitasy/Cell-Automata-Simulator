@@ -511,7 +511,8 @@ public class SimulationParameters {
     }
     
     // creates new gridObject
-    public void setupGridObject() {
+    @SuppressWarnings("rawtypes")
+	public void setupGridObject() {
     		try {
 				Class gridClass = Class.forName("grids." + simShape);
 				Constructor[] gridConstr = gridClass.getConstructors();

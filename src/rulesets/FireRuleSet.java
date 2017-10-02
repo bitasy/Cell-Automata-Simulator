@@ -56,7 +56,7 @@ public class FireRuleSet extends StandardRuleSet{
 	
 	public SliderInfo[] getSliders() {
 		return new SliderInfo[] {
-				new SliderInfo("Catch Fire Probability", 0, 1, true)
+				new SliderInfo("Catch Fire Probability", 0, 1, true, probCatch)
 		};
 	}
 	

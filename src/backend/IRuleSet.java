@@ -1,3 +1,7 @@
+/**
+ * This interface describes the behavior of all RuleSets. It provides information about the simulation it models as well as calculating the new states for each Cell in the simulation.
+ * @author Brian Nieves
+ */
 package backend;
 
 import java.util.List;
@@ -32,5 +36,9 @@ public interface IRuleSet {
 	 */
 	void setParams(double[] params);
 	
+	/**
+	 * Returns the information required to create slider for each parameter specified by this RuleSet.
+	 * @return an array of SliderInfo objects that each contain the information for one parameter.
+	 */
 	SliderInfo[] getSliders();
 }

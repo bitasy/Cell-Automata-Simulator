@@ -8,16 +8,18 @@ public class SliderInfo {
 	private double min;
 	private double max;
 	private boolean isContinuous;
+	private double defaultNum;
 	
 	public SliderInfo(String s) throws XMLFormatException {
 		setupSlider(s);
 	}
 	
-	public SliderInfo(String title, double min, double max, boolean isContinuous) {
+	public SliderInfo(String title, double min, double max, boolean isContinuous, double defaultNum) {
 		this.title = title;
 		this.min = min;
 		this.max = max;
 		this.isContinuous = isContinuous;
+		this.defaultNum = defaultNum;
 	}
 	
 	private void setupSlider(String s) throws XMLFormatException {
@@ -51,6 +53,6 @@ public class SliderInfo {
 	}
 	
 	public double getDefault() {
-		return (max-min)/2;
+		return defaultNum;
 	}
 }

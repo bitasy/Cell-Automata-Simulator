@@ -153,7 +153,6 @@ public class SimulationInterface extends BorderPane {
 		grid.setHgap(10);
 		grid.setPadding(new Insets(0, 10, 0, 10));
 		SliderInfo[] sliders = simulator.getSliderInfo();
-		System.out.println(sliders.length);
 		for (int i = 0; i < sliders.length; i++) {
 			SliderInfo sliderInformation = sliders[i];
 			VBox sliderBox = setSliderBox(sliderInformation.getMin(), sliderInformation.getMax(),
