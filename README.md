@@ -3,7 +3,7 @@
 CompSci 308 Cell Society Project
 
 Simran, Paulo, and Brian worked on the project.
-We started around the 17th and finished on October 2nd. Collectively we probably spent around 80ish hours I would say creating this project. 
+We started around the 17th and finished on October 2nd. Collectively we probably spent around 90ish hours I would say creating this project. 
 Brian worked primarily on the backend, Paulo on the back end, and Simran on the front end, but there was a lot of communication between the three of us on figuring out how the individual parts worked though. 
 
 The main files used to create the project is CellSociety in the front end. Other than that, the program requires a custom XML/ruleset pair to run a novel simulation along with the closed files. 
