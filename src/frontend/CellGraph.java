@@ -8,6 +8,10 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.stage.Stage;
 
+/**
+ * @author Simran
+ *
+ */
 public class CellGraph extends Stage {
 
 	private final int WIDTH = 400;
@@ -22,9 +26,9 @@ public class CellGraph extends Stage {
 
 	// Graphing was adapted from
 	// https:docs.oracle.com/javase/8/javafx/user-interface-tutorial/line-chart.htm#CIHGBCFI
-	// I understand there are a lot of suggestions, but I couldn't find an
-	// easy/elegant way to fix them and since the code was also directly from the
-	// java documentation I figured it was okay
+	// I understand there are a lot of suppressed warnings, but I couldn't find an
+	// easy/elegant way to fix them. A lot of the code from the java documentation
+	// came with a lot of warnings and suggestions
 
 	@SuppressWarnings("rawtypes")
 	public CellGraph() {
@@ -40,6 +44,12 @@ public class CellGraph extends Stage {
 		this.show();
 	}
 
+	/**
+	 * Used to instantiate a new line for each type of state for individual
+	 * simulations (1 line for each possible state)
+	 * 
+	 * @param values
+	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void addStartingPoints(int[] values) {
 		for (Integer value : values) {
@@ -51,6 +61,11 @@ public class CellGraph extends Stage {
 		count++;
 	}
 
+	/**
+	 * Adds points to the graphs as the simulation continues
+	 * 
+	 * @param values
+	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void addPoints(int[] values) {
 		for (int i = 0; i < values.length; i++) {

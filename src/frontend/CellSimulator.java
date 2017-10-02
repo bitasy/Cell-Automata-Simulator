@@ -15,18 +15,21 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author Simran
+ *
+ */
 public class CellSimulator {
 
 	private static final double HEIGHT = .7 * CellSociety.HEIGHT;
 	private Timeline animation;
 	private double step;
 	private IGrid myGrid;
-	private MasterMap masterMap;
+	private MasterMap masterMap; // Has XML_readings and string that contains all errors
 	private Map<String, SimulationParameters> XML_readings;
 	private SimulationParameters data;
 	private Stage stage;
@@ -37,17 +40,25 @@ public class CellSimulator {
 	private Pane pane;
 	private ScrollPane scroll;
 
+	/**
+	 * CellSimulator contains all the visualization for the game and holds the
+	 * displays for the grid. It handles all the actions that take place when there
+	 * is interactions with the interface. It also throws all the errors and is
+	 * responsible for sending relevant information to the Grid
+	 * 
+	 * @param s
+	 *            Stage of the game
+	 */
 	public CellSimulator(Stage s) {
 		pane = new Pane();
 		scroll = new ScrollPane();
 		scroll.setContent(pane);
-		scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED); // Horizontal scroll bar
-		scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED); // Vertical scroll bar
+		scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+		scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 		scroll.setPrefSize(CellSociety.WIDTH, HEIGHT);
 		stage = s;
 		masterMap = new MasterMap();
 		XML_readings = masterMap.getMap();
-		// System.out.println("map size: " + XML_readings.size());
 		myGraph = new CellGraph();
 		checkForErrors();
 		pane.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -67,6 +78,10 @@ public class CellSimulator {
 		animation.pause();
 	}
 
+	/**
+	 * Sets parameters and has a new Grid Object depending on the original
+	 * specifications
+	 */
 	public void handleReset() {
 		data.setupGridObject();
 		myGrid = data.getGridObject();
@@ -75,6 +90,9 @@ public class CellSimulator {
 		animation.pause();
 	}
 
+	/**
+	 * Method to handle all updating of the grid, dynamic text, and graph
+	 */
 	public void handleStep() {
 		myGrid.update();
 		int[] statusUpdate = myGrid.getCellCounts();
@@ -82,23 +100,43 @@ public class CellSimulator {
 		myGraph.addPoints(statusUpdate);
 	}
 
+	/**
+	 * Changes the titles, grid, sliders for the parameters, and the grid depending
+	 * on if there is a new simulation that needs to be loaded.
+	 * 
+	 * @param sim
+	 *            Name of the simulation
+	 */
 	public void handleSimulatorChange(String sim) {
 		data = XML_readings.get(sim);
 		stage.setTitle(CellSociety.TITLE + " - " + data.getTitle());
 		myGrid = data.getGridObject();
 		myGrid.drawTo(pane);
-		parameters = Arrays.copyOfRange(data.getExtraParameters(), 1, data.getExtraParameters().length);//new double[data.getRules().getSliders().length];
+		parameters = Arrays.copyOfRange(data.getExtraParameters(), 1, data.getExtraParameters().length);
 		myGraph.reset();
 		myGraph.addStartingPoints(myGrid.getCellCounts());
 		startAnimation();
 	}
 
+	/**
+	 * Handle conversion so that slider speed becomes updates per second
+	 * 
+	 * @param speed
+	 */
 	public void handleSpeedChange(double speed) {
 		step = 1000 / speed;
 		animation.stop();
 		startAnimation();
 	}
 
+	/**
+	 * Changes the parameters in accordance with the sliders
+	 * 
+	 * @param newValue
+	 *            The value that the parameter should be changed
+	 * @param index
+	 *            The corresponding index in the parameters array
+	 */
 	public void handleExtraParameters(double newValue, int index) {
 		animation.stop();
 		parameters[index] = newValue;
@@ -106,12 +144,18 @@ public class CellSimulator {
 		startAnimation();
 	}
 
+	/**
+	 * Creates new window for simulation
+	 */
 	public void handleSimCreation() {
 		Stage newStage = new Stage();
 		CellSociety game = new CellSociety();
 		game.start(newStage);
 	}
 
+	/**
+	 * Creates error if the button saving state doesn't work
+	 */
 	public void handleSaveState() {
 		XMLWrite xmlWriter = new XMLWrite();
 		try {
@@ -131,6 +175,10 @@ public class CellSimulator {
 		return data.getAuthor();
 	}
 
+	/**
+	 * @return Array of custom SliderInfo object that stores all the information
+	 *         required to programmatically create a new slider
+	 */
 	public SliderInfo[] getSliderInfo() {
 		return data.getRules().getSliders();
 	}
@@ -151,6 +199,9 @@ public class CellSimulator {
 		animation.setCycleCount(Timeline.INDEFINITE);
 	}
 
+	/**
+	 * Sees if there were errors loading XMLs and starts alerts if there is an error
+	 */
 	private void checkForErrors() {
 		alert.setTitle(CellSociety.ALERT_TITLE);
 		alert.setHeaderText(null);
@@ -162,6 +213,11 @@ public class CellSimulator {
 		}
 	}
 
+	/**
+	 * @param stateCount
+	 *            Array that contains count of each state at the appropriate index
+	 * @return String to display information on screen
+	 */
 	private String readStatus(int[] stateCount) {
 		String status = "";
 		for (int i = 0; i < stateCount.length; i++) {

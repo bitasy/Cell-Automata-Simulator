@@ -8,9 +8,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 
+/**
+ * @author Simran
+ *
+ */
 public class CellSociety extends Application {
 
-	public static final ResourceBundle labels = ResourceBundle.getBundle("text");
+	public static final ResourceBundle labels = ResourceBundle.getBundle("text"); // Used to populate text for interface 
 	public static final String TITLE = labels.getString("title");
 	public static final String[] BUTTON_TITLES = labels.getString("buttons").split(",");
 	public static final String UNIT_TITLE = labels.getString("units");
@@ -30,6 +34,14 @@ public class CellSociety extends Application {
 		launch(args);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see javafx.application.Application#start(javafx.stage.Stage)
+	 * 
+	 * Splits the top and bottom half into the grid and the interface. Instantiates
+	 * the game and lets it run
+	 */
 	@Override
 	public void start(Stage s) {
 		s.setResizable(false);
