@@ -13,13 +13,26 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
+/**
+ * @author Simran
+ *
+ */
 public class SimulationInterface extends BorderPane {
 
-	private static final double HEIGHT =  .3 * CellSociety.HEIGHT;
+	private static final double HEIGHT = .3 * CellSociety.HEIGHT;
 	private String[] simNames;
 	private Text authorText = new Text();
 	private CellSimulator simulator;
 
+	/**
+	 * Handles all the changeable objects like sliders/drop downs as well as
+	 * dynamic/static text. It programmatically creates the drop down with the
+	 * available simulation and available parameters using sliders
+	 * 
+	 * @param s
+	 *            Simulator access is required to handle all interactions with the
+	 *            grid
+	 */
 	public SimulationInterface(CellSimulator s) {
 		super();
 		simulator = s;
@@ -32,6 +45,10 @@ public class SimulationInterface extends BorderPane {
 		createGraphInfo();
 	}
 
+	/**
+	 * Creates the drop down choicebox, save simulation button, and add new
+	 * simulation button
+	 */
 	private void createDropDownSection() {
 		VBox vSim = new VBox();
 		ChoiceBox<String> simulations = createChoiceBox();
@@ -50,6 +67,9 @@ public class SimulationInterface extends BorderPane {
 		this.setLeft(vSim);
 	}
 
+	/**
+	 * Contains dynamic text with updates on the statuses of the states
+	 */
 	private void createGraphInfo() {
 		VBox topBox = new VBox();
 		Text populationText = new Text();
@@ -60,6 +80,11 @@ public class SimulationInterface extends BorderPane {
 		this.setTop(topBox);
 	}
 
+	/**
+	 * Helps create drop down choicebox
+	 * 
+	 * @return
+	 */
 	private ChoiceBox<String> createChoiceBox() {
 		ChoiceBox<String> simulations = new ChoiceBox<>();
 		ChangeListener<String> changeListener = new ChangeListener<String>() {
@@ -77,6 +102,9 @@ public class SimulationInterface extends BorderPane {
 		return simulations;
 	}
 
+	/**
+	 * Create all 4 main buttons contant for all simulations
+	 */
 	private void createButtonsSection() {
 		BorderPane buttons = new BorderPane();
 		buttons.setMaxWidth(300);
@@ -88,6 +116,9 @@ public class SimulationInterface extends BorderPane {
 		this.setCenter(buttons);
 	}
 
+	/**
+	 * @return VBox containing Reset and Step Buttons
+	 */
 	private VBox setRightButtons() {
 		VBox vRightButtons = new VBox(20);
 		vRightButtons.setPadding(new Insets(25, 20, 0, 0));
@@ -101,6 +132,9 @@ public class SimulationInterface extends BorderPane {
 		return vRightButtons;
 	}
 
+	/**
+	 * @return VBOX containing Start and Stop Buttons
+	 */
 	private VBox setLeftButtons() {
 		VBox vLeftButtons = new VBox(20);
 		vLeftButtons.setPadding(new Insets(25, 20, 0, 50));
@@ -114,6 +148,9 @@ public class SimulationInterface extends BorderPane {
 		return vLeftButtons;
 	}
 
+	/**
+	 * Has the speed slider, units for text, and author text
+	 */
 	private void createSpeedSection() {
 		BorderPane speedSection = new BorderPane();
 		VBox sliderBox = setSliderBox(CellSociety.MINSPEED, CellSociety.MAXSPEED,
@@ -133,6 +170,17 @@ public class SimulationInterface extends BorderPane {
 		this.setRight(speedSection);
 	}
 
+	/**
+	 * Used to create a general slider to avoid reptition for speed slider and the
+	 * programatically created sliders
+	 * 
+	 * @param min
+	 * @param max
+	 * @param def
+	 *            default value
+	 * @param unitDescription
+	 * @return
+	 */
 	private VBox setSliderBox(double min, double max, double def, String unitDescription) {
 		VBox sliderBox = new VBox(5);
 		Slider slider = new Slider(min, max, def);
@@ -148,6 +196,12 @@ public class SimulationInterface extends BorderPane {
 		return sliderBox;
 	}
 
+	/**
+	 * Programatically creates the sliders based off of the information from the XML
+	 * files. In order to reduce repitition, the sliders were created using a
+	 * separate method, and I couldn't find another reasonably efficient way to
+	 * split of this method so it is relatively long
+	 */
 	private void createSliderSection() {
 		GridPane grid = new GridPane();
 		grid.setHgap(10);
