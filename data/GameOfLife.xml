@@ -4,7 +4,7 @@
     <author>John Horton Conway</author>
     <colorScheme>0 1</colorScheme>
     <extraParams>1</extraParams>
-    <shape>square</shape>
+    <shape>TriangularGrid</shape>
     <hasOutline>true</hasOutline>
     <neighborsConsidered>all</neighborsConsidered>
     <sliders>ratio 0 1 true</sliders>
