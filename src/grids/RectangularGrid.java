@@ -28,6 +28,7 @@ public class RectangularGrid implements IGrid {
 	private static final int DEFAULT_SECONDARY_STATE = -1;
 	private static final double HEIGHT = .7 * CellSociety.HEIGHT;
 	private static final double GRID_LINE_WIDTH = 2;
+	protected static final double SIM_HEIGHT = .7 * CellSociety.HEIGHT;
 	
 	protected int[][] NEIGHBOR_SET = new int[][]{ {-1, -1}, {-1, 0},
 		   {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, 1} };
@@ -173,17 +174,13 @@ public class RectangularGrid implements IGrid {
 	
 	protected void draw() {
 		myCanvas.getChildren().removeAll(myCanvas.getChildren());
-		
-		
 		int rows = myGrid.length;
 		int cols = myGrid[0].length;
-		
-		double cellSize = Math.min(CellSociety.WIDTH / cols, HEIGHT / rows);
-		
+		double cellSize = Math.min(CellSociety.WIDTH / cols, SIM_HEIGHT / rows);
 		double totalWidthPercent = cellSize * cols / CellSociety.WIDTH;
 		double firstX = (.5 - totalWidthPercent / 2) * CellSociety.WIDTH;
-		double totalHeightPercent = cellSize * rows / HEIGHT;
-		double firstY = (.5 - totalHeightPercent / 2) * HEIGHT;
+		double totalHeightPercent = cellSize * rows / SIM_HEIGHT;
+		double firstY = (.5 - totalHeightPercent / 2) * SIM_HEIGHT;
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < cols; j++) {
 				Cell c = myGrid[i][j];
@@ -198,7 +195,5 @@ public class RectangularGrid implements IGrid {
 			}
 		}
 	}
-	
-	
 }
 
