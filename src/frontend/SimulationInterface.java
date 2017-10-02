@@ -1,6 +1,5 @@
 package frontend;
 
-import java.util.List;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
@@ -68,11 +67,11 @@ public class SimulationInterface extends BorderPane {
 			public void changed(ObservableValue<? extends String> observables, String oldV, String newV) {
 				simulator.handleSimulatorChange(newV);
 				authorText.setText(simulator.getAuthor());
+				createSliderSection(); 
 			}
 		};
 		simulations.getSelectionModel().selectedItemProperty().addListener(changeListener);
 		simulations.getItems().addAll(simNames);
-		
 		simulations.setValue(simNames[0]);
 		simulations.setPadding(new Insets(3, 3, 3, 3));
 		return simulations;
@@ -153,9 +152,10 @@ public class SimulationInterface extends BorderPane {
 		GridPane grid = new GridPane();
 		grid.setHgap(10);
 		grid.setPadding(new Insets(0, 10, 0, 10));
-		List<SliderInfo> sliders = simulator.getSliderInfo();
-		for (int i = 0; i < sliders.size(); i++) {
-			SliderInfo sliderInformation = sliders.get(i);
+		SliderInfo[] sliders = simulator.getSliderInfo();
+		System.out.println(sliders.length);
+		for (int i = 0; i < sliders.length; i++) {
+			SliderInfo sliderInformation = sliders[i];
 			VBox sliderBox = setSliderBox(sliderInformation.getMin(), sliderInformation.getMax(),
 					sliderInformation.getDefault(), sliderInformation.getTitle());
 			Slider slider = (Slider) sliderBox.getChildren().get(0);
@@ -163,11 +163,13 @@ public class SimulationInterface extends BorderPane {
 			final int constantIndex = i;
 			slider.valueProperty().addListener(new ChangeListener<Number>() {
 				public void changed(ObservableValue<? extends Number> ov, Number old_val, Number new_val) {
+					double setValue = new_val.doubleValue();
 					if (!sliderInformation.isContinuous()) {
-						slider.setValue(Math.round(new_val.doubleValue()));
+						setValue = Math.round(setValue);
 					}
-					simulator.handleExtraParameters(new_val.doubleValue(), constantIndex);
-					value.setText(String.format("%.2f", new_val));
+					slider.setValue(setValue);
+					simulator.handleExtraParameters(setValue, constantIndex);
+					value.setText(String.format("%.2f", setValue));
 				}
 			});
 			grid.add(sliderBox, i, 0);

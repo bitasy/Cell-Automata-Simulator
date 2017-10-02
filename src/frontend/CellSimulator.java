@@ -1,26 +1,28 @@
 package frontend;
 
-import java.util.List;
-import java.util.Map;
-
 import backend.IGrid;
-import grids.RectangularGrid;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.event.EventHandler;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
-import javafx.stage.Stage;
-import javafx.util.Duration;
 import xml_start.MasterMap;
 import xml_start.SimulationParameters;
 import xml_start.XMLWrite;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
+import javafx.geometry.Bounds;
+import javafx.geometry.Insets;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
+import javafx.util.Duration;
+import java.util.List;
+import java.util.Map;
 
-public class CellSimulator extends Pane {
+public class CellSimulator {
 
 	private static final double HEIGHT = .7 * CellSociety.HEIGHT;
 	private Timeline animation;
@@ -34,16 +36,30 @@ public class CellSimulator extends Pane {
 	private double[] parameters;
 	private Text populationText;
 	private CellGraph myGraph;
+	private Pane pane;
+	private ScrollPane scroll;
 
 	public CellSimulator(Stage s) {
-		super();
+		pane = new Pane();
+		scroll = new ScrollPane();
+		scroll.setContent(pane);
+		scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS); // Horizontal scroll bar
+		scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS); // Vertical scroll bar
+		scroll.setPrefSize(CellSociety.WIDTH, HEIGHT);
+		// scroll.viewportBoundsProperty().addListener(new ChangeListener<Bounds>() {
+		// @Override
+		// public void changed(ObservableValue<? extends Bounds> ov, Bounds oldBounds,
+		// Bounds bounds) {
+		// pane.setPrefWidth(bounds.getWidth());
+		// pane.setPrefHeight(bounds.getHeight());
+		// }
+		// });
 		stage = s;
 		masterMap = new MasterMap();
 		XML_readings = masterMap.getMap();
 		myGraph = new CellGraph();
 		checkForErrors();
-		this.setPrefSize(CellSociety.WIDTH, HEIGHT);
-		this.setOnMouseClicked(new EventHandler<MouseEvent>() {
+		pane.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
 				handlePause();
@@ -64,7 +80,8 @@ public class CellSimulator extends Pane {
 		System.out.println("Reset");
 		data.setupGridObject();
 		myGrid = data.getGridObject();
-		myGrid.drawTo(this);
+		myGrid.drawTo(pane);
+		data.getRules().setParams(parameters);
 		animation.pause();
 	}
 
@@ -80,7 +97,7 @@ public class CellSimulator extends Pane {
 		data = XML_readings.get(sim);
 		stage.setTitle(CellSociety.TITLE + " - " + data.getTitle());
 		myGrid = data.getGridObject();
-		myGrid.drawTo(this);
+		myGrid.drawTo(pane);
 		parameters = new double[data.getRules().getSliders().length];
 		myGraph.reset();
 		myGraph.addStartingPoints(myGrid.getCellCounts());
@@ -89,6 +106,7 @@ public class CellSimulator extends Pane {
 
 	public void handleSpeedChange(double speed) {
 		System.out.println("Speed Change!!");
+		System.out.println(pane.getWidth());
 		step = 1000 / speed;
 		animation.stop();
 		startAnimation();
@@ -127,12 +145,16 @@ public class CellSimulator extends Pane {
 		return data.getAuthor();
 	}
 
-	public List<SliderInfo> getSliderInfo() {
-		return data.getSliders();
+	public SliderInfo[] getSliderInfo() {
+		return data.getRules().getSliders();
 	}
 
 	public void setText(Text text) {
 		populationText = text;
+	}
+
+	public ScrollPane getPane() {
+		return scroll;
 	}
 
 	private void startAnimation() {
