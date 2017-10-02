@@ -19,7 +19,7 @@ import org.w3c.dom.Element;
  * 
  * XML Writing class to save current state of simulation
  * 
- * @author ptflecha
+ * @author Paulo Flecha
  * 
  * Some sections adapted from WriteXMLFile.java by @mykong
  * URL: https://www.mkyong.com/java/how-to-create-xml-file-in-java-dom/
