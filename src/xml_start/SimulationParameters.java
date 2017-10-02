@@ -486,11 +486,15 @@ public class SimulationParameters {
     		return gridObject;
     }
     
-    public void setupGridObject() throws ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
-    		Class gridClass = Class.forName("grids." + simShape);
-	    	Constructor[] gridConstr = gridClass.getConstructors();
-	    	Object gridObjectInstance = gridConstr[0].newInstance(this);
-	    	gridObject = (IGrid) gridObjectInstance;
+    public void setupGridObject() {
+    		try {
+				Class gridClass = Class.forName("grids." + simShape);
+				Constructor[] gridConstr = gridClass.getConstructors();
+				Object gridObjectInstance = gridConstr[0].newInstance(this);
+				gridObject = (IGrid) gridObjectInstance;
+			} catch (Exception e) {
+				gridObject = new RectangularGrid(this);
+			}
     }
     
     

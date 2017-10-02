@@ -63,7 +63,7 @@ public class XMLWrite {
 		TransformerFactory transformerFactory = TransformerFactory.newInstance();
 		Transformer transformer = transformerFactory.newTransformer();
 		DOMSource source = new DOMSource(doc);
-		String fileString = "saved_states/savedState" + getXMLFileNumber() + ".xml";
+		String fileString = "saved_states/savedState" + (getXMLFileNumber()+1) + ".xml";
 		StreamResult result = new StreamResult(new File(fileString));
 
 		// Output to console for testing

@@ -28,6 +28,7 @@ public class CellGraph extends Stage {
 	public CellGraph() {
 		super();
 		lineChart = new LineChart<Number, Number>(xAxis, yAxis);
+		lineChart.setCreateSymbols(false);
 		allSeries = new ArrayList<XYChart.Series>();
 		count = 0;
 		Scene scene = new Scene(lineChart, WIDTH, HEIGHT);

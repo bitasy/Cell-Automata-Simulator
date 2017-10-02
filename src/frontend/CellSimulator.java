@@ -62,6 +62,8 @@ public class CellSimulator extends Pane {
 
 	public void handleReset() {
 		System.out.println("Reset");
+		data.setupGridObject();
+		myGrid = data.getGridObject();
 		myGrid.drawTo(this);
 		animation.pause();
 	}
@@ -155,7 +157,7 @@ public class CellSimulator extends Pane {
 	private String readStatus(int[] stateCount) {
 		String status = "";
 		for (int i = 0; i < stateCount.length; i++) {
-			status += CellSociety.STATE + (i + 1) + ": " + stateCount[i];
+			status += CellSociety.STATE + (i + 1) + ": " + stateCount[i] + " ";
 		}
 		return status;
 	}

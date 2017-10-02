@@ -53,7 +53,7 @@ public class SimulationInterface extends BorderPane {
 
 	private void createGraphInfo() {
 		VBox topBox = new VBox();
-		Text populationText = new Text("Insert Population Info Here!");
+		Text populationText = new Text();
 		populationText.setFill(Color.BLACK);
 		topBox.getChildren().add(populationText);
 		topBox.setAlignment(Pos.CENTER);
