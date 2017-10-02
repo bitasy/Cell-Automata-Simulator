@@ -30,4 +30,9 @@ public interface IGrid {
 	 * @return the int array of cell counts.
 	 */
 	int[] getCellCounts();
+	
+	/**
+	 * Freezes grid on an error.
+	 */
+	void freeze();
 }

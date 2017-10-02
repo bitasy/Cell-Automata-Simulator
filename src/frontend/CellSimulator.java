@@ -49,6 +49,7 @@ public class CellSimulator {
 		XML_readings = masterMap.getMap();
 		// System.out.println("map size: " + XML_readings.size());
 		myGraph = new CellGraph();
+		myGraph.setY(0);
 		checkForErrors();
 		pane.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
@@ -76,7 +77,14 @@ public class CellSimulator {
 	}
 
 	public void handleStep() {
-		myGrid.update();
+		try {
+			myGrid.update();			
+		}
+		catch (IllegalArgumentException e) {
+			myGrid.freeze();
+			alert.setContentText(e.getMessage());
+			alert.show();
+		}
 		int[] statusUpdate = myGrid.getCellCounts();
 		populationText.setText(readStatus(statusUpdate));
 		myGraph.addPoints(statusUpdate);
@@ -117,7 +125,6 @@ public class CellSimulator {
 		try {
 			xmlWriter.saveState(data, myGrid.getPrimaryStates(), parameters);
 		} catch (Exception e) {
-			e.printStackTrace();
 			alert.setContentText(CellSociety.SAVING_ERROR);
 			alert.showAndWait();
 		}

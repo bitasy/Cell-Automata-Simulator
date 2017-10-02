@@ -10,6 +10,8 @@ import backend.EffectGrid;
 import backend.IGrid;
 import backend.IRuleSet;
 import frontend.CellSociety;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -37,6 +39,7 @@ public class RectangularGrid implements IGrid {
 	private IRuleSet myRuleSet;
 	protected Pane myCanvas;
 	private double strokeWidth;
+	private boolean frozen;
 
 	protected Cell[][] myGrid;
 
@@ -67,18 +70,22 @@ public class RectangularGrid implements IGrid {
 	}
 	
 	@Override
-	public void update() {
-		EffectGrid newStates = new RectangularEffectGrid();
-		myRuleSet.setNewGrid(newStates);
-		applyRules();
-		
-		for(int i = 0; i < myGrid.length; i++) {
-			for(int j = 0; j < myGrid[0].length; j++) {
-				myGrid[i][j].changeState(newStates.getStates(i*myGrid[0].length+j));
-			}
+	public void update() throws IllegalArgumentException{
+		if (!frozen) {
+			EffectGrid newStates = new RectangularEffectGrid();
+			myRuleSet.setNewGrid(newStates);
+				applyRules();
+
+			for (int i = 0; i < myGrid.length; i++) {
+				for (int j = 0; j < myGrid[0].length; j++) {
+					myGrid[i][j].changeState(newStates.getStates(i * myGrid[0].length + j));
+				}
+			} 
 		}
 		
 	}
+	
+	public void freeze() {frozen = true;}
 	
 	private void applyRules() {
 		for(int rule = 1; rule <= myRuleSet.numRules(); rule++)
