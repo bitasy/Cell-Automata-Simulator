@@ -58,7 +58,7 @@ public class CellGraph extends Stage {
 	}
 
 	public void reset() {
-		System.out.println("this was called");
+		System.out.println("reset");
 		count = 0;
 		lineChart.getData().removeAll(lineChart.getData());
 		allSeries.clear();
