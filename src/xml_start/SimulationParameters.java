@@ -22,7 +22,7 @@ import rulesets.SegregationRuleSet;
 
 /**
  * Contains simulation parameters for a unique simulation, loaded from XML file
- * @author team14
+ * @author Paulo Flecha
  *
  * Some code structure adapted from Music.java by @author Robert C. Duvall
  *
@@ -69,7 +69,8 @@ public class SimulationParameters {
     	
         myDataValues = dataValues;    
         simName = simPathName;
-        setupAllParameters();
+        if (dataValues != null) {setupAllParameters();}
+        
         
     }
     
@@ -185,6 +186,7 @@ public class SimulationParameters {
     		
     }
     
+    // helper to copy 2d grid to array format
     public void copy2DGridToArrayGrid() {
 		int[][] grid = simGrid;
 		int[] cellList = new int[grid.length*grid[0].length];
@@ -346,24 +348,43 @@ public class SimulationParameters {
     		simTitle = myDataValues.get("title");
     }
     
-    // setup rule set file
+
+    // sets up rules, to work even with dummy non-xml files
     public void setupRules() {
-    	
 	    	File folder = new File("data/");
 	    	File[] listOfFiles = folder.listFiles();
-	
-	    	for (int i = 0; i < listOfFiles.length; i++) {
-	    	      if (listOfFiles[i].isFile()) {
+	    	int counter = 0;
+	    	// for (int i = 0; i < listOfFiles.length; i++) {
+	    for (File f : listOfFiles) {
+	    	      if (f.isFile()) {
 	    	    	  
-	    	    	  	String fileString = listOfFiles[i].getName();
-	    	    	  	String simulationName = fileString.replace(".xml","");
-	    	    	  	rulesMap.put(simulationName, rules[i]);
-	    	    	  	
+	    	    	  	String fileString = f.getName();
+	    	    	  	if (fileString.contains(".xml")) {
+	    	    	  		String simulationName = fileString.replace(".xml","");
+		    	    	  	if (isValid(simulationName)) {
+		    	    	  		rulesMap.put(simulationName, rules[counter]);
+		    	    	  		counter++;
+		    	    	  	} 	
+	    	    	  	}
 	    	      }
 	    	}
 	    	    
-    		simRules = rulesMap.get(simName);
-    	
+		simRules = rulesMap.get(simName);
+    }
+    
+    // checks if XML file name exists as a ruleset title
+    private boolean isValid(String s) {
+    		
+	    	File folder = new File("src/rulesets/");
+	    	File[] listOfFiles = folder.listFiles();
+	    for (File f : listOfFiles) {
+	    	      if (f.isFile()) {
+	    	    	  	String fileString = f.getName();
+	    	    	  	if (fileString.contains(s)) {return true;}
+	    	      }
+	    }
+	    return false;
+	    
     }
     
     // extra parameters that may be unique do different simulations
@@ -438,6 +459,7 @@ public class SimulationParameters {
 		return null;
 	}
 
+	// gets array of initial states
 	public int[] getInitialStates() {
 		return simGridArray;
 	}
@@ -482,11 +504,13 @@ public class SimulationParameters {
     		return myDataValues.get(tag);
     }
     
+    // gets current gridObject
     public IGrid getGridObject() {
     		
     		return gridObject;
     }
     
+    // creates new gridObject
     public void setupGridObject() {
     		try {
 				Class gridClass = Class.forName("grids." + simShape);

@@ -49,6 +49,7 @@ public class CellSimulator {
 		stage = s;
 		masterMap = new MasterMap();
 		XML_readings = masterMap.getMap();
+		// System.out.println("map size: " + XML_readings.size());
 		myGraph = new CellGraph();
 		checkForErrors();
 		pane.setOnMouseClicked(new EventHandler<MouseEvent>() {

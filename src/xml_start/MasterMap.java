@@ -22,7 +22,7 @@ import javafx.stage.FileChooser.ExtensionFilter;
  * Also creates Map<String, SimulationParameter>, mapping the title of the simulation to the SimulationParameter object
  * containing all the relevant parameters for that simulation
  * 
- * @author ptflecha
+ * @author Paulo Flecha
  * 
  * Adapted from Main.java code from:
  * 
@@ -41,9 +41,12 @@ public class MasterMap {
 	}
 	
 	// reads in XML file and assigns SimulationParameters values
-    private static SimulationParameters read(String s) throws Exception {
+    private SimulationParameters read(String s) throws Exception {
     	
 		String fileName = "data/" + s + ".xml";
+		
+		//if (!isValidName(s)) {return null;}
+		
         File dataFile = new File(fileName);
         SimulationParameters mySimulation = null;
         
@@ -53,9 +56,28 @@ public class MasterMap {
         		
         }
         
-        mySimulation.setupGridObject();
+        if (mySimulation != null) {mySimulation.setupGridObject();}
         return mySimulation;
     }
+    
+    // checks to see if there is a file name in rule sets
+    private boolean isValidName(String s) {
+    	
+	    	File folder = new File("rulesets/");
+	    	File[] listOfFiles = folder.listFiles();
+	
+	    	for (int i = 0; i < listOfFiles.length; i++) {
+	    	      if (listOfFiles[i].isFile()) {
+	    	    	  
+	    	    	  	String fileString = listOfFiles[i].getName();
+	    	    	  	if (fileString.contains(s)) {return true;}
+	    	      }
+	    	}
+    	
+	    	return false;
+	    	
+    }
+    
     	
     	// creates map of all SimulationParameter instances for each simulation type
     	private void makeMap() {
@@ -70,42 +92,39 @@ public class MasterMap {
 	    	      if (listOfFiles[i].isFile()) {
 	    	    	  
 	    	    	  	String fileString = listOfFiles[i].getName();
-	    	    	  	String s = fileString.replace(".xml","");
-	    	    	  	 	  	
-	    	    	  	SimulationParameters currentSimulation = null;
-	    				try {
-	    					currentSimulation = read(s);
-	    				} catch (XMLFormatException e) {
-    	            		
-	    		            	List<String> errorList = new ArrayList<String>();
-	    	        			errorList.add(e.getMessage());
-	    	        			errorsMap.put(s, errorList);    
-	    					
-	    				} catch (Exception e) {
-	    					
-	    		            	List<String> errorList = errorsMap.get(s);
-	    		            	if (errorList == null) {errorList = new ArrayList<String>();}
-	    		            	String errorMsg = "Error loading XML for " + s;
-	    		            	errorList.add(errorMsg);
-	    	        			errorsMap.put(s, errorList);          		
+	    	    	  	// System.out.println("file string is: " + fileString);
+	    	    	  	if (fileString.contains(".xml")) {
+		    	    	  	String s = fileString.replace(".xml","");
+    	    	  	 	  	// System.out.println(s);
+		    	    	  	SimulationParameters currentSimulation;
+		    				try {
+		    					currentSimulation = read(s);
+		    					simulationMap.put(s, currentSimulation);
+		    				} catch (XMLFormatException e) {
+	    	            		
+		    		            	List<String> errorList = new ArrayList<String>();
+		    	        			errorList.add(e.getMessage());
+		    	        			errorsMap.put(s, errorList);    
+		    					
+		    				} catch (Exception e) {
+		    					
+		    		            	List<String> errorList = errorsMap.get(s);
+		    		            	if (errorList == null) {errorList = new ArrayList<String>();}
+		    		            	String errorMsg = "Error loading XML for " + s;
+		    		            	errorList.add(errorMsg);
+		    	        			errorsMap.put(s, errorList);          		
 
-	    	            } 
-	    				
-	    			if (currentSimulation != null) {
-	    					simulationMap.put(s, currentSimulation);			
-	    			}
+		    	            } 
+		    				
+	    	    	  	}
+	    	    	  	
+
 	    	      }
 	    	}
     		
     		return;
     }
     	
-    	
-    	
-    	
-    	
-    	
-
     // getter for master map
     public Map<String, SimulationParameters> getMap() {
     		return simulationMap;

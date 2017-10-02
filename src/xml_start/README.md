@@ -53,9 +53,9 @@ In the Fire simulation the number below may represent probCatch, i.e. the probab
     <extraParams>0.9</extraParams>
     
     
-**Shape** will specify the shape used for the elements, also influencing the shape of the grid as well. Values can be "square", "hexagon", "triangle" and potentially "other"; when shape is "other", this means it will not be assigned any values of rows or columns;
+**Shape** will specify the name of the class used for the grid elements, also influencing the shape of the grid as well. Values can be "RectangularGrid", "CardinalGrid", "HexagonalGrid", "TriangularGrid" and potentially "NeighborGrid"; when shape is "NeighborGrid", this means it will not be assigned any values of rows or columns; if it is none of these, the default parameter is "RectangularGrid"
 
-	<shape>square</shape>
+	<shape>RectangularGrid</shape>
 
 
 **Outline** will dictate whether the cells have an outline as its borders or not; values of "true" or "false"
@@ -102,7 +102,7 @@ In the Fire simulation the number below may represent probCatch, i.e. the probab
 
 - The grid interpretation will be specified by the Initial Configuration identifier (explained above)
 - The 3 ways (fixed, probability and random) of which the grid can be interpreted are explained below
-- Note that if the **shape** identifier is defined as "other", Grid will be interpreted as a "fixed" by default, and will have no rows or columns defined (in simulations like penrose)
+- Note that if the **shape** identifier is defined as "NeighborGrid", Grid will be interpreted as a "fixed" by default, and will have no rows or columns defined (in simulations like Penrose)
 
 
 **fixed** identifier interpretation
@@ -159,6 +159,7 @@ Below is a list of errors checked for (and what is done about them) vs. errors n
 - Invalid or incorrect slider formatting: POP UP / EXCEPTION
 - Invalid Initial Configuration specifier: DEFAULT PARAMETER
 - Incorrect Random Grid setup: DEFAULT PARAMETERS
+- Incorrect or random file in data/ folder: POP UP / EXCEPTION (doesn't crash simulation)
 
 **Default parameters added**
 - Shape

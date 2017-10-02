@@ -18,6 +18,8 @@ import org.xml.sax.SAXException;
  * 
  * Class responsible for reading XML file and extracting relevant information, and assigning it to SimulationParameters
  * 
+ * @author Paulo Flecha
+ * 
  * Adapted from XMLParser.java by:
  * @author Rhondu Smithwick
  * @author Robert C. Duvall 
@@ -49,6 +51,7 @@ public class XMLParserCS {
         // System.out.println(root);
         if (! isValidFile(root, SimulationParameters.DATA_TYPE)) {
             throw new XMLException("XML file does not represent %s", SimulationParameters.DATA_TYPE);
+        		// return null;
         }
         // read data associated with the fields given by the object
         Map<String, String> results = new HashMap<>();
