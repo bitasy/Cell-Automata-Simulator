@@ -38,6 +38,7 @@ public class CellGraph extends Stage {
 
 	public void addStartingPoints(int[] values) {
 		for (Integer value : values) {
+			System.out.println(value);
 			XYChart.Series series = new XYChart.Series();
 			series.getData().add(new XYChart.Data(count, value));
 			lineChart.getData().add(series);

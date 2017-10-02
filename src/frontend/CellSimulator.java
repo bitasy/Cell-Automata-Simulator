@@ -68,7 +68,7 @@ public class CellSimulator extends Pane {
 
 	public void handleStep() {
 		myGrid.update();
-		int[] statusUpdate = myGrid.getPrimaryStates();
+		int[] statusUpdate = myGrid.getCellCounts();
 		populationText.setText(readStatus(statusUpdate));
 		myGraph.addPoints(statusUpdate);
 	}
@@ -81,7 +81,7 @@ public class CellSimulator extends Pane {
 		myGrid.drawTo(this);
 		parameters = new double[data.getRules().getSliders().length];
 		myGraph.reset();
-		myGraph.addStartingPoints(myGrid.getPrimaryStates());
+		myGraph.addStartingPoints(myGrid.getCellCounts());
 		startAnimation();
 	}
 

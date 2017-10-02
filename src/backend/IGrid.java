@@ -19,4 +19,6 @@ public interface IGrid {
 	void drawTo(Pane pane);
 	
 	public int[] getPrimaryStates();
+
+	int[] getCellCounts();
 }

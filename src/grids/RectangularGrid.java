@@ -48,6 +48,7 @@ public class RectangularGrid implements IGrid {
 	 * @param cellSize the side length of each cell in the grid, in pixels.
 	 */
 	public RectangularGrid(SimulationParameters simdata) {
+
 		myGrid = new Cell[simdata.getNumRows()][simdata.getNumCols()];
 		colorMap = simdata.getColorScheme();
 		numStates = (int) simdata.getExtraParameters()[0];
@@ -57,6 +58,11 @@ public class RectangularGrid implements IGrid {
 		myRuleSet = simdata.getRules();
 		myRuleSet.setParams(Arrays.copyOfRange(simdata.getExtraParameters(), 1, numStates+1));
 	}
+	
+//	public RectangularGrid() {
+//		
+//	}
+
 	
 	private void populate(int[] initialState) {
 		for(int i = 0; i < initialState.length; i++) {
@@ -130,6 +136,24 @@ public class RectangularGrid implements IGrid {
 			}
 		}
 		return states;
+	}
+	
+	public int[] getCellCounts() {
+		int[] states = new int[colorMap.size()];
+		for(int i = 0; i < states.length; i++) {
+			states[i] = getCellCount(i);
+		}
+		return states;
+	}
+	
+	private int getCellCount(int state) {
+		int counter = 0;
+		for(Cell[] row : myGrid) {
+			for(Cell cell : row) {
+				if(cell.getPrimaryState() == state) counter++;
+			}
+		}
+		return counter;
 	}
 	
 	class RectangularEffectGrid implements EffectGrid {

@@ -7,6 +7,13 @@
 - Details about what kinds of errors are checked for or not are included in the last section;
 - It is the responsibility of whoever is adding the XML file(s) to ensure it is formatted correctly as best as possible by following the rules below;
 
+## Saving States
+
+- When choosing to save the current state to XML, an XML file will be created under the folder "/saved_states"
+- It will save all the parameters of the simulations type and current state (including exact grid arrangement and slider values)
+- This data from the file may be directly copy and pasted from that file and into the specific simulation type file (in folder "/data")
+- By doing so, this will enable the simulation to start at the point where it was saved at 
+
 ## Description
 
 **Title** is simply a text sequence
@@ -46,7 +53,7 @@ In the Fire simulation the number below may represent probCatch, i.e. the probab
     <extraParams>0.9</extraParams>
     
     
-**Shape** will specify the shape used for the elements, also influencing the shape of the grid as well. Values can be "square", "hexagon", "triangle" and potentially "other"
+**Shape** will specify the shape used for the elements, also influencing the shape of the grid as well. Values can be "square", "hexagon", "triangle" and potentially "other"; when shape is "other", this means it will not be assigned any values of rows or columns;
 
 	<shape>square</shape>
 
@@ -94,7 +101,8 @@ In the Fire simulation the number below may represent probCatch, i.e. the probab
 **Grid** is a visual representation of how the grid will look like
 
 - The grid interpretation will be specified by the Initial Configuration identifier (explained above)
-- The 3 ways (fixed, probability and random) of which the grid can be interpreted are explained below:
+- The 3 ways (fixed, probability and random) of which the grid can be interpreted are explained below
+- Note that if the **shape** identifier is defined as "other", Grid will be interpreted as a "fixed" by default, and will have no rows or columns defined (in simulations like penrose)
 
 
 **fixed** identifier interpretation

@@ -72,6 +72,7 @@ public class SimulationInterface extends BorderPane {
 		};
 		simulations.getSelectionModel().selectedItemProperty().addListener(changeListener);
 		simulations.getItems().addAll(simNames);
+		
 		simulations.setValue(simNames[0]);
 		simulations.setPadding(new Insets(3, 3, 3, 3));
 		return simulations;

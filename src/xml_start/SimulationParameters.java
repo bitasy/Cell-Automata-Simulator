@@ -1,17 +1,22 @@
 package xml_start;
 
 import java.io.File;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+
+import backend.IGrid;
 import backend.IRuleSet;
 import frontend.SliderInfo;
 
 import java.util.Random;
 import rulesets.*;
+import grids.*;
 import javafx.scene.paint.Color;
 
 /**
@@ -39,7 +44,6 @@ public class SimulationParameters {
         "toroidal",
         "sliders"
     });
-    
     private IRuleSet[] rules = {new FireRuleSet(), new GameOfLifeRuleSet(), new PredatorPreyRuleSet(), new SegregationRuleSet()};
     public Map<String, IRuleSet> rulesMap = new HashMap<String, IRuleSet>();
     
@@ -53,12 +57,14 @@ public class SimulationParameters {
     private String simInitialConfig;
     private String simShape;
     private List<SliderInfo> simSliders;
+    private int[] simGridArray;
+    private IGrid gridObject;
     
     // specific data values for this instance
     private Map<String, String> myDataValues;
 
     // constructor initializing all parameters for simulation
-    public SimulationParameters (Map<String, String> dataValues, String simPathName) throws XMLFormatException {
+    public SimulationParameters (Map<String, String> dataValues, String simPathName) throws XMLFormatException, ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
     	
         myDataValues = dataValues;    
         simName = simPathName;
@@ -76,19 +82,21 @@ public class SimulationParameters {
     
     
     // calls all setup methods
-    public void setupAllParameters() throws XMLFormatException {
+    public void setupAllParameters() throws XMLFormatException, ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
     	
+    		setupShape();
     		setupGrid();
     		setupAuthor();
     		setupTitle();
     		setupColorScheme();
     		setupExtraParams();
     		setupRules();
-    		setupShape();
     		setupSliders();
+    		//setupGridObject();
     	
     }
     
+    // setup sliders
     private void setupSliders() throws XMLFormatException {
     	
     		simSliders = new ArrayList<SliderInfo>();
@@ -103,48 +111,39 @@ public class SimulationParameters {
     	
     }
     
-    public List<SliderInfo> getSliders() {
-    		return simSliders;
-    }
-    
+    // setup shape value
     private void setupShape() {
     		String s = myDataValues.get("shape");
-    		if (!s.equals("square") && !s.equals("triangle") && !s.equals("hexagon")) {
-    			s = "square";
+    		if (!s.equals("CardinalGrid") && !s.equals("HexagonalGrid") &&
+    				!s.equals("NeighborGrid") && !s.equals("RectangularGrid") && !s.equals("TriangularGrid")) {
+    			s = "RectangularGrid";
     		}
     		simShape = s; 
 	}
-    
-    public boolean hasOutline() {
-    		String outline = myDataValues.get("hasOutline");
-    		return outline.contains("true");
-    }
-    
-    public String getNeighborsConsidered() {
-    		String n = myDataValues.get("neighborsConsidered");
-    		if (!n.equals("cardinal") && !n.equals("diagonal") && !n.equals("all")) {n = "all";}
-    		return n;
-    }
-    
-    public boolean isToroidal() {
-		String outline = myDataValues.get("toroidal");
-		return outline.contains("true");
-}
 
+    // setup main grid
 	public void setupGrid() throws XMLFormatException {
     	
     		simInitialConfig = myDataValues.get("initialConfig");
     		
     		if (simInitialConfig.equals("random")) {
         		setupGridRandom();
+        		copy2DGridToArrayGrid();
     		} else if (simInitialConfig.equals("fixed")) {
-    			setupGridFixed();
+    			if (simShape.equals("NeighborGrid")) { // only case in pemrose
+    				setupGridFixedArray();
+    			} else {
+    				setupGridFixedMatrix();
+    				copy2DGridToArrayGrid();
+    			}
     		} else if (simInitialConfig.equals("probability")) {
     			setupGridProbability();
+    			copy2DGridToArrayGrid();
     		} else {
     			// throw new XMLFormatException();
     			simInitialConfig = " ";
     			setupGridRandom();
+    			copy2DGridToArrayGrid();
     		}
     	
     }
@@ -168,7 +167,39 @@ public class SimulationParameters {
     }
     
     // setup "fixed" grid
-    public void setupGridFixed() throws XMLFormatException {
+    public void setupGridFixedArray() throws XMLFormatException {
+    	
+    		String s = myDataValues.get("grid");
+    		String[] gridArray = s.split("\\s+|;");
+    		int[] gridByTag = new int[gridArray.length];
+    		for (int i = 0; i < gridArray.length; i++) {
+    			
+    			int stateValue = Integer.valueOf(gridArray[i]); 
+    			if (stateValue < 0) {throw new XMLFormatException();}
+    			gridByTag[i] =  stateValue;
+    		}
+    		
+    		simGridArray = gridByTag;
+    		return;
+    		
+    }
+    
+    public void copy2DGridToArrayGrid() {
+		int[][] grid = simGrid;
+		int[] cellList = new int[grid.length*grid[0].length];
+		int tag = 0;
+		for(int[] row : grid) {
+			for(int state : row) {
+				cellList[tag] = state;
+				tag++;
+			}
+		}
+		simGridArray = cellList;
+		return;
+    }
+    
+    // setup "fixed" grid
+    public void setupGridFixedMatrix() throws XMLFormatException {
     	
     		String s = myDataValues.get("grid");
     		
@@ -195,6 +226,7 @@ public class SimulationParameters {
     		return;
     		
     }
+    
     
     // setup "random" grid
     public void setupGridRandom() {
@@ -261,15 +293,7 @@ public class SimulationParameters {
 		for (int a = 0; a < numRows*numCols; a++) { openSpaces.add(a); }
 		
 		// make probability distribution list
-		List<Integer> stateProbability = new ArrayList<Integer>();
-		for (int j = 0; j < probabilities.length; j++) {
-			
-			double prob = probabilities[j];
-			int currState = j+1;
-			int stateCells = (int) (prob*totalCells);
-			for (int k = 0; k < stateCells; k++) { stateProbability.add(currState);}
-			
-		}
+		List<Integer> stateProbability = probabilityDistribution(totalCells, probabilities);
 		
 		int cellsToAdd = stateProbability.size();
 		while (cellsToAdd > 0) {
@@ -294,6 +318,20 @@ public class SimulationParameters {
 		
     	
     }
+
+    // helper for setup "probability" grid: sets up probability distribution
+	private List<Integer> probabilityDistribution(double totalCells, double[] probabilities) {
+		List<Integer> stateProbability = new ArrayList<Integer>();
+		for (int j = 0; j < probabilities.length; j++) {
+			
+			double prob = probabilities[j];
+			int currState = j+1;
+			int stateCells = (int) (prob*totalCells);
+			for (int k = 0; k < stateCells; k++) { stateProbability.add(currState);}
+			
+		}
+		return stateProbability;
+	}
     
     
     // setup author
@@ -327,8 +365,6 @@ public class SimulationParameters {
     	
     }
     
-    
-    
     // extra parameters that may be unique do different simulations
     public void setupExtraParams() {
     		
@@ -358,11 +394,6 @@ public class SimulationParameters {
     		return simColorScheme;
     }
     
-    // get Grid
-    public int[][] getGrid() {
-    		return simGrid; 
-    }
-    
     // get Author
     public String getAuthor() {
     		return simAuthor;
@@ -383,6 +414,11 @@ public class SimulationParameters {
     		return simExtraParams;
     }
     
+    // get num of different states
+    public double getNumStates() {
+    		return simExtraParams[0];
+    }
+    
     
     // get num of rows
     public int getNumRows() {
@@ -395,23 +431,14 @@ public class SimulationParameters {
     		return simGrid[0].length;
     }
 
+    // method would be implemented if we did pemrose simulation (left intentionally empty)
+    // gets mapping of state tag to list of neighbor tags
 	public Map<Integer, List<Integer>> getGridLayout() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public int[] getInitialStates() {
-		// TODO replace getGrid with this
-		int[][] grid = getGrid();
-		int[] cellList = new int[grid.length*grid[0].length];
-		int tag = 0;
-		for(int[] row : grid) {
-			for(int state : row) {
-				cellList[tag] = state;
-				tag++;
-			}
-		}
-		return cellList;
+		return simGridArray;
 	}
     
     
@@ -420,8 +447,53 @@ public class SimulationParameters {
     		return myDataValues.get("colorScheme");
     }
     
-	public String getSimShape() {
+    // get grid shape type
+	public String getGridShape() {
 		return simShape;
 	}
+	
+    // getter for outline setting
+    public boolean hasOutline() {
+    		String outline = myDataValues.get("hasOutline");
+    		return outline.contains("true");
+    }
+    
+    // getter for neighbor setting
+    public String getNeighborsConsidered() {
+    		String n = myDataValues.get("neighborsConsidered");
+    		if (!n.equals("cardinal") && !n.equals("diagonal") && !n.equals("all")) {n = "all";}
+    		return n;
+    }
+
+    // getter for sliders
+    public List<SliderInfo> getSliders() {
+		return simSliders;
+    }
+
+    // getter for toroidal world setting
+    public boolean isToroidal() {
+    		String outline = myDataValues.get("toroidal");
+    		return outline.contains("true");
+    }
+    
+    // get original XML value
+    public String getXMLTag(String tag) {
+    		return myDataValues.get(tag);
+    }
+    
+    public IGrid getGridObject() {
+    		
+    		return gridObject;
+    }
+    
+    public void setupGridObject() throws ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+    		Class gridClass = Class.forName("grids." + simShape);
+	    	Constructor[] gridConstr = gridClass.getConstructors();
+	    	Object gridObjectInstance = gridConstr[0].newInstance(this);
+	    	gridObject = (IGrid) gridObjectInstance;
+    }
+    
     
 }
+
+
