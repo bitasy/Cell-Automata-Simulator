@@ -53,6 +53,7 @@ public class MasterMap {
         		
         }
         
+        mySimulation.setupGridObject();
         return mySimulation;
     }
     	

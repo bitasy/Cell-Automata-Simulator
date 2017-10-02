@@ -1,15 +1,20 @@
 package xml_start;
 
 import java.io.File;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+
+import backend.IGrid;
 import backend.IRuleSet;
 import java.util.Random;
 import rulesets.*;
+import grids.*;
 import javafx.scene.paint.Color;
 
 /**
@@ -37,7 +42,7 @@ public class SimulationParameters {
         "sliders"
     });
 	
-    private Color[] colors = {Color.WHITE, Color.BLACK, Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW, Color.ORANGE};
+    public static Color[] COLORS = {Color.WHITE, Color.BLACK, Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW, Color.ORANGE};
     private IRuleSet[] rules = {new FireRuleSet(), new GameOfLifeRuleSet(), new PredatorPreyRuleSet(), new SegregationRuleSet()};
     public Map<String, IRuleSet> rulesMap = new HashMap<String, IRuleSet>();
     
@@ -52,12 +57,13 @@ public class SimulationParameters {
     private String simShape;
     private List<SliderInfo> simSliders;
     private int[] simGridArray;
+    private IGrid gridObject;
     
     // specific data values for this instance
     private Map<String, String> myDataValues;
 
     // constructor initializing all parameters for simulation
-    public SimulationParameters (Map<String, String> dataValues, String simPathName) throws XMLFormatException {
+    public SimulationParameters (Map<String, String> dataValues, String simPathName) throws XMLFormatException, ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
     	
         myDataValues = dataValues;    
         simName = simPathName;
@@ -75,7 +81,7 @@ public class SimulationParameters {
     
     
     // calls all setup methods
-    public void setupAllParameters() throws XMLFormatException {
+    public void setupAllParameters() throws XMLFormatException, ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
     	
     		setupShape();
     		setupGrid();
@@ -85,6 +91,7 @@ public class SimulationParameters {
     		setupExtraParams();
     		setupRules();
     		setupSliders();
+    		//setupGridObject();
     	
     }
     
@@ -151,7 +158,7 @@ public class SimulationParameters {
 	    	for (int i = 0; i < colorSchemeStringArray.length; i++) {
 	    		int state = Integer.valueOf(colorSchemeStringArray[i]);
 	    		if (state > -1) {
-	    			simColorScheme.put(state, colors[Integer.valueOf(i)]);
+	    			simColorScheme.put(state, COLORS[Integer.valueOf(i)]);
 	    		}
 	    		
 	    	}
@@ -177,7 +184,7 @@ public class SimulationParameters {
     }
     
     public void copy2DGridToArrayGrid() {
-		int[][] grid = getGrid();
+		int[][] grid = simGrid;
 		int[] cellList = new int[grid.length*grid[0].length];
 		int tag = 0;
 		for(int[] row : grid) {
@@ -386,11 +393,6 @@ public class SimulationParameters {
     		return simColorScheme;
     }
     
-    // get Grid
-    public int[][] getGrid() {
-    		return simGrid; 
-    }
-    
     // get Author
     public String getAuthor() {
     		return simAuthor;
@@ -476,6 +478,18 @@ public class SimulationParameters {
     // get original XML value
     public String getXMLTag(String tag) {
     		return myDataValues.get(tag);
+    }
+    
+    public IGrid getGridObject() {
+    		
+    		return gridObject;
+    }
+    
+    public void setupGridObject() throws ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+    		Class gridClass = Class.forName("grids." + simShape);
+	    	Constructor[] gridConstr = gridClass.getConstructors();
+	    	Object gridObjectInstance = gridConstr[0].newInstance(this);
+	    	gridObject = (IGrid) gridObjectInstance;
     }
     
     

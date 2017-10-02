@@ -42,6 +42,12 @@ public class RectangularGrid implements IGrid {
 	 * @param simdata the SimulationLoader object that holds information about the simulation parameters.
 	 * @param cellSize the side length of each cell in the grid, in pixels.
 	 */
+	
+	
+	public RectangularGrid(SimulationParameters simdata) {
+		
+	}
+	
 	public RectangularGrid(SimulationParameters simdata, double cellSize) {
 		myGrid = new Cell[simdata.getNumRows()][simdata.getNumCols()];
 		colorMap = simdata.getColorScheme();
@@ -52,6 +58,11 @@ public class RectangularGrid implements IGrid {
 		myRuleSet = simdata.getRules();
 		myRuleSet.setParams(Arrays.copyOfRange(simdata.getExtraParameters(), 1, numStates+1));
 	}
+	
+//	public RectangularGrid() {
+//		
+//	}
+
 	
 	private void populate(int[] initialState) {
 		for(int i = 0; i < initialState.length; i++) {
