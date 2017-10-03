@@ -71,10 +71,16 @@ public class CellSimulator {
 		step = 1000 / ((CellSociety.MAXSPEED - CellSociety.MINSPEED) / 2);
 	}
 
+	/**
+	 * Starts the timeline that updates grid
+	 */
 	public void handleStart() {
 		animation.play();
 	}
 
+	/**
+	 * Pauses the timeline that updates grid
+	 */
 	public void handlePause() {
 		animation.pause();
 	}
@@ -96,9 +102,8 @@ public class CellSimulator {
 	 */
 	public void handleStep() {
 		try {
-			myGrid.update();			
-		}
-		catch (IllegalArgumentException e) {
+			myGrid.update();
+		} catch (IllegalArgumentException e) {
 			myGrid.freeze();
 			alert.setContentText(e.getMessage());
 			alert.show();
@@ -174,10 +179,20 @@ public class CellSimulator {
 		}
 	}
 
+	/**
+	 * Used to determine simulation names for the drop down menu
+	 * 
+	 * @return
+	 */
 	public String[] getSimulationNames() {
 		return XML_readings.keySet().toArray(new String[XML_readings.keySet().size()]);
 	}
 
+	/**
+	 * Used to send information about current author to visualization
+	 * 
+	 * @return
+	 */
 	public String getAuthor() {
 		return data.getAuthor();
 	}
@@ -190,14 +205,29 @@ public class CellSimulator {
 		return data.getRules().getSliders();
 	}
 
+	/**
+	 * Used to set Population text so the visualization can have updated state info
+	 * 
+	 * @param text
+	 */
 	public void setText(Text text) {
 		populationText = text;
 	}
 
+	/**
+	 * Sends the pane so the CellSociety can view the class
+	 * 
+	 * @return
+	 */
 	public ScrollPane getPane() {
 		return scroll;
 	}
 
+	/**
+	 * Used to create a new animation with the current step for updating. The
+	 * previous timeline has to be stopped and a new one created in order to ensure
+	 * previous timelines are not running
+	 */
 	private void startAnimation() {
 		if (animation != null) {
 			animation.stop();

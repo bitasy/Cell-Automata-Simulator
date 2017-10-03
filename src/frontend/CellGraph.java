@@ -76,6 +76,9 @@ public class CellGraph extends Stage {
 		count++;
 	}
 
+	/**
+	 * Used to reset all the graph values for when there is a new simulation in play 
+	 */
 	public void reset() {
 		count = 0;
 		lineChart.getData().removeAll(lineChart.getData());
