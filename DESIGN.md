@@ -19,15 +19,15 @@ An XML file will define which rules are used in a simulation, as well as initial
 
 ## Overview
 
-The program design has eight major classes: CellSociety, Screen, SimulationLoader, CellSimulator, SimulationInterface, Grid, Cell, and Rules. CellSociety initializes the program by creating an ArrayList of SimulationLoader objects that each read in the information for a particular simulation from its XML file. It then passes this to SimulationInterface through the Screen class, the latter of which will handle both displaying the simulation and the user interface in the stage. The SimulationInterface object will represent the options available to the user, including the speed and playback of the simulation as well as the choice of which simulation to run. It passes this information (along with only the currently chosen SimulationLoader object) to a CellSimulator. This object controls the flow of turns in the game by creating and updating a Grid object as specified by the SimulationInterface (60 times per second, once per method call, etc). The Grid object handles updating by going through every cell and passing it to the right static methods in the Rules class that write the resulting state to a new grid, which Grid eventually makes the current grid after all updating is finished. The Grid knows which rules are the correct ones because they are specified by the SimulationLoader class, which represents the correct simulation. The Cell class contains the state of a particular cell, along with methods that change the state as needed. The Rules class is not instantiatable; rather, it contains a database of static methods that take a Cell and its neighbors as parameters and apply logic to return the result. 
+The program design has many major classes including CellSociety, MasterMap, CellSimulator, SimulationInterface, iGrid, and StandardRuleSets. CellSimulator initializes the program by creating an ArrayList of SimulationParamter objects that each read in the information for a particular simulation from its XML file. It then passes this to wherever the information is required. The SimulationInterface object will represent the options available to the user, including the speed and playback of the simulation as well as the choice of which simulation to run. It passes this information to a CellSimulator. This object controls the flow of turns in the game by creating and updating a Grid object as specified by the SimulationInterface (60 times per second, once per method call, etc). The Grid object handles updating by going through every cell and passing it to the right static methods in the Rules class that write the resulting state to a new grid, which Grid eventually makes the current grid after all updating is finished. The Grid knows which rules are the correct ones because they are specified by the SimulationLoader class, which represents the correct simulation. The Cell class contains the state of a particular cell, along with methods that change the state as needed. The RuleSets are different for each simulation and implement interfaces (primarily standardRuleSet) to create the required methods to implement the rulesets. 
 
 ![Interface](design_images/20170917_193024.jpg "User Interface")
 
-Picture form of some information about the classes:
+Old picture form of some information about the classes:
 
 ![Interface](design_images/overview_picture.jpg "User Interface")
 
-For more specifics like method names, check out design details.
+Old specifics like method names, check out design details.
 
 ## User Interface
 
@@ -38,13 +38,10 @@ The current interface is very simply designed as there is the basic plan contain
 
 ## Design Details 
 
-CellSociety: CellSociety class is responsible for having a main() method that starts the program. The start method will create the screen window from an instance of the Screen class, as well as creating an ArrayList of SimulationLoader objects each of which contains relevant information about the different simulations. This relevant information in each SimulationLoader class is passed from an XML file, which will be encoded to be able to interact and be read by the SimulationLoader class. This class most likely wouldn't change much if we were given any additional requirements, as it is simply responsible for doing things that are very basic to all CellSociety simulations.
-
+CellSociety: CellSociety class is responsible for having a main() method that starts the program. The start method will create the screen window, as well as instantiating the classes required to actually create the front end/backend/xml_reading of the game.
 Summary of class:
 * start() method
-    * Make screen
-    * Read XML in simulationloader objects
-    * Make arraylist of simulation loaders objects
+    * Make window and instantiates the CellSimulator and SimulationInterface Classes that setup the visualization. 
 
 Screen: Screen class is responsible for having a method to create the window where the world display will be in, to create the actual world display, as well as all the sliders and parameters that define the simulation. The Screen class will pass in and receive information from the simulation interface class, which will define how exactly these parameters, as well as the grid arrangements and updates, will work in relation to every time the simulation runs and updates. If we were given additional requirements, most likely we'd have to change the way the screen looks (say, if an additional simulation requires different parameters to be included in a simulation) as well as potentially having different ways that the user can interact with the simulation (i.e. perhaps the user could click on the grid to specify initial conditions, amongst other things). These potential additions could be implemented by adding variables or methods in the makeScreen class to handle any additional features, as well as adding a method or class to enable the user to interact with the GUI with clicks on it.
 
@@ -78,18 +75,22 @@ Summary of class:
     * Different sets of variables relevant for each simulation
 
 
-CellSimulator: CellSimulator essentially creates the Grid (essentially a 2D array of Cell shapes) by populating the Screen Class and passes information from the XML files to the cells using a list of SimulationLoaders, which stores information about the initial conditions. It’s main purpose is to be the container of the grid and to maintain the grid independent from many of the other factors of the program. The simulator will be the point of contact for the SimulationInterface as well. Information is extracted from the interface and relayed to the Grid as necessary. If you wanted to create multiple CellSimulator on the same screen, you could create multiple instances of the CellSimulator class and populate it with different grid simulations. 
+CellSimulator: CellSimulator essentially creates the Grid (essentially a 2D array of Cell shapes) by populating the scroll pane  and passes information from the XML files to the cells using a list of SimulationParameters, which stores information about the initial conditions. It’s main purpose is to be the container of the grid and to maintain the grid independent from many of the other factors of the program. The simulator will be the point of contact for the SimulationInterface as well. Information is extracted from the interface and relayed to the Grid as necessary. If you wanted to create multiple CellSimulator on the same screen, you could create multiple instances of the CellSimulator class and populate it with different grid simulations. 
 
 Summary of Class:
-* The CellSimulator would help create the cells in the actual displayed Grid and provide Grid with necessary information from XML files and Interface. setGrid()
+* The CellSimulator would help create the cells in the actual displayed Grid and provide Grid with necessary information from XML files and Interface.
 * Responsible for updating hosting timeline and updating Grid. update()
-* Allows Grid to function independently in respect to many of other elements of the program as the Grid only requires the information it receives from CellSimulator. We want this to keep the program reasonably versatile.
+* Allows Grid to function independently in respect to many of other elements of the program as the Grid only requires the information it receives from CellSimulator. We want this to keep the program reasonably versatile. Many handle methods for handling speed change, paramters, etc.
+* Holds all the parameters from the inputs of the Interface.
 
-SimulatorInterface: SimulatorInterface acts as the main point of contact between the user and the inputs of the game. It is created by the Screen and takes up the lower section of the window. It will accomplish the goals of the user interface by allowing the user to switch simulations (drop down menu), edit state with pause/stop/start/step (buttons), and alter speed (slider). This class will be the gateway to add more user editable elements for the grid. You will get information here and send it to the CellSimulator to handle what must be done to commit the actual change to the simulation. This new information can be gathered in any way that you want, as long as the Simulator is ready to handle it. To make it extendable, we envision adding new sliders and we would also have to change CellSimulator to make sure we could support the new change.
+CellGraph: Handles creating a graph for the simulations. Updates over time as new information about the cell simulation is provided. Methods for starting the simulations and adding points as time goes on.
+
+SimulatorInterface: SimulatorInterface acts as the main point of contact between the user and the inputs of the game. It takes up the lower section of the window. It will accomplish the goals of the user interface by allowing the user to switch simulations (drop down menu), edit state with pause/stop/start/step (buttons), and alter speed (slider). This class will be the gateway to add more user editable elements for the grid. You will get information here and send it to the CellSimulator to handle what must be done to commit the actual change to the simulation. This new information can be gathered in any way that you want, as long as the Simulator is ready to handle it. To make it extendable, we envision adding new sliders and we would also have to change CellSimulator to make sure we could support the new change.
 
 Summary of Class:
-* SimulatorInterface handles getting information from the user and sending it to the simulator where it creates the necessary change. setGUI()
-* Creates separation between the actual Simulation and editable elements to maintain modularity. getInputs()
+* SimulatorInterface handles getting information from the user and sending it to the simulator where it creates the necessary change. Multiple methods to handle the setting of the GUI.
+* Creates separation between the actual Simulation and editable elements to maintain modularity. Many buttons and sliders whose events call methods in the Simulator to handle changes.
+
 Grid: The Grid class keeps track of the two-dimensional Cell array and is in charge of updating the simulation turn by turn. It does this by creating a new grid object and marking the effects of the rules on each cell in the old grid on it. After all the changes have been marked, it makes the new grid the current one and removes the old one. 
 Summary of Class:
 * update()
@@ -145,15 +146,19 @@ Alternatively, there could be an abstract class for the Cell and/or Grid which h
 
 The pro advantage is that all the rules for a particular simulation would live inside the cell and grid class versions of a simulation that extends an abstract class, thus not having any dependency with any additional classes, and the disadvantage would be that one or two (cell and grid) classes would have to be implemented every time a new type of simulation were to be added.
 
+#### Issue 3: Neighbors mappings
+
+One of the biggest design considerations involved a map implementation where each cell is identified by a tag and has associated neighbors as opposed to each cell having an (x, y) index and declaring its neighbors with a different index. The actual implementation included the neighbors with the map framework as it allowed the use of non 2d arrays and was most flexible.
+
 
 ## Team Responsibilities
 
 
 The responsibilities will be split up by classes, and have each team member complete each class based on the functionality required. The higher level functions of each team member will mostly be XML / GUI, Front End and Back End. The implementation of each class will be mindful of the existing dependencies between them such that they can exchange the required information between each other and also so that the team members can complete them by working at the same time and eventually combining all of them together.
 
-Paulo: [XML/GUI] CellSociety, SimulationLoader, Screen, XML
-Simran: [Front End] CellSimulator, SimulatorInterface
-Brian: [Back End] Grid, Rules, Cell
+Paulo: [XML/GUI] XML_start package
+Simran: [Front End] CellSimulator, SimulatorInterface, CellSociety, CellGraph
+Brian: [Back End] Backend, grids, rulesets packages
 
 
 
